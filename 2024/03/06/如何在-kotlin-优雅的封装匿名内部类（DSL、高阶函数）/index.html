@@ -20,23 +20,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Junerver">
-<meta property="og:url" content="http://junerver.xyz/index.html">
+    <meta name="description" content="匿名内部类在 Java 中是经常用到的一个特性，例如在 Android 开发中的各种 Listener，使用时也很简单，比如： 123456789101112&#x2F;&#x2F;lambdabutton.setOnClickListener(v -&gt; &#123;  &#x2F;&#x2F;do some thing&#125;);&#x2F;&#x2F;匿名内部类button.setOnClickListener(new View.OnClic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数）">
+<meta property="og:url" content="http://junerver.xyz/2024/03/06/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/index.html">
 <meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="匿名内部类在 Java 中是经常用到的一个特性，例如在 Android 开发中的各种 Listener，使用时也很简单，比如： 123456789101112&#x2F;&#x2F;lambdabutton.setOnClickListener(v -&gt; &#123;  &#x2F;&#x2F;do some thing&#125;);&#x2F;&#x2F;匿名内部类button.setOnClickListener(new View.OnClic">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-06T08:53:18.000Z">
+<meta property="article:modified_time" content="2024-03-06T08:55:52.682Z">
 <meta property="article:author" content="Junerver">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://junerver.xyz/">
+<link rel="canonical" href="http://junerver.xyz/2024/03/06/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"en","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://junerver.xyz/2024/03/06/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/","path":"2024/03/06/如何在-kotlin-优雅的封装匿名内部类（DSL、高阶函数）/","title":"如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数）"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Junerver</title>
+<title>如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数） | Junerver</title>
   
 
 
@@ -66,7 +70,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">Junerver</h1>
+      <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -88,7 +92,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -101,6 +105,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#DSL"><span class="nav-number">1.</span> <span class="nav-text">DSL</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E5%88%9B%E5%BB%BA%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%B1%BB%EF%BC%9AXxxxInterfaceDslImpl"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.创建接口实现类：XxxxInterfaceDslImpl</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%8E%9F%E5%87%BD%E6%95%B0%E5%90%8C%E5%90%8D%E7%9A%84%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0%EF%BC%8C%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%B8%BA%E5%AE%9E%E7%8E%B0%E7%B1%BB%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0"><span class="nav-number">1.0.2.</span> <span class="nav-text">2.创建与原函数同名的扩展函数，函数参数为实现类扩展函数</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">3.使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">高阶函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#tips%EF%BC%9A"><span class="nav-number">2.0.1.</span> <span class="nav-text">tips：</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -132,16 +137,17 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="http://junerver.xyz/2024/03/06/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -155,13 +161,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Junerver">
+      <meta itemprop="name" content="如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数） | Junerver">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/06/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/" class="post-title-link" itemprop="url">如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数）</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数）
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -184,8 +190,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody">
-          <p>匿名内部类在 Java 中是经常用到的一个特性，例如在 Android 开发中的各种 Listener，使用时也很简单，比如：</p>
+    <div class="post-body" itemprop="articleBody"><p>匿名内部类在 Java 中是经常用到的一个特性，例如在 Android 开发中的各种 Listener，使用时也很简单，比如：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//lambda</span></span><br><span class="line">button.setOnClickListener(v -&gt; &#123;</span><br><span class="line">  <span class="comment">//do some thing</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//匿名内部类</span></span><br><span class="line">button.setOnClickListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnClickListener() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">        <span class="comment">//do some thing</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
 <p>只有一个函数的接口在 Java 和 Kotlin 中都可以很方便的使用 lambda 表达式来缩略，但是如果接口含有多个函数，使用起来就比较”不优雅“了，例如：</p>
@@ -228,7 +233,6 @@
 
 <p>2022.2.22 发布于掘金 <a target="_blank" rel="noopener" href="https://juejin.cn/post/7067324925240934430">https://juejin.cn/post/7067324925240934430</a></p>
 
-      
     </div>
 
     
@@ -236,11 +240,13 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+
+        
+
     </footer>
   </article>
 </div>
+
 
 
 
