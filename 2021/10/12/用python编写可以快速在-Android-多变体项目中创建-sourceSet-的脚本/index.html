@@ -20,17 +20,17 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="本文普适性比较低，仅限于需要在项目里使用多个变体（variant）的开发者。对于gradle打包多变体可以参考我之前写的文章Gradle —— 使用 Gradle 打包多个变体（variant）  太长不看：项目地址：junerver&#x2F;flavor_cli 叨叨叨在多变体项目中有一个工作是比较麻烦而且折磨人的，那就是给不同的变体添加自己的 sourceSet。 每当我们需要将一个 Ja">
+    <meta name="description" content="本文普适性比较低，仅限于需要在项目里使用多个变体（variant）的开发者。对于gradle打包多变体可以参考我之前写的文章Gradle —— 使用 Gradle 打包多个变体（variant）  太长不看：项目地址：junerver&#x2F;flavor_cli">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用python编写可以快速在 Android 多变体项目中创建 sourceSet 的脚本">
 <meta property="og:url" content="https://junerver.xyz/2021/10/12/%E7%94%A8python%E7%BC%96%E5%86%99%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E5%9C%A8-Android-%E5%A4%9A%E5%8F%98%E4%BD%93%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-sourceSet-%E7%9A%84%E8%84%9A%E6%9C%AC/index.html">
 <meta property="og:site_name" content="Junerver">
-<meta property="og:description" content="本文普适性比较低，仅限于需要在项目里使用多个变体（variant）的开发者。对于gradle打包多变体可以参考我之前写的文章Gradle —— 使用 Gradle 打包多个变体（variant）  太长不看：项目地址：junerver&#x2F;flavor_cli 叨叨叨在多变体项目中有一个工作是比较麻烦而且折磨人的，那就是给不同的变体添加自己的 sourceSet。 每当我们需要将一个 Ja">
+<meta property="og:description" content="本文普适性比较低，仅限于需要在项目里使用多个变体（variant）的开发者。对于gradle打包多变体可以参考我之前写的文章Gradle —— 使用 Gradle 打包多个变体（variant）  太长不看：项目地址：junerver&#x2F;flavor_cli">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://junerver.xyz/2021/10/12/%E7%94%A8python%E7%BC%96%E5%86%99%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E5%9C%A8-Android-%E5%A4%9A%E5%8F%98%E4%BD%93%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-sourceSet-%E7%9A%84%E8%84%9A%E6%9C%AC/1">
 <meta property="og:image" content="https://junerver.xyz/2021/10/12/%E7%94%A8python%E7%BC%96%E5%86%99%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E5%9C%A8-Android-%E5%A4%9A%E5%8F%98%E4%BD%93%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-sourceSet-%E7%9A%84%E8%84%9A%E6%9C%AC/2">
 <meta property="article:published_time" content="2021-10-12T02:34:39.000Z">
-<meta property="article:modified_time" content="2024-03-07T03:45:07.891Z">
+<meta property="article:modified_time" content="2024-03-13T08:04:48.159Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Gradle">
 <meta property="article:tag" content="Python">
@@ -199,7 +199,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-03-07 11:45:07" itemprop="dateModified" datetime="2024-03-07T11:45:07+08:00">2024-03-07</time>
+      <time title="修改时间：2024-03-13 16:04:48" itemprop="dateModified" datetime="2024-03-13T16:04:48+08:00">2024-03-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -223,7 +223,9 @@
     <div class="post-body" itemprop="articleBody"><blockquote>
 <p>本文普适性比较低，仅限于需要在项目里使用多个变体（variant）的开发者。对于gradle打包多变体可以参考我之前写的文章<a target="_blank" rel="noopener" href="https://blog.csdn.net/u011133887/article/details/64919136">Gradle —— 使用 Gradle 打包多个变体（variant）</a></p>
 </blockquote>
-<h2 id="太长不看：项目地址：junerver-flavor-cli"><a href="#太长不看：项目地址：junerver-flavor-cli" class="headerlink" title="太长不看：项目地址：junerver&#x2F;flavor_cli"></a>太长不看：<strong>项目地址：</strong><a target="_blank" rel="noopener" href="https://github.com/junerver/flavor_cli">junerver&#x2F;flavor_cli</a></h2><hr>
+<h2 id="太长不看：项目地址：junerver-flavor-cli"><a href="#太长不看：项目地址：junerver-flavor-cli" class="headerlink" title="太长不看：项目地址：junerver&#x2F;flavor_cli"></a>太长不看：<strong>项目地址：</strong><a target="_blank" rel="noopener" href="https://github.com/junerver/flavor_cli">junerver&#x2F;flavor_cli</a></h2><span id="more"></span>
+
+<hr>
 <h2 id="叨叨叨"><a href="#叨叨叨" class="headerlink" title="叨叨叨"></a>叨叨叨</h2><p>在多变体项目中有一个工作是比较麻烦而且折磨人的，那就是给不同的变体添加自己的 sourceSet。</p>
 <p>每当我们需要将一个 Java 文件，通过变体来实现差异化时，都需要将该文件从 main 中拷贝，移动到所有变体各自的 sourceSet 中，需要根据原 Java 文件的目录结构，在各个变体 sourceSet 中创建相同的目录结构。</p>
 <p>这一工作当变体数量一多、源文件的目录层级一深，简直就是地狱级折磨。</p>

@@ -41,7 +41,7 @@
 <meta property="og:image" content="https://junerver.xyz/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/12">
 <meta property="og:image" content="https://junerver.xyz/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/13">
 <meta property="article:published_time" content="2016-12-23T05:44:00.000Z">
-<meta property="article:modified_time" content="2024-03-07T01:17:59.689Z">
+<meta property="article:modified_time" content="2024-03-13T08:08:21.957Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="DI">
 <meta property="article:tag" content="Dagger2">
@@ -210,7 +210,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-03-07 09:17:59" itemprop="dateModified" datetime="2024-03-07T09:17:59+08:00">2024-03-07</time>
+      <time title="修改时间：2024-03-13 16:08:21" itemprop="dateModified" datetime="2024-03-13T16:08:21+08:00">2024-03-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -236,6 +236,8 @@
 <p>本来打算继续写 MVP 模式的，但是看了网上的几篇 Dagger 介绍的文章后，还是决定先写写 Dagger，网上有些文章写的不是过于简单就是太过复杂，或是不够详实，让刚接触 Dagger 的人容易看的云里雾里。正好也是刚学习 Dagger 没多久，记录下来对自己也是一个查缺补漏。文中如有错误，请各位大佬予以斧正！</p>
 <p>本文示例代码：<a target="_blank" rel="noopener" href="https://github.com/junerver/DaggerDemo">https://github.com/junerver/DaggerDemo</a></p>
 <hr>
+<span id="more"></span>
+
 <h2 id="Dagger2"><a href="#Dagger2" class="headerlink" title="Dagger2"></a>Dagger2</h2><p>注：本文中的 Dagger 都是指 Google 推出的 <a target="_blank" rel="noopener" href="https://github.com/google/dagger">Dagger2</a> </p>
 <p>Dagger 是 Square 公司推出的一个 DI（依赖注入）框架，后来项目被 Google 接手，大家习惯性称之为 Dagger2。</p>
 <p><strong>依赖注入</strong>：可能有的朋友看到依赖注入这四个字就迷惑了，这是什么gui？那你听听控制反转呢？是不是更难懂，更加拗口。其实在我们的程序中存在着大量的依赖，这里的依赖不是指我们的项目依赖第三方库，而是指我们的对象依赖于其他的实例。只要实例 A 中用到了 B 的实例，我们就称之为 A 依赖于 B。比如<code>StringBuffer stringBuffer = new StringBuffer(&quot;hello world&quot;);</code>这里的 StringBuffer 类就依赖于 String 类。</p>
