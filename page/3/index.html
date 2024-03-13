@@ -115,7 +115,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -143,6 +143,132 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/" class="post-title-link" itemprop="url">Kotlin 回调函数在的奇妙玩法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-11-12 16:39:00" itemprop="dateCreated datePublished" datetime="2018-11-12T16:39:00+08:00">2018-11-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-03-07 10:32:27" itemprop="dateModified" datetime="2024-03-07T10:32:27+08:00">2024-03-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>本文涉及到的知识点有：扩展函数、Lambda 表达式的高级应用</p>
+</blockquote>
+<p>在 Android 6.0 之后系统加强了对敏感权限的管理，一些敏感权限必须要通过动态权限申请来获得，本文的内容就从这里展开；</p>
+<p>一个正常的权限申请流程大致是这样的：</p>
+<ol>
+<li>检查是否存在权限</li>
+<li>如果不存在则申请，存在则进入功能</li>
+<li>如果用户拒绝则弹出对话框告知用户权限的用处，并提供跳转到设置页面的功能；</li>
+</ol>
+<p>我使用的是网上比较流行的一个权限申请框架 # <a target="_blank" rel="noopener" href="https://github.com/tbruyelle">tbruyelle</a>&#x2F;<strong><a target="_blank" rel="noopener" href="https://github.com/tbruyelle/RxPermissions">RxPermissions</a></strong> ，当然本文的重点并不是如何使用这个库。</p>
+<p>如上所述，我们在一个应用中可能会有很多需要申请不同权限的位置，我们应该为每处需要敏感权限的位置做类似的处理。虽然我们使用了 RxPermissions，但是还是需要在用户拒绝的位置写大量重复的弹窗提示代码，这一点也不优雅。</p>
+<p>我们都知道在 Kotlin 中函数也是可以作为参数传入的，说道到这里不知道你有没有想起点什么，我们在使用 Java 编写 Android 代码时时常使用的各种 Listener，不就是类似这样的一个情况么？</p>
+<p>我们调用 setXXXListener 函数，并且传入一个接口的匿名内部类实现，这样的操作我们称之为<strong>回调</strong>，我们传入的这个 Listener 被中的方法称为回调函数，在 Kotlin 里我们也可以按照这种方式来书写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Java中的匿名内部类，在 Kotlin 中可以使用 object 实现</span></span><br><span class="line">mBtnCallback.setOnClickListener(<span class="keyword">object</span> :View.OnClickListener&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onClick</span><span class="params">(v: <span class="type">View</span>?)</span></span> &#123;</span><br><span class="line">        println(<span class="string">&quot;onclick&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>也许你在书写类似代码时已经发现了一些端倪：<br><img src="/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/1" alt="Lambda 表达式"></p>
+<p>所有的类似接口，在 Kotlin 中都有一些新的签名，这是因为在 Kotlin 里<strong>函数</strong>也是参数的一种，在 Java 中只包含一个方法的接口，在 Kotlin 中都可以使用 Lambda 表达式来达成一样的效果。</p>
+<p>这样做最大的好处就是简化代码，当我们在阅读代码时更加简洁易读，比如上述代码完全可以简化成：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mBtnCallback.setOnClickListener &#123; println(<span class="string">&quot;onclick&quot;</span>) &#125;</span><br></pre></td></tr></table></figure>
+
+<p>非但如此，以前我们在写一些耗时操作时，通常需要申明一些接口作为回调函数使用，在调用时再用匿名内部类来操作得到的结果，现在你可以这样书写了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">doSomeThingNeedTime</span><span class="params">(call: (<span class="type">response</span>:<span class="type">String</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    Thread.sleep(<span class="number">4000</span>)</span><br><span class="line">    <span class="keyword">var</span> response = <span class="string">&quot;xxxx&quot;</span>  <span class="comment">//我们假装这里进行了网络请求</span></span><br><span class="line">    call(response)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doSomeThingNeedTime &#123; response-&gt;</span><br><span class="line">            println(response)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h3><p>在我们实际应用时其实十分简单，下面的代码也许可以帮你加深对其了解：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//传入权限与权限描述，在需要权限的功能打开之前调用</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Activity.<span class="title">rxRequestPermissions</span><span class="params">(<span class="keyword">vararg</span> permissions: <span class="type">String</span>, describe: <span class="type">String</span>, onGranted:()-&gt;<span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> keylistener = DialogInterface.OnKeyListener &#123; _, keyCode, event -&gt;</span><br><span class="line">        keyCode == KeyEvent.KEYCODE_BACK &amp;&amp; event.repeatCount == <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> dialog = AlertDialog.Builder(<span class="keyword">this</span>)</span><br><span class="line">            .setTitle(<span class="string">&quot;权限申请&quot;</span>)</span><br><span class="line">            .setMessage(<span class="string">&quot;<span class="subst">$&#123;describe&#125;</span>为必选项，开通后方可正常使用APP,请在设置中开启。&quot;</span>)</span><br><span class="line">            .setOnKeyListener(keylistener)</span><br><span class="line">            .setCancelable(<span class="literal">false</span>)</span><br><span class="line">            .setPositiveButton(<span class="string">&quot;去开启&quot;</span>) &#123; _, _ -&gt;</span><br><span class="line"><span class="comment">//                JumpPermissionManagement.GoToSetting(this)</span></span><br><span class="line">                finish()</span><br><span class="line">            &#125;</span><br><span class="line">            .setNegativeButton(<span class="string">&quot;结束&quot;</span>) &#123; _, _ -&gt;</span><br><span class="line">                Toast.makeText(<span class="keyword">this</span>, <span class="string">&quot;<span class="subst">$&#123;describe&#125;</span>权限未开启，不能使用该功能！&quot;</span>, Toast.LENGTH_SHORT).show()</span><br><span class="line">                finish()</span><br><span class="line">            &#125;</span><br><span class="line">            .create()</span><br><span class="line">    <span class="keyword">val</span> rxPermissions = RxPermissions(<span class="keyword">this</span>)</span><br><span class="line">    <span class="comment">//传递kotlin的可变长参数给Java的可变参数的时候需要使用修饰符 * ；这个修饰符叫做Speread Operator</span></span><br><span class="line">    <span class="comment">// 它只支持展开的Array 数组，不支持List集合，它只用于变长参数列表的实参，不能重载，它也不是运算符；</span></span><br><span class="line">    rxPermissions.request(*permissions)</span><br><span class="line">            .subscribe &#123;granted -&gt;</span><br><span class="line">                <span class="keyword">if</span> (granted) &#123;</span><br><span class="line">                    onGranted()</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dialog.show()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码就是我写的 Activity 的一个扩展函数，用于实现我们前文提到的更方便的动态申请权限，请看我们的函数申明：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Activity.<span class="title">rxRequestPermissions</span><span class="params">(<span class="keyword">vararg</span> permissions: <span class="type">String</span>, describe: <span class="type">String</span>, onGranted:()-&gt;<span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>我们传入的前三个参数是分别是：要申请的权限（对于我们的扩展函数而言是一个可变长参数），第二个参数我们使用“key &#x3D; value” 这种形式传递，第三个参数就一个回调函数<code>onGranted:()-&gt;Unit</code>；</p>
+<p>其中 onGranted，是我们自己命名的函数名，冒号后面是我们的函数描述即：没有传入参数，返回值类型为 Unit。在我们的扩展函数体中直接将他作为一个函数调用即可，需要注意的是必须要填写括号，AS的自动补全并不会补全这个括号，没有括号时编译器也不会报错。</p>
+<p><strong>如何使用</strong></p>
+<p>在打开需要申请权限的功能位置，我们只要写下以下的数行代码即可：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mBtnRecord.setOnClickListener &#123;</span><br><span class="line">    rxRequestPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, describe = <span class="string">&quot;相机、存储、录音&quot;</span>) &#123;</span><br><span class="line">        startActivityForResult(Intent(<span class="keyword">this</span><span class="symbol">@MainActivity</span>, VideoRecordActivity::<span class="keyword">class</span>.java), REQUEST_VIDEO)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先传入需要申请的权限、权限描述（key &#x3D; value），第三个参数为一个Lambda表达式，这里进行的是存在权限时需要执行的操作。Lambda 表达式作为函数的最后的一个参数时，我们可以把它放在圆括号外书写。</p>
+<p>最终使用时的效果如下：<br><img src="/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/2" alt="点击时请求权限"></p>
+<p><img src="/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/3" alt="未授予全部权限"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2406,154 +2532,6 @@
 <p>乍一看这段代码没有什么问题，但实际上这里有一个很大的坑。通过在 afterTextChanged 方法上增加 Log 记录可以发现，该方法会被多次的调用，并且在滑动后最终结果变成 0 ，其根本原因是因为 EditText 的重新绘制！当重绘之后 该回调函数没有获取到填充的数据，从而导致了数值都被置为 0 了。</p>
 <p>解决方法很简单，我们只要在每次填充数据之前先移除 TextWatcher 监听器，然后为 EditText 填充数据 ，最后在为 EditText 添加 TextWatcher 监听器，代码如下所示：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onBindViewHolder</span><span class="params">(<span class="keyword">final</span> ViewHolder holder, <span class="keyword">final</span> <span class="type">int</span> position)</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> AssessCheckListBean.<span class="type">CheckBean</span> <span class="variable">taskBean</span> <span class="operator">=</span> dataList.get(position);</span><br><span class="line">        holder.tv_check_title.setText(taskBean.getTeachername());</span><br><span class="line">        <span class="keyword">if</span> (holder.et_check_score.getTag() <span class="keyword">instanceof</span> TextWatcher) &#123;</span><br><span class="line">            holder.et_check_score.removeTextChangedListener((TextWatcher) holder.et_check_score.getTag());</span><br><span class="line">        &#125;</span><br><span class="line">        holder.et_check_score.setText(taskBean.getTeacherscore() + <span class="string">&quot;&quot;</span>);</span><br><span class="line">        <span class="type">TextWatcher</span> <span class="variable">watcher</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TextWatcher</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">beforeTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> count, <span class="type">int</span> after)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onTextChanged</span><span class="params">(CharSequence s, <span class="type">int</span> start, <span class="type">int</span> before, <span class="type">int</span> count)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterTextChanged</span><span class="params">(Editable s)</span> &#123;</span><br><span class="line">                taskBean.setTeacherscore(holder.et_check_score.getText().toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        holder.et_check_score.addTextChangedListener(watcher);</span><br><span class="line">        holder.et_check_score.setTag(watcher);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/13448219.png">
-      <meta itemprop="name" content="Junerver">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Junerver">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Junerver">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/" class="post-title-link" itemprop="url">在项目中集成Freeline来提升编译速度【已失效】</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2017-03-20 10:30:21" itemprop="dateCreated datePublished" datetime="2017-03-20T10:30:21+08:00">2017-03-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-03-07 09:02:49" itemprop="dateModified" datetime="2024-03-07T09:02:49+08:00">2024-03-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>转载请标明出处：<a target="_blank" rel="noopener" href="http://www.jianshu.com/p/e1772bfa9a96">http://www.jianshu.com/p/e1772bfa9a96</a></p>
-</blockquote>
-<p><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/webp" alt="img"></p>
-<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>作为一名 Androider 你应该也曾被 AS 那缓慢的编译速度所折磨 ，更为可怕的是即使你只是简单的修改了几行代码，修改了几个布局文件，当你再次运行的时候还是需要再次进行：「编译项目」—「安装 APK 到手机」。这两个步骤在我这台机器上，快则 4、5 分钟，慢则需要 10 多分钟，调试过程异常痛苦！</p>
-<p>Google 推出过加快编译速度的解决方案 「Instant Run」，但是用过的朋友应该都知道，这个功能很多时候存在这一些神奇的 BUG，或者是无法应用的情况，而且速度提升有限。</p>
-<p>还有一个比较不错的且简单易用的插件，名为 「<a target="_blank" rel="noopener" href="https://zeroturnaround.com/software/jrebel-for-android/">JRebel for Android</a>」，这个插件的功能十分强大，编译速度也很快，但是这个插件是付费插件。</p>
-<p>今天我们要介绍的主角是「Freeline」，这是阿里巴巴蚂蚁金服旗下的几位工程师推出的 Android 平台下的秒级编译方案，Github 地址为：<a target="_blank" rel="noopener" href="https://github.com/alibaba/freeline">https://github.com/alibaba/freeline</a>。功能十分强大，在第一次全量编译之后，每次启动从编译到部署到手机全程用时都在数秒之内！可以大大提高开发调试的速度与效率！</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>「Freeline」 推荐的方式为直接安装 Android Studio 插件来使用，但是在实际使用过程中，可能会出现<strong>无法下载「Freeline」 的二进制依赖</strong>，而导致使用失败，使用 Gradle 命令行指令也会存在同样的问题。因此我推荐大家按照我下面的步骤来进行，可以确保万无一失！</p>
-<h3 id="0-准备工作"><a href="#0-准备工作" class="headerlink" title="0 准备工作"></a>0 准备工作</h3><p>对于 Windows 用户来说，你需要提前安装 Python 2.7+（Freeline 暂时还不支持 Python 3+），安装完之后需要重启一下 Android Studio。</p>
-<p>对于 Linux&#x2F;Mac 用户，如果你已经安装了 Python 3+，推荐你将其 alias 设为 python3，再单独安装 Python 2.7+，并作为默认的 Python 指令，避免与 Android Studio 插件自动运行的 python 命令冲突，导致无法正常使用插件。</p>
-<h3 id="1-安装-Android-Studio-插件"><a href="#1-安装-Android-Studio-插件" class="headerlink" title="1 安装 Android Studio 插件"></a>1 安装 Android Studio 插件</h3><p>使用插件可以自动的帮我们在项目 build.gradle 文件中添加各种依赖，从而省去了我们自己修改 build.gradle 文件的步骤。<br><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/format,png" alt="安装 Freeline 插件"></p>
-<p>点击运行 Freeline，在第一次运行插件时，会有如下提示：<br><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/format1,png" alt="提示是否自动初始化"></p>
-<p>大致意思是：检测到我们的项目没有初始化 Freeline，是否自动安装 Freeline？</p>
-<p>我们点击 <strong>Install Freeline Automatically</strong> ，然后选择同步 build.gradle 文件。</p>
-<p>再次点击运行 Freeline，来编译项目并部署到手机，这时如果出现了如下图的错误，不要惊慌，请按照接下来的步骤进行</p>
-<p><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/form3at,png" alt="提示执行 Gradle task"></p>
-<h3 id="2-运行-Gradle-task-：-initFreeline"><a href="#2-运行-Gradle-task-：-initFreeline" class="headerlink" title="2 运行 Gradle task ： initFreeline"></a>2 运行 Gradle task ： initFreeline</h3><p>根据提示内容「执行 initFreeline 任务并下在依赖」，我们点开右侧边栏的 Gradle 选项卡，选择执行：「Application」—「Application」—「Tasks」—「other」—「initFreeline」</p>
-<p><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/forma4t,png" alt="具体位置"></p>
-<p>这时如果你能成功执行完毕，那么恭喜你，You are a lucky dog！</p>
-<p>相信绝多数的小伙伴都是卡在无比漫长的下载过程中了，如下图所示：</p>
-<p><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/for23mat,png" alt="无比漫长的下载过程"></p>
-<p>参考 <a target="_blank" rel="noopener" href="https://www.freelinebuild.com/docs/zh_cn/">Freeline 的手册</a>可以看到，官方有考虑到这个问题，并且提供了我们其他的解决方法，比如使用 Gradle 指令：<code>gradlew initFreeline -Pmirror</code> 来将下载指向国内的镜像网站。</p>
-<p>注意如果在 Linux&#x2F;Mac 环境下需要使用指令 <code>./gradlew initFreeline -Pmirror</code> ，否则你可能会出现如下提示 <code>gradlew: 未找到命令</code>。</p>
-<p>这时如果你能成功执行完毕，那么恭喜你，You are a lucky dog！</p>
-<p>如果你的执行结果如下图：<br><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/form124at,png" alt="手动初始化失败"></p>
-<p>那么恭喜你，请继续收看步骤三。</p>
-<h3 id="3-手动下载-Freeline-依赖并初始化"><a href="#3-手动下载-Freeline-依赖并初始化" class="headerlink" title="3 手动下载 Freeline 依赖并初始化"></a>3 手动下载 Freeline 依赖并初始化</h3><p>使用任何加载工具下载如下链接：<a target="_blank" rel="noopener" href="http://static.freelinebuild.com/freeline/0.8.6/all/freeline.zip">http://static.freelinebuild.com/freeline/0.8.6/all/freeline.zip</a></p>
-<p>请注意版本，本文使用的是 0.8.6 版本，请根据你使用的版本来调整下载链接。</p>
-<p>下载完毕后，讲该文件保存在一个好记的位置，因为稍后要输入该文件的位置。</p>
-<p>在 Terminal 中使用指令 <code>./gradlew initfreeline -PfreelineLocal=&quot;/home/junerver/Freeline/freeline.zip&quot;</code> 来使用本地依赖来进行初始化（博主使用的是 Debian 8.7.1，如果使用的是 Windows 系统请去掉 <code>./</code>）。</p>
-<p><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/442" alt="使用本地依赖进行初始化成功"><br>恭喜你，执行到这一步，我们就已经成功的在项目中集成了 Freeline。</p>
-<h3 id="4-运行插件使用-Freeline"><a href="#4-运行插件使用-Freeline" class="headerlink" title="4 运行插件使用 Freeline"></a>4 运行插件使用 Freeline</h3><p>这个步骤就是最终一步了，我们再次点击 Freeline 插件的图标来运行 Freeline，注意第一次运行的时候会进行一次全量编译，再之后的运行都是增量编译，如下图所示：</p>
-<p><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/for332mat,png" alt="第一次全量编译"></p>
-<p>由于是一个空的项目，所以第一次运行一共用了 28.8 秒，我们来随便的修改一下布局文件，然后再次运行 Freeline 看一下时间：</p>
-<p><img src="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/fo5552rmat,png" alt="增量编译耗时极短"></p>
-<p>从编译到部署到手机一共只用了 0.7 秒，可以看到这个提速效果真的是非常的明显。</p>
-<h2 id="一些补充"><a href="#一些补充" class="headerlink" title="一些补充"></a>一些补充</h2><h3 id="局限"><a href="#局限" class="headerlink" title="局限"></a>局限</h3><p>看了上面的文章，你会感叹 Freeline 的强大，但它也还是有一些不足之处的，比如：仅支持 Java 语言，对其他的基于 JVM 语言（如 Kotlin）不支持；不支持删除带id的资源，否则可能导致aapt编译出错；不支持开启 Jack 编译等等，但是总体看来还是瑕不掩瑜的。</p>
-<h3 id="一些有用的命令行指令"><a href="#一些有用的命令行指令" class="headerlink" title="一些有用的命令行指令"></a>一些有用的命令行指令</h3><p>大多数情况下我们使用插件就可以解决问题，但有时也会出现一些奇怪的 BUG，这时候你可能会需要用到一下的一个 Gradle 指令：</p>
-<p><strong>Gradle Task: checkBeforeCleanBuild</strong><br>主要用于生成工程描述文件，每次 freeline 全量编译前会先执行一下这个任务。当你执行 python 命令提示报错的时候：freeline_core.exceptions.NoConfigFoundException: xxxxxx&#x2F;project_description.json not found, please execute gradlew checkBeforeCleanBuild first.，也需要先执行一下gradlew checkBeforeCleanBuild。</p>
-<p><strong>freeline.py</strong></p>
-<p>使用 freeline 进行编译的主要入口，freeline 主要通过 python 来实现跨平台。</p>
-<p>参数：</p>
-<pre><code>-h
-    使用方式：python freeline.py -h
-    参数说明：输出 freeline 的参数使用说明
--v
-    使用方式：python freeline.py -v
-    参数说明：获取 freeline.py 的版本号
--f
-    使用方式：python freeline.py -f
-    参数说明：强制进行全量编译
--d
-    使用方式：python freeline.py -d（注：可与各类参数叠加使用）
-    参数说明：输出 freeline 的调试日志（注意：不是对 Android 工程进行调试）
--w
-    使用方式：python freeline.py -f -w
-    参数说明：让应用启动的时候等待调试工具连接（目前只支持全量编译的时候配合使用），日常调试推荐直接使用 Android Studio 的attach debugger to Android process
-</code></pre>
-<p>感谢你的阅读，如果可以对你有一些微小的帮助，请点击喜欢+收藏，转载请标明出处。</p>
 
       
     </div>

@@ -115,7 +115,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-count">69</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -143,6 +143,202 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">Compose学习笔记2 - LaunchedEffect、状态与 状态管理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-02-15 08:38:01" itemprop="dateCreated datePublished" datetime="2022-02-15T08:38:01+08:00">2022-02-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-03-11 13:53:56" itemprop="dateModified" datetime="2024-03-11T13:53:56+08:00">2024-03-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="在-Compose-中使用协程"><a href="#在-Compose-中使用协程" class="headerlink" title="在 Compose 中使用协程"></a>在 Compose 中使用协程</h1><p>Kotlin 中协程有多好用，想必不用我多说了。方便的构建、简洁的切换协程语法、<code>await</code>函数与<code>join</code>函数，尤其是在 lifecycle 扩展出现之后，在 Activity 与 Fragment 中可以通过类似 <code>lifecycleScope.launch &#123;  &#125;</code> 这样的语法更方便的使用协程。</p>
+<p>之前我们介绍过，Compose 是 FP 风格的，UI是通过一个个Composable函数组合在一起形成的，自然不能用<code>lifecycleScope.launch &#123;  &#125;</code>，那么在 Compose 中我们该如何使用协程呢？</p>
+<h2 id="LaunchedEffect"><a href="#LaunchedEffect" class="headerlink" title="LaunchedEffect"></a>LaunchedEffect</h2><p>答案就是 <strong>LaunchedEffect</strong> ！，单纯使用的话我们可以把他看过是 Compose 里的 <code>launch&#123;&#125;</code> 函数。用法非常的简单：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Greeting</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    Text(text = <span class="string">&quot;Hello <span class="variable">$name</span>!&quot;</span>)</span><br><span class="line">    LaunchedEffect(<span class="literal">null</span>) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">&quot;这个block执行在协程<span class="subst">$&#123;Thread.currentThread().name&#125;</span>中&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上面所说，如果你只是要一个 <code>launch&#123;&#125;</code> 函数，这样写就可以，但是它还有更高级的用法！<br>我们先来看一下这个函数的源码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="meta">@NonRestartableComposable</span></span><br><span class="line"><span class="meta">@OptIn(InternalComposeApi::class)</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">LaunchedEffect</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    key1: <span class="type">Any</span>?,</span></span></span><br><span class="line"><span class="params"><span class="function">    block: <span class="type">suspend</span> <span class="type">CoroutineScope</span>.() -&gt; <span class="type">Unit</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> applyContext = currentComposer.applyCoroutineContext</span><br><span class="line">    remember(key1) &#123; LaunchedEffectImpl(applyContext, block) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title class_">LaunchedEffectImpl</span>(</span><br><span class="line">    parentCoroutineContext: CoroutineContext,</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> task: <span class="keyword">suspend</span> CoroutineScope.() -&gt; <span class="built_in">Unit</span></span><br><span class="line">) : RememberObserver &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> scope = CoroutineScope(parentCoroutineContext)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> job: Job? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onRemembered</span><span class="params">()</span></span> &#123;</span><br><span class="line">        job?.cancel(<span class="string">&quot;Old job was still running!&quot;</span>)</span><br><span class="line">        job = scope.launch(block = task)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onForgotten</span><span class="params">()</span></span> &#123;</span><br><span class="line">        job?.cancel()</span><br><span class="line">        job = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAbandoned</span><span class="params">()</span></span> &#123;</span><br><span class="line">        job?.cancel()</span><br><span class="line">        job = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如需从可组合项内安全调用挂起函数，请使用 <code>LaunchedEffect</code> 可组合项。当<code>LaunchedEffect</code>  进入组合时，它会启动一个协程，并将代码块作为参数传递。如果 <code>LaunchedEffect</code>  退出组合，协程将取消。如果使用不同的键重组 <code>LaunchedEffect</code> ，系统将取消现有协程，并在新的协程中启动新的挂起函数。</p>
+</blockquote>
+<p>从源码可以看出我们传入的希望在协程中执行的 block，确实也是通过创建一个 <code>CoroutineScope</code> ，最终通过 <code>launch&#123;&#125;</code> 函数执行的。但是通过 <code>remember&#123;&#125;</code> 与 <code>LaunchedEffectImpl</code> 的配合，实现了当 key1 参数的值发生变化时，上一个 job 取消，然后重新执行 block。</p>
+<p>需要注意的是，这里使用的 remember 函数，和我们之前在笔记1介绍的 remember 函数并不是同一个，注意区分。</p>
+<h5 id="这样做有什么好处？"><a href="#这样做有什么好处？" class="headerlink" title="这样做有什么好处？"></a>这样做有什么好处？</h5><p>在 Composable 函数中使用协程，好处与必要性都不言而喻，我们可以更多的书写复杂逻辑。而配合 key1 变化，上一个携程取消，再次执行新的协程，我们可以实现更多的响应式逻辑。<br>例如下拉刷，我们给 key1 传递一个 MutableState，我们可以在 block 里判断，当<code>State == Refresh</code> 时执行网络请求。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Greeting</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> state <span class="keyword">by</span> remember &#123;</span><br><span class="line">        mutableStateOf(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> resp <span class="keyword">by</span> remember &#123;</span><br><span class="line">        mutableStateOf(<span class="string">&quot;hello <span class="variable">$name</span>!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    LaunchedEffect(state) &#123;</span><br><span class="line">        delay(<span class="number">400</span>)</span><br><span class="line">        resp = <span class="string">&quot;state:<span class="subst">$&#123;state&#125;</span>\n这个block执行在协程<span class="subst">$&#123;Thread.currentThread().name&#125;</span>中&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    Column &#123;</span><br><span class="line">        Text(text = resp)</span><br><span class="line">        Button(</span><br><span class="line">            onClick = &#123; ++state &#125;,</span><br><span class="line">            modifier = Modifier</span><br><span class="line">                .height(<span class="number">50.</span>dp)</span><br><span class="line">                .width(<span class="number">100.</span>dp)</span><br><span class="line">        ) &#123;</span><br><span class="line">            Text(text = <span class="string">&quot;点一点&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h1 id="状态与状态管理"><a href="#状态与状态管理" class="headerlink" title="状态与状态管理"></a>状态与状态管理</h1><p>参考官方文档<a target="_blank" rel="noopener" href="https://developer.android.google.cn/jetpack/compose/state">状态和 Jetpack Compose</a></p>
+<h2 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h2><h3 id="remember"><a href="#remember" class="headerlink" title="remember"></a>remember</h3><p>上一节我们介绍过 <code>remember&#123;&#125;</code> 函数就是我们用于保存 Composable 的状态的，我们通常要用 State 来保存状态，从而达成响应式。</p>
+<p>在可组合项中声明 MutableState 对象的方法有三种：</p>
+<ul>
+<li><code>val mutableState = remember &#123; mutableStateOf(default) &#125;</code></li>
+<li><code>var value by remember &#123; mutableStateOf(default) &#125;</code></li>
+<li><code>val (value, setValue) = remember &#123; mutableStateOf(default) &#125;</code></li>
+</ul>
+<hr>
+<p>第三种写法看起来很奇特，如果没有接触过 Koltin，会有一点懵圈，看一下源码就能理解了。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Stable</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">MutableState</span>&lt;<span class="type">T</span>&gt; : <span class="type">State</span>&lt;<span class="type">T</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">var</span> value: T</span><br><span class="line">    <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">component1</span><span class="params">()</span></span>: T</span><br><span class="line">    <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">component2</span><span class="params">()</span></span>: (T) -&gt; <span class="built_in">Unit</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意 <code>component1</code> 与 <code>component2</code>，他就对应着声明时括号里的 <code>value</code> 与 <code>setValue</code>。这种高级特效被被称之为解构声明。</p>
+<p>这种用法在 for 循环中其实也有应用，比如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ((index, value) <span class="keyword">in</span> array.withIndex()) &#123;</span><br><span class="line">    println(<span class="string">&quot;the element at <span class="variable">$index</span> is <span class="variable">$value</span>&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">IndexedValue</span>&lt;<span class="type">out T</span>&gt;(<span class="keyword">public</span> <span class="keyword">val</span> index: <span class="built_in">Int</span>, <span class="keyword">public</span> <span class="keyword">val</span> value: T)</span><br></pre></td></tr></table></figure>
+<p><code>withIndex()</code> 函数是 kotlin 为 Iterable 实现的一个扩展函数，他的最终返回其实是一个 <code>data class</code>，<code>data class</code> 默认实现了 component。</p>
+<p>更多文档请参考：<a target="_blank" rel="noopener" href="https://www.kotlincn.net/docs/reference/multi-declarations.html">解构声明</a></p>
+<hr>
+<p>虽然 <code>remember</code> 可帮助您在重组后保持状态，但不会帮助您在配置更改后保持状态。为此，您必须使用 <code>rememberSaveable</code>。<code>rememberSaveable</code> 会自动保存可保存在 Bundle 中的任何值。对于其他值，您可以将其传入自定义 Saver 对象。</p>
+<h3 id="其他受支持的状态类型"><a href="#其他受支持的状态类型" class="headerlink" title="其他受支持的状态类型"></a>其他受支持的状态类型</h3><blockquote>
+<p>Jetpack Compose 并不要求您使用 MutableState<T> 存储状态。Jetpack Compose 支持其他可观察类型。在 Jetpack Compose 中读取其他可观察类型之前，<em><strong>您必须将其转换为 State<T>，以便 Jetpack Compose 可以在状态发生变化时自动重组界面</strong></em>。<br>Compose 附带一些可以根据 Android 应用中使用的常见可观察类型创建 State<T> 的函数：</p>
+<ul>
+<li>LiveData</li>
+<li>Flow</li>
+<li>RxJava2</li>
+</ul>
+<p>如果您的应用使用自定义可观察类，您可以构建扩展函数，以使 Jetpack Compose 读取其他可观察类型。如需查看具体操作方法的示例，请参阅内置函数的实现。任何允许 Jetpack Compose 订阅每项更改的对象都可以转换为 State<T> 并由可组合项读取。</p>
+</blockquote>
+<p>在上一节我们也演示了 Flow 在 Compose 中的用法，对就是扩展函数 <code>collectAsState()</code>。</p>
+<h2 id="状态提升"><a href="#状态提升" class="headerlink" title="状态提升"></a>状态提升</h2><p>通过前面的学习我们已经知道了该如何使用状态，以及使用状态更新 Compose UI界面。在每个 Composable 函数中都可以通过 <code>remember&#123;&#125;</code> 来实现 Stateful，有的时候这很好用，但有的场景我们也许不应该这样使用。</p>
+<p>例如，当我们实现的 Composable 组件会在多个界面复用，如果它自身持有状态，对于调用者而言，显示是相对复杂切不易使用的，我们往往需要去查看代码才能理解，这种情况下，我们可以通过「状态提升」，来实现 Composable 函数的「无状态」。</p>
+<p>Compose 中的状态提升是一种将状态移至 Composable 函数的调用方，以使 Composable 无状态的模式。Jetpack Compose 中的常规状态提升模式是将状态变量替换为两个参数：</p>
+<ul>
+<li><code>value: T</code>：要显示的当前值</li>
+<li><code>onValueChange: (T) -&gt; Unit</code>：请求更改值的事件，其中 T 是建议的新值</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">HelloScreen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    HelloContent()</span><br><span class="line">    <span class="keyword">var</span> name <span class="keyword">by</span> rememberSaveable &#123; mutableStateOf(<span class="string">&quot;&quot;</span>) &#125;</span><br><span class="line">    <span class="comment">//两种不同的状态提升</span></span><br><span class="line">    HelloContent(value = name, onValueChange = &#123; name = it &#125;)</span><br><span class="line">    HelloContent(rememberSaveable &#123; mutableStateOf(<span class="string">&quot;&quot;</span>) &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">HelloContent</span><span class="params">()</span></span> &#123;</span><br><span class="line">    Column(modifier = Modifier.padding(<span class="number">16.</span>dp)) &#123;</span><br><span class="line">        <span class="keyword">var</span> name <span class="keyword">by</span> remember &#123; mutableStateOf(<span class="string">&quot;&quot;</span>) &#125;</span><br><span class="line">        <span class="keyword">if</span> (name.isNotEmpty()) &#123;</span><br><span class="line">            Text(</span><br><span class="line">                text = <span class="string">&quot;Hello, <span class="variable">$name</span>!&quot;</span>,</span><br><span class="line">                modifier = Modifier.padding(bottom = <span class="number">8.</span>dp),</span><br><span class="line">                style = MaterialTheme.typography.h5</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">        OutlinedTextField(</span><br><span class="line">            value = name,</span><br><span class="line">            onValueChange = &#123; name = it &#125;,</span><br><span class="line">            label = &#123; Text(<span class="string">&quot;Name&quot;</span>) &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">HelloContent</span><span class="params">(value: <span class="type">String</span>, onValueChange: (<span class="type">String</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    Column(modifier = Modifier.padding(<span class="number">16.</span>dp)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (value.isNotEmpty()) &#123;</span><br><span class="line">            Text(</span><br><span class="line">                text = <span class="string">&quot;Hello, <span class="variable">$value</span>!&quot;</span>,</span><br><span class="line">                modifier = Modifier.padding(bottom = <span class="number">8.</span>dp),</span><br><span class="line">                style = MaterialTheme.typography.h5</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">        OutlinedTextField(</span><br><span class="line">            value = value,</span><br><span class="line">            onValueChange = onValueChange,</span><br><span class="line">            label = &#123; Text(<span class="string">&quot;Name&quot;</span>) &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">HelloContent</span><span class="params">(state: <span class="type">MutableState</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name <span class="keyword">by</span> state</span><br><span class="line">    Column(modifier = Modifier.padding(<span class="number">16.</span>dp)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (name.isNotEmpty()) &#123;</span><br><span class="line">            Text(</span><br><span class="line">                text = <span class="string">&quot;Hello, <span class="variable">$name</span>!&quot;</span>,</span><br><span class="line">                modifier = Modifier.padding(bottom = <span class="number">8.</span>dp),</span><br><span class="line">                style = MaterialTheme.typography.h5</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">        OutlinedTextField(</span><br><span class="line">            value = name,</span><br><span class="line">            onValueChange = &#123; name = it &#125;,</span><br><span class="line">            label = &#123; Text(<span class="string">&quot;Name&quot;</span>) &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>观察上面的代码可以很容易理解这句话的意思，所以「状态提升」还是很形象的，Composable 的状态，从自己管理与处理，提升给了调用者。这其实是 Compose 的一个重要编程思想，可以看到 Compose 自生也很好的贯彻了这一思想。</p>
+<p>例如上面示例中的 <code>OutlinedTextField</code>，作为一个输入框，如果调用者不处理其状态，他甚至连最基本的输入回显都做不到！</p>
+<h3 id="状态提升主要注意的事项"><a href="#状态提升主要注意的事项" class="headerlink" title="状态提升主要注意的事项"></a>状态提升主要注意的事项</h3><blockquote>
+<p>以这种方式提升的状态具有一些重要的属性：</p>
+<ul>
+<li><strong>单一可信来源</strong>：我们会通过移动状态而不是复制状态，来确保只有一个可信来源。这有助于避免 bug。</li>
+<li><strong>封装</strong>：只有有状态可组合项能够修改其状态。这完全是内部的。</li>
+<li><strong>可共享</strong>：可与多个可组合项共享提升的状态。如果想在另一个可组合项中执行 name 操作，可以通过变量提升来做到这一点。</li>
+<li><strong>可拦截</strong>：无状态可组合项的调用方可以在更改状态之前决定忽略或修改事件。</li>
+<li><strong>解耦</strong>：无状态 ExpandingCard 的状态可以存储在任何位置。例如，现在可以将 name 移入 ViewModel。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>通过从 <code>HelloContent</code> 中提升出状态，更容易推断该可组合项、在不同的情况下重复使用它，以及进行测试。<code>HelloContent</code> 与状态的存储方式解耦。解耦意味着，如果您修改或替换 <code>HelloScreen</code>，不必更改 <code>HelloContent</code> 的实现方式。</p>
+</blockquote>
+<p><img src="/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/9392c29afda84d3bb098c034d0734471~tplv-k3u1fbpfcp-zoom-1.image" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>状态下降、事件上升的这种模式称为“单向数据流”。在这种情况下，状态会从 <code>HelloScreen</code> 下降为 <code>HelloContent</code>，事件会从 <code>HelloContent</code> 上升为 <code>HelloScreen</code>。通过遵循单向数据流，您可以将在界面中显示状态的可组合项与应用中存储和更改状态的部分解耦。</p>
+</blockquote>
+<p>上面这段话眼熟不？这不就是 MVI 架构的编程思想么！可见 Compose 其实就是 MVI 的。</p>
+<h2 id="恢复状态"><a href="#恢复状态" class="headerlink" title="恢复状态"></a>恢复状态</h2><p>参考文档：<a target="_blank" rel="noopener" href="https://developer.android.google.cn/jetpack/compose/state#restore-ui-state">在 Compose 中恢复状态</a></p>
+<p>这个没啥太多好说的，注意一下几个点就行：</p>
+<h4 id="rememberSaveable"><a href="#rememberSaveable" class="headerlink" title="rememberSaveable"></a>rememberSaveable</h4><p> 试试我们上面写的三个不同的 Composable，他们看起来效果完全相同，区别只是一个用的是 <code>remember&#123;&#125;</code> 函数，另一个用的是 <code>rememberSaveable</code> 函数，但当你试着选装屏幕或变更设置后，你会发现用<code>remember&#123;&#125;</code> 函数实现的状态消失了，所以当我们想要在屏幕旋转后还能保持状态，我们需要使用用 <code>rememberSaveable</code> 。他与 <code>savedInstanceState</code> 很相似，数据都是保存在 <code>Bundle</code> 之中的，因此可保存的数据类型也与 Bundle 的要求一致。</p>
+<h4 id="Parcelize"><a href="#Parcelize" class="headerlink" title="Parcelize"></a>Parcelize</h4><p>参考文档：<a target="_blank" rel="noopener" href="https://developer.android.com/kotlin/parcelize">Parcelize</a></p>
+<p>如何使用 <em><strong>Parcelize</strong></em> ：</p>
+<ol>
+<li>添加插件<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;   </span><br><span class="line">    id <span class="string">&#x27;kotlin-parcelize&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>为类添加注解 <code>@Parcelize</code><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.parcelize.Parcelize</span><br><span class="line"><span class="meta">@Parcelize</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>(<span class="keyword">val</span> firstName: String, <span class="keyword">val</span> lastName: String, <span class="keyword">val</span> age: <span class="built_in">Int</span>): Parcelable</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<p>如何在 <em><strong>rememberSaveable</strong></em> 中使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Parcelize</span></span><br><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">City</span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> country: String) : Parcelable</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">CityScreen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> selectedCity = rememberSaveable &#123;</span><br><span class="line">        mutableStateOf(City(<span class="string">&quot;Madrid&quot;</span>, <span class="string">&quot;Spain&quot;</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方法是最简单、最易用的，绝大多数情况我们都应该优先使用该方法。</p>
+<h4 id="MapSaver"><a href="#MapSaver" class="headerlink" title="MapSaver"></a>MapSaver</h4><p>如果某种原因导致 @Parcelize 不合适，您可以使用 mapSaver 定义自己的规则，规定如何将对象转换为系统可保存到 Bundle 的一组值。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">City</span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> country: String)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> CitySaver = run &#123;</span><br><span class="line">    <span class="keyword">val</span> nameKey = <span class="string">&quot;Name&quot;</span></span><br><span class="line">    <span class="keyword">val</span> countryKey = <span class="string">&quot;Country&quot;</span></span><br><span class="line">    mapSaver(</span><br><span class="line">        save = &#123; mapOf(nameKey to it.name, countryKey to it.country) &#125;,</span><br><span class="line">        restore = &#123; City(it[nameKey] <span class="keyword">as</span> String, it[countryKey] <span class="keyword">as</span> String) &#125;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">CityScreen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> selectedCity = rememberSaveable(stateSaver = CitySaver) &#123;</span><br><span class="line">        mutableStateOf(City(<span class="string">&quot;Madrid&quot;</span>, <span class="string">&quot;Spain&quot;</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="ListSaver"><a href="#ListSaver" class="headerlink" title="ListSaver"></a>ListSaver</h4><p>为了避免需要为映射定义键，您也可以使用 listSaver 并将其索引用作键：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">City</span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> country: String)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> CitySaver = listSaver&lt;City, Any&gt;(</span><br><span class="line">    save = &#123; listOf(it.name, it.country) &#125;,</span><br><span class="line">    restore = &#123; City(it[<span class="number">0</span>] <span class="keyword">as</span> String, it[<span class="number">1</span>] <span class="keyword">as</span> String) &#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">CityScreen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> selectedCity = rememberSaveable(stateSaver = CitySaver) &#123;</span><br><span class="line">        mutableStateOf(City(<span class="string">&quot;Madrid&quot;</span>, <span class="string">&quot;Spain&quot;</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>Tips</strong></em>：记不记得上一篇文章中介绍的 <code>viewModel()</code> 函数，如果状态被保存到 VM 中也能实现 <code>rememberSaveable</code> 相似的效果，原因很简单，无需多说。</p>
+<h2 id="管理状态"><a href="#管理状态" class="headerlink" title="管理状态"></a>管理状态</h2><p>Compose 中大致有这管理状态的方式：</p>
+<ol>
+<li>Composable 函数自行通过 <code>remember&#123;&#125;</code> 函数管理自己的状态</li>
+<li>通过「状态提升」将值与事件提升给更上一级的调用者管理</li>
+<li>创建状态容器类，使用 <code>remember&#123;&#125;</code> 函数包装</li>
+<li>使用 ViewModel 托管状态，在需要使用状态的地方通过 <code>viewMode()</code> 函数获取状态。</li>
+</ol>
+<p>怎么管理状态是一种选择，没有正确错误之分，只有应用场景是否合适，只要团队统一即可，一般来说我们还是使用 ViewModel 比较符合习惯。</p>
+<h2 id="类比-Flutter"><a href="#类比-Flutter" class="headerlink" title="类比 Flutter"></a>类比 Flutter</h2><p>如果用 Flutter 做比较，我们可以这样来理解 Compose：</p>
+<ul>
+<li>在不使用状态时，每一个 Composable 函数相当于 一个 StatelessWidget。</li>
+<li>当使在 Composable 函数中用 <code>remember&#123;&#125;</code>  获取状态后，相当于 一个 StatefulWidget。</li>
+<li>有状态的 Composable 函数，相当于 Flutter 中的 State 的 <code>Widget build(BuildContext context)</code> 函数。</li>
+<li>Compose 的状态发生变化时，Composable 函数会自动重组，相当于 Flutter State 的 rebuild。</li>
+<li>Composable 函数，没有类似 <code>initState()</code> 这样的仅执行一次函数，因此需要注意一些逻辑代码的执行时机，防止出现死循环。想实现仅执行一次这样的效果，可以通过前面介绍的 <code>LaunchedEffect</code> 函数，为其参数 key1 赋值一个无状态值来达成，例如：<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Greeting</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> counter <span class="keyword">by</span> remember &#123; mutableStateOf(<span class="number">0</span>) &#125;</span><br><span class="line">    <span class="keyword">var</span> visible <span class="keyword">by</span> remember &#123; mutableStateOf(<span class="literal">true</span>) &#125;</span><br><span class="line">    LaunchedEffect(key1 = <span class="built_in">Unit</span>, block = &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">&quot;我只会在Composable第一次执行时才会执行，后续状态变化不会再次调用&quot;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    Column &#123;</span><br><span class="line">        <span class="keyword">if</span> (visible) &#123;</span><br><span class="line">            Text(text = <span class="string">&quot;Hello <span class="variable">$name</span>!<span class="subst">$&#123;counter&#125;</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        Button(</span><br><span class="line">            onClick = &#123;</span><br><span class="line">                counter += <span class="number">1</span></span><br><span class="line">                visible = !visible</span><br><span class="line">            &#125;,</span><br><span class="line">            modifier = Modifier</span><br><span class="line">                .height(<span class="number">50.</span>dp)</span><br><span class="line">                .width(<span class="number">100.</span>dp)</span><br><span class="line">        ) &#123;</span><br><span class="line">            Text(text = <span class="string">&quot;点一下&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2290,132 +2486,6 @@
 <h2 id="如果我们的传入参数是一个用户，但是我们最终想要的结果是用户全部订单（List）中的全部商品的集合，这时我们就需要flatMap-铺平。"><a href="#如果我们的传入参数是一个用户，但是我们最终想要的结果是用户全部订单（List）中的全部商品的集合，这时我们就需要flatMap-铺平。" class="headerlink" title="如果我们的传入参数是一个用户，但是我们最终想要的结果是用户全部订单（List）中的全部商品的集合，这时我们就需要flatMap 铺平。"></a>如果我们的传入参数是一个用户，但是我们最终想要的结果是用户全部订单（List）中的全部商品的集合，这时我们就需要<code>flatMap</code> 铺平。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> Customer.orderedProducts: Set&lt;Product&gt; <span class="keyword">get</span>() &#123;</span><br><span class="line">    <span class="comment">// Return all products this customer has ordered</span></span><br><span class="line">    <span class="comment">//返回用户全部订单中所有的商品种类</span></span><br><span class="line">    <span class="keyword">return</span> orders.flatMap &#123;</span><br><span class="line">        it.products</span><br><span class="line">    &#125;.toSet()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> Shop.allOrderedProducts: Set&lt;Product&gt; <span class="keyword">get</span>() &#123;</span><br><span class="line">    <span class="comment">// Return all products that were ordered by at least one customer</span></span><br><span class="line">    <span class="comment">//返回商店中全部的至少被一位用户下单过的商品</span></span><br><span class="line">   customers.flatMap &#123;</span><br><span class="line">        it.orders</span><br><span class="line">    &#125;.flatMap &#123;</span><br><span class="line">        it.products</span><br><span class="line">    &#125;.toSet()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> customers.flatMap &#123;</span><br><span class="line">        it.orderedProducts</span><br><span class="line">    &#125;.toSet()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h2 id="取最大值函数：max-、maxBy-根据传入的选择器找出集合中最大的成员"><a href="#取最大值函数：max-、maxBy-根据传入的选择器找出集合中最大的成员" class="headerlink" title="取最大值函数：max()、maxBy{} 根据传入的选择器找出集合中最大的成员"></a>取最大值函数：<code>max()</code>、<code>maxBy&#123;&#125;</code> 根据传入的选择器找出集合中最大的成员<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Customer.<span class="title">getMostExpensiveOrderedProduct</span><span class="params">()</span></span>: Product? &#123;</span><br><span class="line">    <span class="comment">// Return the most expensive product which has been ordered</span></span><br><span class="line">    <span class="keyword">return</span> orders.flatMap &#123;</span><br><span class="line">        it.products    <span class="comment">//订单铺平成商品</span></span><br><span class="line">    &#125;.maxBy &#123;</span><br><span class="line">        it.price <span class="comment">//取出商品中价格最大的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h2 id="排序函数：sortedBy-根据传入的选择器升序排列"><a href="#排序函数：sortedBy-根据传入的选择器升序排列" class="headerlink" title="排序函数：sortedBy{} 根据传入的选择器升序排列"></a>排序函数：<code>sortedBy&#123;&#125;</code> 根据传入的选择器升序排列<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Shop.<span class="title">getCustomersSortedByNumberOfOrders</span><span class="params">()</span></span>: List&lt;Customer&gt; &#123;</span><br><span class="line">    <span class="comment">// Return a list of customers, sorted by the ascending number of orders they made</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.customers.sortedBy &#123;</span><br><span class="line">        it.orders.size <span class="comment">//按照客户的订单数升序排列</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h2 id="求和函数：sum-返回Int、-sumBy-返回-Int、-sumByDouble-返回-Double"><a href="#求和函数：sum-返回Int、-sumBy-返回-Int、-sumByDouble-返回-Double" class="headerlink" title="求和函数：sum()返回Int、 sumBy{}返回 Int、 sumByDouble{} 返回 Double "></a>求和函数：<code>sum()</code>返回Int、 <code>sumBy&#123;&#125;</code>返回 Int、 <code>sumByDouble&#123;&#125;</code> 返回 Double<br> <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Customer.<span class="title">getTotalOrderPrice</span><span class="params">()</span></span>: <span class="built_in">Double</span> &#123;</span><br><span class="line">    <span class="comment">// Return the sum of prices of all products that a customer has ordered.</span></span><br><span class="line">    <span class="comment">// Note: a customer may order the same product for several times.</span></span><br><span class="line">    orders.flatMap &#123;</span><br><span class="line">        it.products</span><br><span class="line">    &#125;.sumByDouble &#123;</span><br><span class="line">        it.price</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    orders.flatMap &#123; it.products &#125;.fold(<span class="number">0.0</span>,&#123;acc, product -&gt;</span><br><span class="line">            acc+product.price</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">var</span> result = <span class="number">0.0</span></span><br><span class="line">    orders.flatMap &#123; it.products &#125;.forEach &#123;</span><br><span class="line">        result+=it.price</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>  result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h2 id="分组函数-groupBy-按照传入的选择器将集合对象分组返回Map"><a href="#分组函数-groupBy-按照传入的选择器将集合对象分组返回Map" class="headerlink" title="分组函数 groupBy{} 按照传入的选择器将集合对象分组返回Map&lt;K, List&lt;T&gt;&gt;"></a>分组函数 <code>groupBy&#123;&#125;</code> 按照传入的选择器将集合对象分组返回<code>Map&lt;K, List&lt;T&gt;&gt;</code><br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Shop.<span class="title">groupCustomersByCity</span><span class="params">()</span></span>: Map&lt;City, List&lt;Customer&gt;&gt; &#123;</span><br><span class="line">    <span class="comment">// fun Shop.groupCustomersByCity(): Map&lt;City, List&lt;Customer&gt;&gt; &#123;</span></span><br><span class="line">    <span class="comment">// Return a map of the customers living in each city</span></span><br><span class="line">    <span class="comment">//不使用groupBy函数的写法</span></span><br><span class="line">    <span class="keyword">val</span> map = mutableMapOf&lt;City,List&lt;Customer&gt;&gt;()</span><br><span class="line">    <span class="keyword">val</span> citys = <span class="keyword">this</span>.customers.map &#123;</span><br><span class="line">        it.city</span><br><span class="line">    &#125;.toSet().map &#123;</span><br><span class="line">         map.put(it, <span class="keyword">this</span>.getCustomersFrom(it))</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//    return map //效果等同</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.customers.groupBy &#123; it.city &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><p>折叠函数：<code>Iterable&lt;T&gt;.fold&#123;initial:R, operation: (R,T) -&gt; R&#125;</code><br><img src="/2018/12/03/Kotlin-Koans-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C/1" alt="折叠函数"></p>
 <p>将一个  <code>T</code> 的<strong>集合</strong>装换成一个 <code>R</code> ，所以这个方法被称为折叠。</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Shop.<span class="title">getSetOfProductsOrderedByEachCustomer</span><span class="params">()</span></span>: Set&lt;Product&gt; &#123;</span><br><span class="line">    <span class="comment">// Return the set of products that were ordered by each of the customers</span></span><br><span class="line">    <span class="comment">//找到商店中每一个用户都下单的商品</span></span><br><span class="line">    allOrderedProducts.filter &#123; p -&gt;</span><br><span class="line">        customers.all &#123;</span><br><span class="line">            it.orders.flatMap &#123;</span><br><span class="line">                it.products</span><br><span class="line">            &#125;.any &#123;</span><br><span class="line">                it == p</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;.toSet()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> customers.fold(allOrderedProducts, &#123; orderedByAll, customer -&gt;</span><br><span class="line">        <span class="comment">//第一次调用该函数时传入值为fold函数的第一个参数 全部被下单的产品集合</span></span><br><span class="line">        orderedByAll.intersect( <span class="comment">//交集运算</span></span><br><span class="line">                customer.orders.flatMap &#123;</span><br><span class="line">                    it.products</span><br><span class="line">                &#125;.toSet() <span class="comment">//传入的用户的全部产品的集合</span></span><br><span class="line">        )</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/13448219.png">
-      <meta itemprop="name" content="Junerver">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Junerver">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Junerver">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/" class="post-title-link" itemprop="url">Kotlin 回调函数在的奇妙玩法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-11-12 16:39:00" itemprop="dateCreated datePublished" datetime="2018-11-12T16:39:00+08:00">2018-11-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-03-07 10:32:27" itemprop="dateModified" datetime="2024-03-07T10:32:27+08:00">2024-03-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>本文涉及到的知识点有：扩展函数、Lambda 表达式的高级应用</p>
-</blockquote>
-<p>在 Android 6.0 之后系统加强了对敏感权限的管理，一些敏感权限必须要通过动态权限申请来获得，本文的内容就从这里展开；</p>
-<p>一个正常的权限申请流程大致是这样的：</p>
-<ol>
-<li>检查是否存在权限</li>
-<li>如果不存在则申请，存在则进入功能</li>
-<li>如果用户拒绝则弹出对话框告知用户权限的用处，并提供跳转到设置页面的功能；</li>
-</ol>
-<p>我使用的是网上比较流行的一个权限申请框架 # <a target="_blank" rel="noopener" href="https://github.com/tbruyelle">tbruyelle</a>&#x2F;<strong><a target="_blank" rel="noopener" href="https://github.com/tbruyelle/RxPermissions">RxPermissions</a></strong> ，当然本文的重点并不是如何使用这个库。</p>
-<p>如上所述，我们在一个应用中可能会有很多需要申请不同权限的位置，我们应该为每处需要敏感权限的位置做类似的处理。虽然我们使用了 RxPermissions，但是还是需要在用户拒绝的位置写大量重复的弹窗提示代码，这一点也不优雅。</p>
-<p>我们都知道在 Kotlin 中函数也是可以作为参数传入的，说道到这里不知道你有没有想起点什么，我们在使用 Java 编写 Android 代码时时常使用的各种 Listener，不就是类似这样的一个情况么？</p>
-<p>我们调用 setXXXListener 函数，并且传入一个接口的匿名内部类实现，这样的操作我们称之为<strong>回调</strong>，我们传入的这个 Listener 被中的方法称为回调函数，在 Kotlin 里我们也可以按照这种方式来书写：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Java中的匿名内部类，在 Kotlin 中可以使用 object 实现</span></span><br><span class="line">mBtnCallback.setOnClickListener(<span class="keyword">object</span> :View.OnClickListener&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onClick</span><span class="params">(v: <span class="type">View</span>?)</span></span> &#123;</span><br><span class="line">        println(<span class="string">&quot;onclick&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>也许你在书写类似代码时已经发现了一些端倪：<br><img src="/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/1" alt="Lambda 表达式"></p>
-<p>所有的类似接口，在 Kotlin 中都有一些新的签名，这是因为在 Kotlin 里<strong>函数</strong>也是参数的一种，在 Java 中只包含一个方法的接口，在 Kotlin 中都可以使用 Lambda 表达式来达成一样的效果。</p>
-<p>这样做最大的好处就是简化代码，当我们在阅读代码时更加简洁易读，比如上述代码完全可以简化成：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mBtnCallback.setOnClickListener &#123; println(<span class="string">&quot;onclick&quot;</span>) &#125;</span><br></pre></td></tr></table></figure>
-
-<p>非但如此，以前我们在写一些耗时操作时，通常需要申明一些接口作为回调函数使用，在调用时再用匿名内部类来操作得到的结果，现在你可以这样书写了：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">doSomeThingNeedTime</span><span class="params">(call: (<span class="type">response</span>:<span class="type">String</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    Thread.sleep(<span class="number">4000</span>)</span><br><span class="line">    <span class="keyword">var</span> response = <span class="string">&quot;xxxx&quot;</span>  <span class="comment">//我们假装这里进行了网络请求</span></span><br><span class="line">    call(response)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doSomeThingNeedTime &#123; response-&gt;</span><br><span class="line">            println(response)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h3><p>在我们实际应用时其实十分简单，下面的代码也许可以帮你加深对其了解：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//传入权限与权限描述，在需要权限的功能打开之前调用</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Activity.<span class="title">rxRequestPermissions</span><span class="params">(<span class="keyword">vararg</span> permissions: <span class="type">String</span>, describe: <span class="type">String</span>, onGranted:()-&gt;<span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> keylistener = DialogInterface.OnKeyListener &#123; _, keyCode, event -&gt;</span><br><span class="line">        keyCode == KeyEvent.KEYCODE_BACK &amp;&amp; event.repeatCount == <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> dialog = AlertDialog.Builder(<span class="keyword">this</span>)</span><br><span class="line">            .setTitle(<span class="string">&quot;权限申请&quot;</span>)</span><br><span class="line">            .setMessage(<span class="string">&quot;<span class="subst">$&#123;describe&#125;</span>为必选项，开通后方可正常使用APP,请在设置中开启。&quot;</span>)</span><br><span class="line">            .setOnKeyListener(keylistener)</span><br><span class="line">            .setCancelable(<span class="literal">false</span>)</span><br><span class="line">            .setPositiveButton(<span class="string">&quot;去开启&quot;</span>) &#123; _, _ -&gt;</span><br><span class="line"><span class="comment">//                JumpPermissionManagement.GoToSetting(this)</span></span><br><span class="line">                finish()</span><br><span class="line">            &#125;</span><br><span class="line">            .setNegativeButton(<span class="string">&quot;结束&quot;</span>) &#123; _, _ -&gt;</span><br><span class="line">                Toast.makeText(<span class="keyword">this</span>, <span class="string">&quot;<span class="subst">$&#123;describe&#125;</span>权限未开启，不能使用该功能！&quot;</span>, Toast.LENGTH_SHORT).show()</span><br><span class="line">                finish()</span><br><span class="line">            &#125;</span><br><span class="line">            .create()</span><br><span class="line">    <span class="keyword">val</span> rxPermissions = RxPermissions(<span class="keyword">this</span>)</span><br><span class="line">    <span class="comment">//传递kotlin的可变长参数给Java的可变参数的时候需要使用修饰符 * ；这个修饰符叫做Speread Operator</span></span><br><span class="line">    <span class="comment">// 它只支持展开的Array 数组，不支持List集合，它只用于变长参数列表的实参，不能重载，它也不是运算符；</span></span><br><span class="line">    rxPermissions.request(*permissions)</span><br><span class="line">            .subscribe &#123;granted -&gt;</span><br><span class="line">                <span class="keyword">if</span> (granted) &#123;</span><br><span class="line">                    onGranted()</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dialog.show()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上述代码就是我写的 Activity 的一个扩展函数，用于实现我们前文提到的更方便的动态申请权限，请看我们的函数申明：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Activity.<span class="title">rxRequestPermissions</span><span class="params">(<span class="keyword">vararg</span> permissions: <span class="type">String</span>, describe: <span class="type">String</span>, onGranted:()-&gt;<span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-<p>我们传入的前三个参数是分别是：要申请的权限（对于我们的扩展函数而言是一个可变长参数），第二个参数我们使用“key &#x3D; value” 这种形式传递，第三个参数就一个回调函数<code>onGranted:()-&gt;Unit</code>；</p>
-<p>其中 onGranted，是我们自己命名的函数名，冒号后面是我们的函数描述即：没有传入参数，返回值类型为 Unit。在我们的扩展函数体中直接将他作为一个函数调用即可，需要注意的是必须要填写括号，AS的自动补全并不会补全这个括号，没有括号时编译器也不会报错。</p>
-<p><strong>如何使用</strong></p>
-<p>在打开需要申请权限的功能位置，我们只要写下以下的数行代码即可：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mBtnRecord.setOnClickListener &#123;</span><br><span class="line">    rxRequestPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, describe = <span class="string">&quot;相机、存储、录音&quot;</span>) &#123;</span><br><span class="line">        startActivityForResult(Intent(<span class="keyword">this</span><span class="symbol">@MainActivity</span>, VideoRecordActivity::<span class="keyword">class</span>.java), REQUEST_VIDEO)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>首先传入需要申请的权限、权限描述（key &#x3D; value），第三个参数为一个Lambda表达式，这里进行的是存在权限时需要执行的操作。Lambda 表达式作为函数的最后的一个参数时，我们可以把它放在圆括号外书写。</p>
-<p>最终使用时的效果如下：<br><img src="/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/2" alt="点击时请求权限"></p>
-<p><img src="/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/3" alt="未授予全部权限"></p>
 
       
     </div>
