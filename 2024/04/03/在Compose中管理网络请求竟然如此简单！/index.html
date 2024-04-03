@@ -28,7 +28,7 @@
 <meta property="og:description" content="写在前面本文中提及的use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关系复杂的状态管理，专心于业务与UI组件。 这是系列文章的第7篇，前文：  在Compose中使用useRequest轻松管理网络请求  在Compose中使用状态提升？我提升个P…Provider  在Compos">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-03T01:13:13.000Z">
-<meta property="article:modified_time" content="2024-04-03T02:07:50.655Z">
+<meta property="article:modified_time" content="2024-04-03T02:35:04.923Z">
 <meta property="article:author" content="Junerver">
 <meta name="twitter:card" content="summary">
 
@@ -105,7 +105,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compose-%E4%B8%8B%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%9A%84%E7%97%9B%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">Compose 下网络请求的痛点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#show-time"><span class="nav-number">3.</span> <span class="nav-text">show time !!</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%9B%E5%BB%BA%E7%8A%B6%E6%80%81%E5%AD%98%E5%82%A8-store"><span class="nav-number">3.1.</span> <span class="nav-text">1. 创建状态存储 store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%9A%E8%BF%87-ReduxProvider-%E6%9A%B4%E9%9C%B2%E7%8A%B6%E6%80%81%E5%AD%98%E5%82%A8"><span class="nav-number">3.2.</span> <span class="nav-text">2. 通过 ReduxProvider 暴露状态存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%8C%89%E9%9C%80%E4%BD%BF%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">3. 按需使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E6%9B%B4%E5%A4%9A"><span class="nav-number">4.</span> <span class="nav-text">探索更多</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compose-%E4%B8%8B%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%9A%84%E7%97%9B%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">Compose 下网络请求的痛点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#show-time"><span class="nav-number">3.</span> <span class="nav-text">show time !!</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%9B%E5%BB%BA%E7%8A%B6%E6%80%81%E5%AD%98%E5%82%A8-store"><span class="nav-number">3.1.</span> <span class="nav-text">1. 创建状态存储 store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%9A%E8%BF%87-ReduxProvider-%E6%9A%B4%E9%9C%B2%E7%8A%B6%E6%80%81%E5%AD%98%E5%82%A8"><span class="nav-number">3.2.</span> <span class="nav-text">2. 通过 ReduxProvider 暴露状态存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%8C%89%E9%9C%80%E4%BD%BF%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">3. 按需使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2"><span class="nav-number">4.</span> <span class="nav-text">状态管理三剑客</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E6%9B%B4%E5%A4%9A"><span class="nav-number">5.</span> <span class="nav-text">探索更多</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -188,7 +188,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2024-04-03 09:13:13 / 修改时间：10:07:50" itemprop="dateCreated datePublished" datetime="2024-04-03T09:13:13+08:00">2024-04-03</time>
+      <time title="创建时间：2024-04-03 09:13:13 / 修改时间：10:35:04" itemprop="dateCreated datePublished" datetime="2024-04-03T09:13:13+08:00">2024-04-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -255,6 +255,12 @@
 
 <p>这里的 <code>it</code> 是 dispatch 函数，你可以在闭包内发起状态变更，对你的网络请求进行 <code>try-catch</code>，然后将结果或者异常使用 <code>NetFetchResult.Success</code> 或 <code>NetFetchResult.Error</code> 包装即可！</p>
 <p>最后请说声：⌈ 多谢提升哥！⌋</p>
+<h2 id="状态管理三剑客"><a href="#状态管理三剑客" class="headerlink" title="状态管理三剑客"></a>状态管理三剑客</h2><p>到此为止我们已经介绍了三位用于在 Compose 中进行状态管理的钩子函数：</p>
+<ul>
+<li><code>useReducer</code>：用于实践MVI，只需要传递 reducer 函数与初始状态，返回给我们状态、dispatch函数</li>
+<li><code>useContext</code>：用于状态提升，解耦组件之间的状态传递，底层实现是：<code>ProvidableCompositionLocal</code> 与 <code>CompositionLocalProvider</code></li>
+<li><code>useSelector</code>&#x2F;<code>useDispatch</code>：基于 <code>useContext</code> 实现的的全局版本的 <code>useReducer</code></li>
+</ul>
 <h2 id="探索更多"><a href="#探索更多" class="headerlink" title="探索更多"></a>探索更多</h2><p>好了以上就是 hooks 1.0.10 版本带来的一点小小改动，现在你可以自信在在Compose中使用网络请求了！</p>
 <p>项目开源地址：<a target="_blank" rel="noopener" href="https://github.com/junerver">junerver</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a></p>
 <p>MavenCentral：<a target="_blank" rel="noopener" href="https://central.sonatype.com/artifact/xyz.junerver.compose/hooks">hooks</a></p>
