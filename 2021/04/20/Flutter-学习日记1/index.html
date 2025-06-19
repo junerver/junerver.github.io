@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文用于记录我在项目中集成 Flutter 遇到的种种问题，作者纯 Flutter 小白，所以可能会有大量错误，请大佬指出。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter 学习日记1">
+<meta property="og:url" content="https://junerver.xyz/2021/04/20/Flutter-%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B01/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="本文用于记录我在项目中集成 Flutter 遇到的种种问题，作者纯 Flutter 小白，所以可能会有大量错误，请大佬指出。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="article:published_time" content="2021-04-20T04:54:59.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.433Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2021/04/20/Flutter-%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B01/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2021/04/20/Flutter-%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B01/","path":"2021/04/20/Flutter-学习日记1/","title":"Flutter 学习日记1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Flutter 学习日记1 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%9C%A8%E5%8E%9F%E7%94%9F%E9%A1%B9%E7%9B%AE%E4%B8%AD%E6%98%BE%E7%A4%BA-Flutter-%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">1 在原生项目中显示 Flutter 项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-flutter-%E4%B8%AD%E7%8A%B6%E6%80%81%E6%A0%8F%E5%AD%97%E4%BD%93%E9%A2%9C%E8%89%B2%E4%BF%AE%E6%94%B9"><span class="nav-number">2.</span> <span class="nav-text">2 flutter 中状态栏字体颜色修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BB%8Eflutter%E9%A1%B5%E9%9D%A2%E8%BF%94%E5%9B%9E%E5%8E%9F%E7%94%9F%E9%A1%B5%E9%9D%A2%EF%BC%88%E4%B8%8E%E5%8E%9F%E7%94%9F%E8%BF%9B%E8%A1%8C%E4%BA%A4%E4%BA%92%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">3 从flutter页面返回原生页面（与原生进行交互）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E3%80%81json%E8%A7%A3%E6%9E%90%E3%80%81%E5%88%97%E8%A1%A8%E5%B1%95%E7%A4%BA"><span class="nav-number">4.</span> <span class="nav-text">4 网络请求、json解析、列表展示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%BC%93%E5%AD%98engine%E5%AF%BC%E8%87%B4%E8%AE%BE%E7%BD%AE%E7%9A%84%E7%8A%B6%E6%80%81%E6%A0%8F%E6%95%88%E6%9E%9C%E6%97%A0%E6%95%88"><span class="nav-number">5.</span> <span class="nav-text">5 缓存engine导致设置的状态栏效果无效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-appbar%E6%B6%88%E5%A4%B1"><span class="nav-number">6.</span> <span class="nav-text">6 appbar消失</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-buildTypes"><span class="nav-number">7.</span> <span class="nav-text">7 buildTypes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%88%86%E5%89%B2%E7%BA%BF"><span class="nav-number">8.</span> <span class="nav-text">8 分割线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="nav-number">9.</span> <span class="nav-text">9  传递参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E5%AE%B9%E5%99%A8-Container-%E4%BF%AE%E9%A5%B0"><span class="nav-number">10.</span> <span class="nav-text">10 容器 Container 修饰</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-dart-%E4%B8%AD%E7%9A%84"><span class="nav-number">11.</span> <span class="nav-text">11 dart 中的 &#x3D;&gt;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-Dio-%E5%8F%96%E6%B6%88%E8%AF%B7%E6%B1%82"><span class="nav-number">12.</span> <span class="nav-text">12 Dio 取消请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-setState%E7%9A%84%E9%94%99%E8%AF%AF%E8%B0%83%E7%94%A8"><span class="nav-number">13.</span> <span class="nav-text">13 setState的错误调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-Ink"><span class="nav-number">14.</span> <span class="nav-text">14 Ink</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-%E5%88%87%E5%9C%86%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95"><span class="nav-number">15.</span> <span class="nav-text">15 切圆的几种方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-%E8%B8%A9%E5%9D%91%E9%9B%86%E6%88%90%E6%89%93%E5%8C%85APK"><span class="nav-number">16.</span> <span class="nav-text">16 踩坑集成打包APK</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2021/04/20/Flutter-%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Flutter 学习日记1 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flutter 学习日记1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-04-20 12:54:59" itemprop="dateCreated datePublished" datetime="2021-04-20T12:54:59+08:00">2021-04-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Flutter/" itemprop="url" rel="index"><span itemprop="name">Flutter</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文用于记录我在项目中集成 Flutter 遇到的种种问题，作者纯 Flutter 小白，所以可能会有大量错误，请大佬指出。</p>
+<span id="more"></span>
+
+<h3 id="1-在原生项目中显示-Flutter-项目"><a href="#1-在原生项目中显示-Flutter-项目" class="headerlink" title="1 在原生项目中显示 Flutter 项目"></a>1 在原生项目中显示 Flutter 项目</h3><p>我的原生项目是 Android ，使用 AS 开发，使用官网介绍的源码集成方式集成Flutter 模块，在原项目中的 settings.gradle 添加如下代码：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">setBinding(<span class="keyword">new</span> Binding([<span class="attr">gradle:</span> <span class="variable language_">this</span>]))</span><br><span class="line">evaluate(<span class="keyword">new</span> File(</span><br><span class="line">        settingsDir.parentFile,</span><br><span class="line">        <span class="string">&#x27;flutter_module/.android/include_flutter.groovy&#x27;</span></span><br><span class="line">))</span><br><span class="line">include <span class="string">&#x27;:flutter_module&#x27;</span></span><br><span class="line">project(<span class="string">&#x27;:flutter_module&#x27;</span>).projectDir = <span class="keyword">new</span> File(<span class="string">&#x27;../flutter_module&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>这样既可在同一个工作目录下同时编辑 Android 项目与 Flutter 项目。</p>
+<h3 id="2-flutter-中状态栏字体颜色修改"><a href="#2-flutter-中状态栏字体颜色修改" class="headerlink" title="2 flutter 中状态栏字体颜色修改"></a>2 flutter 中状态栏字体颜色修改</h3><p>修改 Flutter 页面中状态栏颜色：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> main() &#123;</span><br><span class="line">  runApp(MyApp());</span><br><span class="line">  <span class="keyword">if</span> (Platform.isAndroid) &#123;</span><br><span class="line">    SystemChrome.setSystemUIOverlayStyle(</span><br><span class="line">        SystemUiOverlayStyle(</span><br><span class="line">          statusBarColor: Colors.black, <span class="comment">//状态栏设置为黑色</span></span><br><span class="line">        )</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这会修改状态栏为黑色，此时状态栏文字颜色也是黑色，我们还需要在 MaterialApp中设置主题 Theme：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="comment">// This widget is the root of your application.</span></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> MaterialApp(</span><br><span class="line">      title: <span class="string">&#x27;Flutter Demo&#x27;</span>,</span><br><span class="line">      theme: ThemeData(</span><br><span class="line">        primarySwatch: Colors.blue,</span><br><span class="line">          primaryColor: Color(<span class="number">0xFFf7f7f7</span>),</span><br><span class="line">          brightness : Brightness.dark, <span class="comment">//dark状态栏会被修改为白色字体 light 修改为黑色</span></span><br><span class="line">      ),</span><br><span class="line">      home: MyHomePage(title: <span class="string">&#x27;Flutter Demo Home Page&#x27;</span>),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样设置之后Flutter页面的状态栏就是正常的黑底白字。</p>
+<h3 id="3-从flutter页面返回原生页面（与原生进行交互）"><a href="#3-从flutter页面返回原生页面（与原生进行交互）" class="headerlink" title="3 从flutter页面返回原生页面（与原生进行交互）"></a>3 从flutter页面返回原生页面（与原生进行交互）</h3><p>原生页面实现一个MethodChannel 用于交互</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">FlutterEngine</span> <span class="variable">flutterEngine</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FlutterEngine</span>(mContext);</span><br><span class="line"><span class="comment">// 设置初始路由</span></span><br><span class="line">flutterEngine.getNavigationChannel().setInitialRoute(<span class="string">&quot;/home/feedback?&quot;</span>+mFlutterParams.toJson());</span><br><span class="line"><span class="comment">// 开始执行dart代码来pre-warm FlutterEngine</span></span><br><span class="line">flutterEngine.getDartExecutor().executeDartEntrypoint(</span><br><span class="line">        DartExecutor.DartEntrypoint.createDefault()</span><br><span class="line">);</span><br><span class="line"><span class="comment">// 缓存FlutterEngine</span></span><br><span class="line">FlutterEngineCache.getInstance().put(<span class="string">&quot;my_engine_id&quot;</span>, flutterEngine);</span><br><span class="line"><span class="type">MethodChannel</span> <span class="variable">nativeChannel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MethodChannel</span>(flutterEngine.getDartExecutor(), <span class="string">&quot;com.example.flutter/native&quot;</span>);</span><br><span class="line">nativeChannel.setMethodCallHandler((methodCall, result) -&gt; &#123;</span><br><span class="line">    <span class="keyword">switch</span> (methodCall.method) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;goBack&quot;</span>:</span><br><span class="line">            <span class="comment">// 返回上一页</span></span><br><span class="line">            Logger.d(<span class="string">&quot;flutter调用了goBack&quot;</span>);</span><br><span class="line">            <span class="type">Intent</span> <span class="variable">i</span> <span class="operator">=</span> getActivity().getIntent();</span><br><span class="line">            mContext.startActivity(i);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;goBackWithResult&quot;</span>:</span><br><span class="line">            Logger.d(<span class="string">&quot;flutter调用了goBackWithResult&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">&quot;jumpToNative&quot;</span>:</span><br><span class="line">            <span class="comment">// 跳转原生页面</span></span><br><span class="line">            Logger.d(<span class="string">&quot;flutter调用了jumpToNative&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            result.notImplemented();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">startActivity(</span><br><span class="line">        FlutterActivity</span><br><span class="line">                .withCachedEngine(<span class="string">&quot;my_engine_id&quot;</span>)</span><br><span class="line">                .build(mContext)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>在flutter 页面：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> nativeChannel = <span class="keyword">const</span> MethodChannel(<span class="string">&#x27;com.example.flutter/native&#x27;</span>);  <span class="comment">//创建原生频道</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//在需要调用原生方法的位置：</span></span><br><span class="line"></span><br><span class="line">nativeChannel.invokeMethod(<span class="string">&#x27;goBack&#x27;</span>); <span class="comment">//goBack是上面在原生中定义的方法</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-网络请求、json解析、列表展示"><a href="#4-网络请求、json解析、列表展示" class="headerlink" title="4 网络请求、json解析、列表展示"></a>4 网络请求、json解析、列表展示</h3><p><strong>网络请求：</strong></p>
+<p>使用 <a target="_blank" rel="noopener" href="https://pub.flutter-io.cn/packages/dio">Dio</a> 库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependencies:</span><br><span class="line">  flutter:</span><br><span class="line">    sdk: flutter</span><br><span class="line">  dio: ^3.0.10 </span><br></pre></td></tr></table></figure>
+
+<p>使用方式如下：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;<span class="built_in">List</span>&lt;FeedBackData&gt;&gt; _getData() <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="built_in">String</span> url = params[<span class="string">&#x27;baseUrl&#x27;</span>] + <span class="string">&#x27;/something&#x27;</span>;</span><br><span class="line">    Response response = <span class="keyword">await</span> dio.<span class="keyword">get</span>(url, queryParameters: params);</span><br><span class="line">    <span class="keyword">if</span> (response.statusCode == HttpStatus.OK) &#123;</span><br><span class="line">      <span class="keyword">var</span> _json = response.data;</span><br><span class="line">      FeedBackBean bean = FeedBackBean.fromJson(json.decode(_json));</span><br><span class="line">      minid = bean.data.last.id;</span><br><span class="line">      <span class="keyword">if</span> (bean.data.length &lt; <span class="number">10</span>) &#123;</span><br><span class="line">        enableLoadmore = <span class="keyword">false</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        enableLoadmore = <span class="keyword">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> bean.data;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>JSON 解析：</strong></p>
+<ol>
+<li>使用在线工具 <a target="_blank" rel="noopener" href="https://javiercbk.github.io/json_to_dart/">JSON_to_Dart</a>，生成实体类；</li>
+<li>使用 json.decode(_json) 解析JSON 字符串；</li>
+<li>调用实体类的 <code>fromJson()</code> 函数；</li>
+</ol>
+<p><strong>图片加载：</strong><br>使用 <a target="_blank" rel="noopener" href="https://pub.dev/packages/cached_network_image">cache_network_image</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dependencies:</span><br><span class="line">  cached_network_image: ^2.5.0</span><br></pre></td></tr></table></figure>
+<p>使用：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CachedNetworkImage(</span><br><span class="line">        imageUrl: <span class="string">&quot;http://via.placeholder.com/350x150&quot;</span>,</span><br><span class="line">        placeholder: (context, url) =&gt; CircularProgressIndicator(),</span><br><span class="line">        errorWidget: (context, url, error) =&gt; Icon(Icons.error),</span><br><span class="line">     ),</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-缓存engine导致设置的状态栏效果无效"><a href="#5-缓存engine导致设置的状态栏效果无效" class="headerlink" title="5 缓存engine导致设置的状态栏效果无效"></a>5 缓存engine导致设置的状态栏效果无效</h3><p>使用缓存可以显著的提高 flutter 页面的打开速度，使其体验接近于原生，但是存在以下问题。</p>
+<p>预热引擎会提前执行一次main函数，预热时执行的修改状态栏的代码是不起作用的。被预热的页面打开下一级 Flutter 页面也是无法修改其状态栏颜色的。</p>
+<p>解决方法： 不适用缓存，使用 <code>withNewEngine()</code></p>
+<h3 id="6-appbar消失"><a href="#6-appbar消失" class="headerlink" title="6 appbar消失"></a>6 appbar消失</h3><p>在使用 webview 时 出现了一个奇怪的现象，大致现象如下：</p>
+<blockquote>
+<p>原生 &#x3D;&gt;  Flutter1(webview) &#x3D;&gt; Flutter2(webview)   正常</p>
+</blockquote>
+<p>当逐层返回到原生页面时，再次执行上面的操作， Flutter2 页面出现仅显示 webview 而不显示其他内容的问题，经过大量测试，问题应该出在 Webview组件 与 Scaffold组件上。</p>
+<p><strong>解决方法</strong>：使用 <code>Material</code> 组件替代 <code>Scaffold</code></p>
+<h3 id="7-buildTypes"><a href="#7-buildTypes" class="headerlink" title="7 buildTypes"></a>7 buildTypes</h3><p>如果你自定义了 buildType，且修改了flutter.gradle，需要注意自定义的构建模式中 debuggable 的值，当你调试完毕，将 flutter.gradle 修改为 <code>initWith release</code> 后，需要将自定义构建模式中的 debuggable 修改为 false，否者无法编译。</p>
+<h3 id="8-分割线"><a href="#8-分割线" class="headerlink" title="8 分割线"></a>8 分割线</h3><p>水平分割线</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Divider(</span><br><span class="line">  color: Color(<span class="number">0xFFCCCCCC</span>),</span><br><span class="line">  height: <span class="number">1</span>,</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+<p>分割线默认高度就是1 ，为什么还要设置1呢？设置1 是为了取消掉分割线自带的margin。</p>
+<p>垂直分割线：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VerticalDivider(</span><br><span class="line">  color: Color(<span class="number">0xFFCCCCCC</span>),</span><br><span class="line">  indent: <span class="number">5</span>,</span><br><span class="line">  endIndent: <span class="number">5</span>,</span><br><span class="line">  width: <span class="number">1</span>,</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+<p><code>indent</code> 前缩进量，<code>endIndent</code> 后缩进量。需要注意的是，如果没有显示分割线，说明在当前其父容器的<strong>高度（VerticalDivider）</strong> or <strong>宽度（Divider）</strong>是不确定的。</p>
+<p>这种情况可以选择给其父容器加上<strong>高度</strong> 或者  <strong>宽度</strong>，或者选择套一个<code>Container</code></p>
+<h3 id="9-传递参数"><a href="#9-传递参数" class="headerlink" title="9  传递参数"></a>9  传递参数</h3><p>传参给下一级页面非常简单直接用构造器即可，而传回参数也一样简单：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//打开子页面</span></span><br><span class="line">() <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="comment">//跳转请假页面，在请假成功后返回成功，刷新页面</span></span><br><span class="line">  <span class="built_in">dynamic</span> result = <span class="keyword">await</span> Navigator.of(context)</span><br><span class="line">      .push(MaterialPageRoute(builder: (context) &#123;</span><br><span class="line">    <span class="keyword">return</span> AddLeave(widget.params);</span><br><span class="line">  &#125;));</span><br><span class="line">  logger.d(result);</span><br><span class="line">  <span class="keyword">if</span> (result != <span class="keyword">null</span>) &#123;</span><br><span class="line">    setState(() &#123;&#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="comment">//子页面返回</span></span><br><span class="line">Navigator.of(context).pop(</span><br><span class="line">            <span class="string">&#x27;&#123;&quot;id&quot;:&quot;<span class="subst">$&#123;dataLists[index].id&#125;</span>&quot;,&quot;text&quot;:&quot;<span class="subst">$&#123;dataLists[index].daily_name&#125;</span>&quot;&#125;&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<ol>
+<li>首先声明函数为 <code>async</code> 异步函数，使用 <code>await</code> 修饰<code>push</code>方法打开子页面；（await会将当前线程阻塞？）</li>
+<li>子页面在 <code>pop()</code> 函数中传递参数；</li>
+<li>父页面处理返回值；</li>
+</ol>
+<p>上面的示例代码中我使用的JSON作为返回值，你也可以自定义对象来进行传递。</p>
+<h3 id="10-容器-Container-修饰"><a href="#10-容器-Container-修饰" class="headerlink" title="10 容器 Container 修饰"></a>10 容器 Container 修饰</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Container(</span><br><span class="line">  child: TextField(</span><br><span class="line">    keyboardType: TextInputType.emailAddress,</span><br><span class="line">    decoration: InputDecoration(</span><br><span class="line">        labelText: <span class="string">&quot;Email&quot;</span>,</span><br><span class="line">        hintText: <span class="string">&quot;电子邮件地址&quot;</span>,</span><br><span class="line">        prefixIcon: Icon(Icons.email),</span><br><span class="line">        border: InputBorder.none <span class="comment">//隐藏下划线</span></span><br><span class="line">    )</span><br><span class="line">  ),</span><br><span class="line">  decoration: BoxDecoration(</span><br><span class="line">      <span class="comment">// 下滑线浅灰色，宽度1像素</span></span><br><span class="line">      border: Border(bottom: BorderSide(color: Colors.grey[<span class="number">200</span>], width: <span class="number">1.0</span>)),</span><br><span class="line">      <span class="comment">//剪裁圆形</span></span><br><span class="line">      borderRadius: BorderRadius.circular(<span class="number">1000</span>),</span><br><span class="line">  ),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-dart-中的"><a href="#11-dart-中的" class="headerlink" title="11 dart 中的 &#x3D;&gt;"></a>11 dart 中的 &#x3D;&gt;</h3><p>一个函数只有一条语句时,可以省略函数体的花括号 <code>&#123;&#125;</code>  直接使用 <code>=&gt;</code> 来指向这一条语句；</p>
+<p>最常见的应该是：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> main() =&gt; runApp(myapp)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="12-Dio-取消请求"><a href="#12-Dio-取消请求" class="headerlink" title="12 Dio 取消请求"></a>12 Dio 取消请求</h3><p>你可以通过 cancel token 来取消发起的请求：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CancelToken token = CancelToken();</span><br><span class="line">dio.<span class="keyword">get</span>(url, cancelToken: token)</span><br><span class="line">    .catchError((DioError err)&#123;</span><br><span class="line">        <span class="keyword">if</span> (CancelToken.isCancel(err)) &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;Request canceled! &#x27;</span>+ err.message)</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">// handle error.</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"><span class="comment">// cancel the requests with &quot;cancelled&quot; message.</span></span><br><span class="line">token.cancel(<span class="string">&quot;cancelled&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>注意: 同一个cancel token 可以用于多个请求，当一个cancel token取消时，所有使用该cancel token的请求都会被取消。</p>
+<p>完整的示例请参考<a target="_blank" rel="noopener" href="https://github.com/flutterchina/dio/blob/master/example/cancel_request.dart">取消示例</a>.</p>
+<h3 id="13-setState的错误调用"><a href="#13-setState的错误调用" class="headerlink" title="13 setState的错误调用"></a>13 setState的错误调用</h3><blockquote>
+<p>This error happens if you call setState() on a State object for a widget that no longer appears in the widget tree (e.g., whose parent widget no longer includes the widget in its build). This error can occur when code calls setState() from a timer or an animation callback.</p>
+</blockquote>
+<p>出现这种报错的原因往往是因为在异步操作，比如发起网络请求，在widget被移除后，调用了<code>setState()</code> 函数。</p>
+<p>解决方法：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mounted) &#123;</span><br><span class="line">        setState(() &#123;</span><br><span class="line">          </span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="14-Ink"><a href="#14-Ink" class="headerlink" title="14 Ink"></a>14 Ink</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Ink(</span><br><span class="line">  decoration: BoxDecoration(</span><br><span class="line">      gradient: LinearGradient(</span><br><span class="line">          begin: Alignment.topLeft,</span><br><span class="line">          end: Alignment.bottomRight,</span><br><span class="line">          colors: [Color(<span class="number">0xFFDE2F21</span>), Color(<span class="number">0xFFEC592F</span>)]),</span><br><span class="line">      borderRadius: BorderRadius.all(Radius.circular(<span class="number">20</span>))),</span><br><span class="line">  child: InkWell(</span><br><span class="line">    borderRadius: BorderRadius.all(Radius.circular(<span class="number">20</span>)),</span><br><span class="line">    child: Container(</span><br><span class="line">      padding:</span><br><span class="line">      EdgeInsets.symmetric(vertical: <span class="number">8</span>, horizontal: <span class="number">20</span>),</span><br><span class="line">      child: Text(</span><br><span class="line">        <span class="string">&#x27;这是InkWell的点击效果&#x27;</span>,</span><br><span class="line">        style: TextStyle(color: Colors.black),</span><br><span class="line">      ),</span><br><span class="line">    ),</span><br><span class="line">    onTap: () &#123;&#125;,</span><br><span class="line">  ),</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+
+<p>不如 <code>FlatButton</code> 好用，在某些情况下很容易出现无法显示水波纹的问题；<br>但是 <code>FlatButton</code>  存在一些默认的设置，比如存在默认的最小宽度、无法设置高度，可以用 <code>Container</code> 包裹来解决。存在内部默认的<code>padding</code>，可以通过设置  <code>padding: EdgeInsets.all(0)</code> 来解决。</p>
+<h3 id="15-切圆的几种方法"><a href="#15-切圆的几种方法" class="headerlink" title="15 切圆的几种方法"></a>15 切圆的几种方法</h3><ol>
+<li>ClipOval<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Container(</span><br><span class="line">  <span class="comment">//头像</span></span><br><span class="line">  margin: EdgeInsets.only(left: <span class="number">12</span>, right: <span class="number">0</span>, top: <span class="number">12</span>),</span><br><span class="line">  child: ClipOval(</span><br><span class="line">    child: CachedNetworkImage(</span><br><span class="line">      imageUrl: params[KEY.BASE_URL] + data.avatar,</span><br><span class="line">      placeholder: (context, url) =&gt;</span><br><span class="line">          Image.asset(<span class="string">&#x27;assets/images/default_avatar.png&#x27;</span>),</span><br><span class="line">      errorWidget: (context, url, error) =&gt;</span><br><span class="line">          Image.asset(<span class="string">&#x27;assets/images/default_avatar.png&#x27;</span>),</span><br><span class="line">      width: <span class="number">45.0</span>,</span><br><span class="line">      height: <span class="number">45.0</span>, <span class="comment">//限制图片大小</span></span><br><span class="line">    ),</span><br><span class="line">  ),</span><br><span class="line">  width: <span class="number">45.0</span>,</span><br><span class="line">  height: <span class="number">45.0</span>, <span class="comment">//限制切圆大小</span></span><br><span class="line">),</span><br></pre></td></tr></table></figure></li>
+<li>使用Container修饰器</li>
+</ol>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Container(</span><br><span class="line">  height: <span class="number">40</span>,</span><br><span class="line">  width: <span class="number">40</span>,</span><br><span class="line">  alignment: Alignment.center,</span><br><span class="line">  decoration: BoxDecoration(</span><br><span class="line">      color: HexColor(color),</span><br><span class="line">      borderRadius: BorderRadius.circular(<span class="number">1000</span>)),</span><br><span class="line">  child: Text(</span><br><span class="line">    type,</span><br><span class="line">    textAlign: TextAlign.center,</span><br><span class="line">    style: TextStyle(color: Colors.white, fontSize: <span class="number">13</span>),</span><br><span class="line">  ),</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+
+<h3 id="16-踩坑集成打包APK"><a href="#16-踩坑集成打包APK" class="headerlink" title="16 踩坑集成打包APK"></a>16 踩坑集成打包APK</h3><p>项目运行起来、能通过AS部署到手机，不代表打包APK文件也是一帆风顺。</p>
+<p>Flutter 与 Android 混开的集成方式有两种：</p>
+<ol>
+<li>产物集成 （aar）</li>
+<li>源码集成 （flutter module）</li>
+</ol>
+<p>这里我更推荐源码集成，而不是侵入性更低的产物集成，原因是 AAR 产物存在大量的天坑。</p>
+<p><img src="/1" alt="在这里插入图片描述"><br>网上所谓的各种解决方法也因人而异、因版本而异，并不存在通用的完美解决方法。</p>
+<p>源码集成相对比较简单，出错几率更低，无非就是所有开发者都需要安装 Flutter SDK 而已，并不是什么大事。</p>
+<p>源码集成的坑就一个，一定不要再打包的时候指定 flavor ！</p>
+<p>我们经常会单独打渠道包，这种操作在 flutter module 集成方式下，会出现丢文件的问题，最终导致 APK 文件无法安装，或者是安装后打开闪退。</p>
+<p>解决方法只有一个：<code>./gradlew assembleRelease</code></p>
+<p>直接打包全部渠道包！如果渠道很多，只需要单独打某个的话，就在<code>build.gradle</code> 文件中注释掉其他 flavor，这样可以加快打包速度！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Flutter/" rel="tag"># Flutter</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/01/22/%E5%8E%9F%E7%94%9FAndroid%E9%A1%B9%E7%9B%AE%E9%9B%86%E6%88%90Flutter-Module%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/" rel="prev" title="原生Android项目集成Flutter Module踩坑记录">
+                  <i class="fa fa-angle-left"></i> 原生Android项目集成Flutter Module踩坑记录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/10/12/%E7%94%A8python%E7%BC%96%E5%86%99%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E5%9C%A8-Android-%E5%A4%9A%E5%8F%98%E4%BD%93%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-sourceSet-%E7%9A%84%E8%84%9A%E6%9C%AC/" rel="next" title="用python编写可以快速在 Android 多变体项目中创建 sourceSet 的脚本">
+                  用python编写可以快速在 Android 多变体项目中创建 sourceSet 的脚本 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="１、什么是 View在我们的日常工作中，你可能已经接触过了很多 View ，View 是 Android 中所有控件的基类，例如 Buttton、TextView、LinearLayout，这些类的继承关系如下图的所示（使用 Ctrl + H 快捷键组合可以查看选中类的继承关系）：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="View 事件体系详解（1）">
+<meta property="og:url" content="https://junerver.xyz/2017/04/12/View-%E4%BA%8B%E4%BB%B6%E4%BD%93%E7%B3%BB%E8%AF%A6%E8%A7%A3%EF%BC%881%EF%BC%89/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="１、什么是 View在我们的日常工作中，你可能已经接触过了很多 View ，View 是 Android 中所有控件的基类，例如 Buttton、TextView、LinearLayout，这些类的继承关系如下图的所示（使用 Ctrl + H 快捷键组合可以查看选中类的继承关系）：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1240">
+<meta property="og:image" content="https://junerver.xyz/2">
+<meta property="og:image" content="https://junerver.xyz/3">
+<meta property="og:image" content="https://junerver.xyz/4">
+<meta property="og:image" content="https://junerver.xyz/5">
+<meta property="article:published_time" content="2017-04-12T15:07:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.483Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="View">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1240">
+
+
+<link rel="canonical" href="https://junerver.xyz/2017/04/12/View-%E4%BA%8B%E4%BB%B6%E4%BD%93%E7%B3%BB%E8%AF%A6%E8%A7%A3%EF%BC%881%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2017/04/12/View-%E4%BA%8B%E4%BB%B6%E4%BD%93%E7%B3%BB%E8%AF%A6%E8%A7%A3%EF%BC%881%EF%BC%89/","path":"2017/04/12/View-事件体系详解（1）/","title":"View 事件体系详解（1）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>View 事件体系详解（1） | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EF%BC%91%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF-View"><span class="nav-number">1.</span> <span class="nav-text">１、什么是 View</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81View-%E7%9A%84%E7%82%B9%E5%87%BB%E4%BA%8B%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">2、View 的点击事件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E3%80%81MotionEvent"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、MotionEvent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E3%80%81MotionEvent-%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、MotionEvent 事件类型</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2017/04/12/View-%E4%BA%8B%E4%BB%B6%E4%BD%93%E7%B3%BB%E8%AF%A6%E8%A7%A3%EF%BC%881%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="View 事件体系详解（1） | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          View 事件体系详解（1）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-04-12 23:07:00" itemprop="dateCreated datePublished" datetime="2017-04-12T23:07:00+08:00">2017-04-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="１、什么是-View"><a href="#１、什么是-View" class="headerlink" title="１、什么是 View"></a>１、什么是 View</h2><p>在我们的日常工作中，你可能已经接触过了很多 View ，View 是 Android 中所有控件的基类，例如 Buttton、TextView、LinearLayout，这些类的继承关系如下图的所示（使用 Ctrl + H 快捷键组合可以查看选中类的继承关系）：</p>
+<span id="more"></span>
+
+<p><img src="/1240" alt="Buttton"><br><img src="/2" alt="TextView"><br><img src="/3" alt="LinearLayout"></p>
+<p>上图可以看出 LinearLayout 与 TextView 还有些不同，LinearLayout  的父类是 ViewGroup， ViewGroup 的父类也是 View。</p>
+<p>查看 View 源代码可以看到官方对 View 有这样一段说明：</p>
+<blockquote>
+<p>This class represents the basic building block for user interface components. A View<br>occupies a rectangular area on the screen and is responsible for drawing and<br>event handling. View is the base class for <em>widgets</em>, which are<br>used to create interactive UI components (buttons, text fields, etc.). The<br>{@link android.view.ViewGroup} subclass is the base class for <em>layouts</em>, which<br>are invisible containers that hold other Views (or other ViewGroups) and define<br>their layout properties.</p>
+</blockquote>
+<blockquote>
+<p>View 类是用户界面的基本组成块。一个 View 在屏幕上占据一个<strong>矩形区域</strong>，负责绘制视图与事件处理。View 是控件的基类，它是用于创建交互式UI组件（按钮、文本域等）。其子类 ViewGroup 类是所有布局（Layout）的基类，布局（Layout）是一个可持有其他 View（或其他 ViewGroup）并能定义它们布局属性的看不见的容器。</p>
+</blockquote>
+<h2 id="2、View-的点击事件"><a href="#2、View-的点击事件" class="headerlink" title="2、View 的点击事件"></a>2、View 的点击事件</h2><p>View 类中有一个回调方法为 **<code>onTouchEvent</code>**，该回调方法会在触摸屏幕事件发生时调用，在 View 类中可以通过实现该回调方法来处理 View 的一系列滑动事件的处理。</p>
+<p>我们可以自定义一个 MyView 类继承自 View 类，重写 <code>onTouchEvent</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouchEvent</span><span class="params">(MotionEvent event)</span> &#123;</span><br><span class="line">    Log.d(TAG, <span class="string">&quot;onTouch&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">super</span>.onTouchEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改布局文件，添加我们自定义的 View，需要注意的是，这里必须要写该类的完整包名：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;com.junerver.viewdemo.MyView</span><br><span class="line">    android:layout_width=<span class="string">&quot;match_parent&quot;</span></span><br><span class="line">    android:layout_height=<span class="string">&quot;100dp&quot;</span></span><br><span class="line">    android:background=<span class="string">&quot;#ffddee&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>运行后，点击该区域，Logcat 中输出如下：<br><img src="/4" alt="logcat 输出"></p>
+<p>可以看出，每次我们点击该 View 所在区域时就会调用一次 <strong><code>onTouchEvent</code></strong> 回调方法。</p>
+<h3 id="2-1、MotionEvent"><a href="#2-1、MotionEvent" class="headerlink" title="2.1、MotionEvent"></a>2.1、MotionEvent</h3><p>在 <strong><code>onTouchEvent</code></strong> 回调方法中我们可以发现，该方法接受了一个 <strong>MotionEvent</strong> 参数，该参数是手指接触屏幕后所产生的的一系列事件。<br>我们依旧选择查看源码介绍来简单了解该类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Object used to report movement (mouse, pen, finger, trackball) events.</span><br><span class="line">Motion events may hold either absolute or relative movements and other data, depending on the type of device.</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>该对象用于报告运动（鼠标、笔、手指、轨迹球）事件。<br>运动事件可以持有绝对或相对运动和其他数据，这取决于设备的类型。</p>
+</blockquote>
+<p>细心的你可能会发现，上一小节我们的代码存在一个小问题，那就是如果我们点击 View 后拖动一段距离，并不会产生新的 Log 日志，这与我们预想的不一样，按道理应该会在滑动的过程中产生一系列的事件，并不断的调用 <strong><code>onTouchEvent</code></strong> 回调方法。</p>
+<p>其实原因很简单，注意 <strong><code>onTouchEvent</code></strong> 回调方法，这是一个有返回值的方法，它的返回值是一个 boolean 类型，而上一节我们代码的最后一行是 <code>return super.onTouchEvent(event);</code>。<br>该表达式的返回值其实是一个 <strong>false</strong>，我们可以查看 View 源码中的 <strong><code>onTouchEvent</code></strong> 方法的介绍，其中有这样一句话：</p>
+<blockquote>
+<p>@return True if the event was handled, false otherwise.<br>如果事件被处理（消费）则返回 true，否则返回 false。</p>
+</blockquote>
+<p>需要注意的是，我们在 View 上点击、滑动的时候，其实会产生很多的 <strong>MotionEvent</strong>，这些事件如同队列一样，依次的通过 <strong><code>onTouchEvent</code></strong> 回调方法来处理。这里因为我们使用的默认返回值 false，所以系统认为本次事件尚未处理完毕，所以我们后续的滑动事件，并没有被处理，只需将该方法的返回值设为 true 就可以不断的接收到点击事件。</p>
+<h3 id="2-2、MotionEvent-事件类型"><a href="#2-2、MotionEvent-事件类型" class="headerlink" title="2.2、MotionEvent 事件类型"></a>2.2、MotionEvent 事件类型</h3><p>查看源码可以得知，点击事件本身是区分事件类型的，常用的点击事件类型有：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">ACTION_DOWN</span>             <span class="operator">=</span> <span class="number">0</span>;<span class="comment">//单点触摸动作</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">ACTION_UP</span>               <span class="operator">=</span> <span class="number">1</span>;<span class="comment">//单点触摸离开动作</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">ACTION_MOVE</span>             <span class="operator">=</span> <span class="number">2</span>;<span class="comment">//触摸点移动动作</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">ACTION_CANCEL</span>           <span class="operator">=</span> <span class="number">3</span>;<span class="comment">//触摸动作取消</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">ACTION_OUTSIDE</span>          <span class="operator">=</span> <span class="number">4</span>;<span class="comment">//触摸动作超出边界</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">ACTION_POINTER_DOWN</span>     <span class="operator">=</span> <span class="number">5</span>;<span class="comment">//多点触摸动作</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">ACTION_POINTER_UP</span>       <span class="operator">=</span> <span class="number">6</span>;<span class="comment">//多点离开动作</span></span><br></pre></td></tr></table></figure>
+<p>正常情况下，触摸一次屏幕都会产生一系列的触摸事件，我们可以使用 <code>MotionEventCompat.getActionMasked(event)</code> 方法来获知本次触摸时间的事件类型。</p>
+<p>PS：可能你会在一些代码中看到使用 <code>event.getAction()</code> 方法来获取触摸事件的事件类型，但是需要注意的是，如果该 View 产生的是一个多点触摸事件，那么 <code>event.getAction()</code> 的返回值将不同于 <code>MotionEventCompat.getActionMasked(event)</code>。原因其实很简单，大家可以查看这两个方法的源码，或是参考<a target="_blank" rel="noopener" href="http://blog.csdn.net/victory08/article/details/49101367">getAction、getActionMask、getActionIndex区别</a>这篇文章。</p>
+<p>修改 <strong><code>onTouchEvent</code></strong> 回调方法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouchEvent</span><span class="params">(MotionEvent event)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">action</span> <span class="operator">=</span> MotionEventCompat.getActionMasked(event);</span><br><span class="line">    event.getAction();</span><br><span class="line">    <span class="keyword">switch</span>(action) &#123;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">            Log.d(TAG, <span class="string">&quot;down&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">            Log.d(TAG, <span class="string">&quot;move&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">            Log.d(TAG, <span class="string">&quot;up&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次点击该 View 并滑动，可以看到 Logcat 上输出了一系列的触摸事件被触发的日志。<br><img src="/5" alt="一系列的触摸事件"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/View/" rel="tag"># View</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/03/21/%E8%B8%A9%E5%9D%91%E8%AE%B0-%E5%9C%A8-RecyclerView-%E4%B8%AD%E4%BD%BF%E7%94%A8-EditText-%E6%BB%9A%E5%8A%A8%E5%90%8E%E6%95%B0%E6%8D%AE%E6%B6%88%E5%A4%B1/" rel="prev" title="踩坑记-在 RecyclerView 中使用 EditText 滚动后数据消失">
+                  <i class="fa fa-angle-left"></i> 踩坑记-在 RecyclerView 中使用 EditText 滚动后数据消失
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/05/26/View-%E4%BA%8B%E4%BB%B6%E4%BD%93%E7%B3%BB%E8%AF%A6%E8%A7%A3%EF%BC%882%EF%BC%89/" rel="next" title="View 事件体系详解（2）">
+                  View 事件体系详解（2） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

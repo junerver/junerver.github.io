@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="有了前面的章节的学习，我们已经基本了解了 react 及组件等概念，但是我们之前都是直接在 html 中使用的 react，接下来，我们将通过 create-react-app 脚手架，来创建一个真正的 react 项目，开始深入学习 react 的其他知识。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零开始学习React-4：用脚手架创建项目，配置Prettier规范项目">
+<meta property="og:url" content="https://junerver.xyz/2022/06/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React-4%EF%BC%9A%E7%94%A8%E8%84%9A%E6%89%8B%E6%9E%B6%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%EF%BC%8C%E9%85%8D%E7%BD%AEPrettier%E8%A7%84%E8%8C%83%E9%A1%B9%E7%9B%AE/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="有了前面的章节的学习，我们已经基本了解了 react 及组件等概念，但是我们之前都是直接在 html 中使用的 react，接下来，我们将通过 create-react-app 脚手架，来创建一个真正的 react 项目，开始深入学习 react 的其他知识。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/2022/06/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React-4%EF%BC%9A%E7%94%A8%E8%84%9A%E6%89%8B%E6%9E%B6%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%EF%BC%8C%E9%85%8D%E7%BD%AEPrettier%E8%A7%84%E8%8C%83%E9%A1%B9%E7%9B%AE/1">
+<meta property="og:image" content="https://junerver.xyz/2">
+<meta property="og:image" content="https://junerver.xyz/3">
+<meta property="article:published_time" content="2022-06-08T03:56:07.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.492Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/2022/06/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React-4%EF%BC%9A%E7%94%A8%E8%84%9A%E6%89%8B%E6%9E%B6%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%EF%BC%8C%E9%85%8D%E7%BD%AEPrettier%E8%A7%84%E8%8C%83%E9%A1%B9%E7%9B%AE/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2022/06/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React-4%EF%BC%9A%E7%94%A8%E8%84%9A%E6%89%8B%E6%9E%B6%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%EF%BC%8C%E9%85%8D%E7%BD%AEPrettier%E8%A7%84%E8%8C%83%E9%A1%B9%E7%9B%AE/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2022/06/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React-4%EF%BC%9A%E7%94%A8%E8%84%9A%E6%89%8B%E6%9E%B6%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%EF%BC%8C%E9%85%8D%E7%BD%AEPrettier%E8%A7%84%E8%8C%83%E9%A1%B9%E7%9B%AE/","path":"2022/06/08/从零开始学习React-4：用脚手架创建项目，配置Prettier规范项目/","title":"从零开始学习React-4：用脚手架创建项目，配置Prettier规范项目"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从零开始学习React-4：用脚手架创建项目，配置Prettier规范项目 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-CRA%E8%84%9A%E6%89%8B%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">1. CRA脚手架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8D%95%E9%A1%B5%E9%9D%A2%E5%BA%94%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">2. 单页面应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8-yarn"><span class="nav-number">3.</span> <span class="nav-text">3. 使用 yarn</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E9%A1%B9%E7%9B%AE%E6%9B%B4%E7%9B%AE%E5%BD%95%E5%AE%89%E8%A3%85%E6%89%80%E6%9C%89%E4%BE%9D%E8%B5%96"><span class="nav-number">3.1.</span> <span class="nav-text">在项目更目录安装所有依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%9A%84%E4%BE%9D%E8%B5%96"><span class="nav-number">3.2.</span> <span class="nav-text">添加新的依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7%E4%BE%9D%E8%B5%96"><span class="nav-number">3.3.</span> <span class="nav-text">升级依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E4%BE%9D%E8%B5%96%E9%A1%B9"><span class="nav-number">3.4.</span> <span class="nav-text">删除依赖项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE-Prettier%EF%BC%8C%E8%A7%84%E8%8C%83%E4%BB%A3%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">4. 安装、配置 Prettier，规范代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">4.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEeslint"><span class="nav-number">4.2.</span> <span class="nav-text">配置eslint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%8F%90%E4%BA%A4%E6%97%B6%E8%87%AA%E5%8A%A8%E8%BF%90%E8%A1%8C-Prettier"><span class="nav-number">4.3.</span> <span class="nav-text">代码提交时自动运行 Prettier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WebStorm-%E4%B8%AD%E4%BD%BF%E7%94%A8-prettier-%E7%9A%84%E4%B8%80%E4%BA%9B%E9%85%8D%E7%BD%AE"><span class="nav-number">4.4.</span> <span class="nav-text">WebStorm 中使用 prettier 的一些配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E6%97%B6%E4%BD%BF%E7%94%A8%E7%BB%9D%E5%AF%B9%E8%B7%AF%E5%BE%84"><span class="nav-number">4.5.</span> <span class="nav-text">引用时使用绝对路径</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/06/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React-4%EF%BC%9A%E7%94%A8%E8%84%9A%E6%89%8B%E6%9E%B6%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%EF%BC%8C%E9%85%8D%E7%BD%AEPrettier%E8%A7%84%E8%8C%83%E9%A1%B9%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从零开始学习React-4：用脚手架创建项目，配置Prettier规范项目 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从零开始学习React-4：用脚手架创建项目，配置Prettier规范项目
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-06-08 11:56:07" itemprop="dateCreated datePublished" datetime="2022-06-08T11:56:07+08:00">2022-06-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">Web前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>有了前面的章节的学习，我们已经基本了解了 react 及组件等概念，但是我们之前都是直接在 html 中使用的 react，接下来，我们将通过 create-react-app 脚手架，来创建一个真正的 react 项目，开始深入学习 react 的其他知识。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="1-CRA脚手架"><a href="#1-CRA脚手架" class="headerlink" title="1. CRA脚手架"></a>1. CRA脚手架</h2><p>如果你和我一样是一名 android 开发者，对脚手架这个概念可能有些陌生，其实我们在 AS 中新建的项目就可以看做是一个脚手架，他帮我们创建好了目录结构，安装好了基础的相关依赖。</p>
+<p>React 没有类 AS 这样的专用开发工具，我们需要通过 <a target="_blank" rel="noopener" href="https://github.com/facebook/create-react-app">create react app</a> 脚手架（简称 cra）命令来帮我们创建好项目的基础结构，使用的指令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//使用ts模板创建项目</span><br><span class="line">npx create-react-app my-app-name --template typescript</span><br><span class="line">//进入项目目录</span><br><span class="line">cd my-app-name</span><br><span class="line">//启动项目</span><br><span class="line">yarn start</span><br></pre></td></tr></table></figure>
+
+<p>上面的 my-app-name 是项目名称，<code>--template typescript</code> 表示使用 ts 模板来创建 React 项目，如果使用 js 创建项目，则可以忽略该参数。</p>
+<img src="1" width = "380"  />
+
+<p>目录结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">my-app</span><br><span class="line">├── README.md</span><br><span class="line">├── node_modules  //依赖的包</span><br><span class="line">├── package.json  //包管理文件</span><br><span class="line">├── .gitignore  //git忽略</span><br><span class="line">├── public  //公共资源</span><br><span class="line">│   ├── favicon.ico</span><br><span class="line">│   ├── index.html  //spa的页面</span><br><span class="line">│   └── manifest.json</span><br><span class="line">└── src  //源代码</span><br><span class="line">    ├── App.css</span><br><span class="line">    ├── App.tsx  //默认创建的组件</span><br><span class="line">    ├── App.test.ts</span><br><span class="line">    ├── index.css</span><br><span class="line">    ├── index.tsx  //项目入口</span><br><span class="line">    ├── logo.svg</span><br><span class="line">    └── setupTests.ts</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-单页面应用"><a href="#2-单页面应用" class="headerlink" title="2. 单页面应用"></a>2. 单页面应用</h2><blockquote>
+<p>单页面应用(single-page application)，是一个应用程序，它可以加载单个 HTML 页面，以及运行应用程序所需的所有必要资源（例如 JavaScript 和 CSS）。与页面或后续页面的任何交互，都不再需要往返 server 加载资源，即页面不会重新加载。</p>
+<p>你可以使用 React 来构建单页应用程序，但不是必须如此。React 还可用于增强现有网站的小部分，使其增加额外交互。用 React 编写的代码，可以与服务器端渲染的标记（例如 PHP）或其他客户端库和平共处。实际上，这也正是 Facebook 内部使用 React 的方式。</p>
+</blockquote>
+<p>一般的无论是使用 React 还是 Vue，现在我们都是使用他们创建 spa 单页应用，通过路由实现组件切换，而不是创建真实的、不同的页面。</p>
+<h2 id="3-使用-yarn"><a href="#3-使用-yarn" class="headerlink" title="3. 使用 yarn"></a>3. 使用 yarn</h2><p>当然我们可以使用 npm 来进行包管理等操作，但是更推荐使用 yarn 来做这些事，简单的了解常用 yarn 指令：</p>
+<h3 id="在项目更目录安装所有依赖"><a href="#在项目更目录安装所有依赖" class="headerlink" title="在项目更目录安装所有依赖"></a>在项目更目录安装所有依赖</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn </span><br></pre></td></tr></table></figure>
+
+<h3 id="添加新的依赖"><a href="#添加新的依赖" class="headerlink" title="添加新的依赖"></a>添加新的依赖</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yarn add [package]</span><br><span class="line">yarn add [package]@[version]</span><br><span class="line">yarn add [package]@[tag]</span><br></pre></td></tr></table></figure>
+
+<h3 id="升级依赖"><a href="#升级依赖" class="headerlink" title="升级依赖"></a>升级依赖</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yarn up [package]</span><br><span class="line">yarn up [package]@[version]</span><br><span class="line">yarn up [package]@[tag]</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除依赖项"><a href="#删除依赖项" class="headerlink" title="删除依赖项"></a>删除依赖项</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn remove [package]</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-安装、配置-Prettier，规范代码"><a href="#4-安装、配置-Prettier，规范代码" class="headerlink" title="4. 安装、配置 Prettier，规范代码"></a>4. 安装、配置 Prettier，规范代码</h2><p>开发时难免会有需要协同开发的场景，但是每个人的开发习惯、开发工具都不一样，因此我们需要统一代码风格，除了要求人员的自律以外，更好的方法是使用 <a target="_blank" rel="noopener" href="https://prettier.io/docs/en/install.html">Prettier</a> 来规范。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ol>
+<li><p><code>yarn add --dev --exact prettier</code></p>
+</li>
+<li><p><code>echo &#123;&#125;&gt; .prettierrc.json</code> 创建配置文件，并填写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;tabWidth&quot;: 2,</span><br><span class="line">  &quot;singleQuote&quot;: true,</span><br><span class="line">  &quot;semi&quot;: false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分别表示：1：tab宽度为两个空格；2：字符串使用单引号；3：语句行末不使用分号</p>
+</li>
+<li><p>创建 <a target="_blank" rel="noopener" href="https://prettier.io/docs/en/ignore.html">.prettierignore</a> 文件 <code>.prettierignore</code> 并填写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Ignore artifacts:</span><br><span class="line">build</span><br><span class="line">coverage</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>现在只要运行 <code>yarn prettier --write .</code> ，我们就可以按照配置格式化全部代码了</p>
+<h3 id="配置eslint"><a href="#配置eslint" class="headerlink" title="配置eslint"></a>配置eslint</h3><p>prettier与eslint是有冲突的，需要安装 <code>yarn add eslint-config-prettier -D</code> ，需要修改 package.json 文件的 <strong>eslintConfig</strong> 增加 ：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&quot;eslintConfig&quot;: &#123;</span><br><span class="line">    &quot;extends&quot;: [</span><br><span class="line">      &quot;react-app&quot;,</span><br><span class="line">      &quot;react-app/jest&quot;,</span><br><span class="line">      &quot;prettier&quot;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码提交时自动运行-Prettier"><a href="#代码提交时自动运行-Prettier" class="headerlink" title="代码提交时自动运行 Prettier"></a>代码提交时自动运行 Prettier</h3><p>提交时自动使用Prettier需要安装<a target="_blank" rel="noopener" href="https://github.com/okonet/lint-staged">lint-staged</a>， <code>npx mrm lint-staged</code>，需要修改 package.json 文件的 <strong>lint-staged</strong> 增加tsx、jsx文件支持：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;lint-staged&quot;: &#123;</span><br><span class="line">    &quot;*.&#123;js,css,md,ts,jsx,tsx&#125;&quot;: &quot;prettier --write&quot;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="WebStorm-中使用-prettier-的一些配置"><a href="#WebStorm-中使用-prettier-的一些配置" class="headerlink" title="WebStorm 中使用 prettier 的一些配置"></a>WebStorm 中使用 prettier 的一些配置</h3><p>webstorm 默认安装了prettier 插件，在设置中搜索 prettier，然后选择对应项目的prettier包</p>
+<p><img src="/2" alt="image-20220608173945618.png"></p>
+<p>勾选下面的两个复选框，将在格式化代码与保存时使用 prettier 帮助我们格式化代码。</p>
+<h3 id="引用时使用绝对路径"><a href="#引用时使用绝对路径" class="headerlink" title="引用时使用绝对路径"></a>引用时使用绝对路径</h3><ol>
+<li><p>在 tsconfig.json 的 <strong>compilerOptions</strong> 下增加：<code>&quot;baseUrl&quot;: &quot;./src&quot;,</code></p>
+</li>
+<li><p>在 webstorm 搜索 <em>imports</em> 勾选 <em>Use paths relative to tsconfig.json</em></p>
+</li>
+</ol>
+<p><img src="/3" alt="image-20220608174737472.png"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/05/23/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React%EF%BC%9Areact%E4%B8%AD%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E4%B8%8E%E6%9F%AF%E9%87%8C%E5%8C%96/" rel="prev" title="从零开始学习React：react中事件处理与柯里化">
+                  <i class="fa fa-angle-left"></i> 从零开始学习React：react中事件处理与柯里化
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/" rel="next" title="React入门：在 React 中使用使用 Antd">
+                  React入门：在 React 中使用使用 Antd <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="”总所周知“，在 Compose 中有个思想叫做状态提升，在之前的文章Compose学习笔记2 - LaunchedEffect、状态与 状态管理中我们曾提及过。 状态提升的目的是为了让我们的组件尽可能的”无状态“，无状态的优点：  可复用，组件只负责组件的职责，不持有或者少持有状态 可测试，组件不持有状态，更接近于纯函数，相同输入必然有相同输出  状态提升的想法很好，但是实践的时候可能并不美妙。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Compose中使用状态提升？我提升个P...Provider">
+<meta property="og:url" content="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="”总所周知“，在 Compose 中有个思想叫做状态提升，在之前的文章Compose学习笔记2 - LaunchedEffect、状态与 状态管理中我们曾提及过。 状态提升的目的是为了让我们的组件尽可能的”无状态“，无状态的优点：  可复用，组件只负责组件的职责，不持有或者少持有状态 可测试，组件不持有状态，更接近于纯函数，相同输入必然有相同输出  状态提升的想法很好，但是实践的时候可能并不美妙。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-11T07:43:30.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.517Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Compose">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="ahooks">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/","path":"2024/03/11/在Compose中使用状态提升？我提升个P-Provider/","title":"在Compose中使用状态提升？我提升个P...Provider"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>在Compose中使用状态提升？我提升个P...Provider | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E6%9C%89%E7%82%B9%E4%B8%91%E9%99%8B%E7%9A%84%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87"><span class="nav-number">1.</span> <span class="nav-text">可能有点丑陋的状态提升</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-useContext-%E6%9D%A5%E8%A7%A3%E8%80%A6%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E7%9A%84%E7%8A%B6%E6%80%81%E3%80%81%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92"><span class="nav-number">2.</span> <span class="nav-text">使用 useContext 来解耦组件之间的状态、事件传递</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E9%80%A0%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%88%9B%E5%BB%BA%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">2.1.</span> <span class="nav-text">改造第一步：创建上下文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E9%80%A0%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E4%BD%BF%E7%94%A8%E4%B8%8A%E4%B8%8B%E6%96%87%E5%AF%B9%E8%B1%A1%E6%8F%90%E4%BE%9B%E7%9A%84-Provider-%E7%BB%84%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">改造第二步：使用上下文对象提供的 Provider 组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E9%80%A0%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E6%94%B9%E9%80%A0%E5%AD%90%E7%BB%84%E4%BB%B6%EF%BC%8C%E4%BD%BF%E7%94%A8-useContext-%E5%87%BD%E6%95%B0%E8%8E%B7%E5%8F%96%E9%9C%80%E8%A6%81%E7%9A%84%E7%8A%B6%E6%80%81%E3%80%81%E5%87%BD%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">改造第三步：改造子组件，使用 useContext 函数获取需要的状态、函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%88%90%EF%BC%9A%E7%8E%B0%E5%9C%A8%E6%88%91%E4%BB%AC%E7%9A%84%E7%BB%84%E4%BB%B6%E4%BA%92%E7%9B%B8%E4%B9%8B%E9%97%B4%E4%B8%8D%E5%86%8D%E8%80%A6%E5%90%88%EF%BC%8C%E6%97%A0%E9%9C%80%E4%BC%A0%E9%80%92%E7%8A%B6%E6%80%81%E3%80%81%E5%87%BD%E6%95%B0"><span class="nav-number">2.4.</span> <span class="nav-text">完成：现在我们的组件互相之间不再耦合，无需传递状态、函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E6%9B%B4%E5%A4%9A"><span class="nav-number">3.</span> <span class="nav-text">探索更多</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="在Compose中使用状态提升？我提升个P...Provider | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在Compose中使用状态提升？我提升个P...Provider
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-11 15:43:30" itemprop="dateCreated datePublished" datetime="2024-03-11T15:43:30+08:00">2024-03-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>”总所周知“，在 Compose 中有个思想叫做<strong>状态提升</strong>，在之前的文章<a href="https://junerver.xyz/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/#%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87">Compose学习笔记2 - LaunchedEffect、状态与 状态管理</a>中我们曾提及过。</p>
+<p>状态提升的目的是为了让我们的组件尽可能的”无状态“，无状态的优点：</p>
+<ul>
+<li>可复用，组件只负责组件的职责，不持有或者少持有状态</li>
+<li>可测试，组件不持有状态，更接近于纯函数，相同输入必然有相同输出</li>
+</ul>
+<p>状态提升的想法很好，但是实践的时候可能并不美妙。</p>
+<span id="more"></span>
+
+<h2 id="可能有点丑陋的状态提升"><a href="#可能有点丑陋的状态提升" class="headerlink" title="可能有点丑陋的状态提升"></a>可能有点丑陋的状态提升</h2><p>我们快速的写一个 TodoList，来演示一下状态提升可能存在的问题：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">TestStateHoisting</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 在顶层组件声明状态与改变状态的函数(称之为事件)</span></span><br><span class="line">    <span class="keyword">val</span> list = useList&lt;Todo&gt;()</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">addTodo</span><span class="params">(todo: <span class="type">Todo</span>)</span></span> &#123;</span><br><span class="line">        list.add(todo)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">delTodo</span><span class="params">(id: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        list.removeIf &#123; it.id == id &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    Surface &#123;</span><br><span class="line">        Column &#123;</span><br><span class="line">            <span class="comment">//事件传递</span></span><br><span class="line">            Header(::addTodo)</span><br><span class="line">            TodoList(todos = list, ::delTodo)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Todo</span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> id: String)</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Header</span><span class="params">(addTodo: (<span class="type">Todo</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> (input, setInput) = useState(<span class="string">&quot;&quot;</span>)</span><br><span class="line">    Row &#123;</span><br><span class="line">        OutlinedTextField(</span><br><span class="line">            value = input,</span><br><span class="line">            onValueChange = setInput,</span><br><span class="line">        )</span><br><span class="line">        TButton(text = <span class="string">&quot;add&quot;</span>) &#123;</span><br><span class="line">            addTodo(Todo(input, NanoId.generate()))</span><br><span class="line">            setInput(<span class="string">&quot;&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">TodoList</span><span class="params">(todos: <span class="type">List</span>&lt;<span class="type">Todo</span>&gt;, delTodo: (<span class="type">String</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    Column &#123;</span><br><span class="line">        todos.map &#123;</span><br><span class="line">            TodoItem(item = it, delTodo)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">TodoItem</span><span class="params">(item: <span class="type">Todo</span>, delTodo: (<span class="type">String</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    Row(modifier = Modifier.fillMaxWidth()) &#123;</span><br><span class="line">        Text(text = item.name)</span><br><span class="line">        TButton(text = <span class="string">&quot;del&quot;</span>) &#123;</span><br><span class="line">            delTodo(item.id)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">TButton</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    text: <span class="type">String</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">    enabled: <span class="type">Boolean</span> = <span class="literal">true</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">    modifier: <span class="type">Modifier</span> = Modifier,</span></span></span><br><span class="line"><span class="params"><span class="function">    onClick: () -&gt; <span class="type">Unit</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span> &#123;</span><br><span class="line">    Button(onClick = onClick, enabled = enabled, modifier = modifier.padding(PaddingValues(<span class="number">4.</span>dp))) &#123;</span><br><span class="line">        Text(text = text)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是一个非常完整的 ”状态提升“ 示例，但是它有一点点丑陋。例子中这种组织、管理状态的思想称之为：<strong>单向数据流</strong>，即状态（数据）从父组件向下流向子组件，数据只有一个唯一可信源，就是来自父组件的状态。子组件从过向上传递事件（通过调用由父组件传递的改变状态的函数实现传递），来改变状态。</p>
+<p>使用<strong>状态提升</strong>，在面对一些复杂场景，例如多个不同层级的组件，需要将所有状态提升到共有的顶层组件，然后通过 props 在组件之间传递。一来代码量上提升很多，二来如果涉及修改，就会比较麻烦。</p>
+<p>有的中间组件可能并不需要使用这些状态，或者函数。例如 <code>TodoList</code> 组件，在它的实现中它其实并不关心 <code>delTodo</code> 函数到底是什么，它也不会使用这个函数。但是为了传递到目标组件还是需要在 props 中进行声明，显得非常的笨重。</p>
+<h2 id="使用-useContext-来解耦组件之间的状态、事件传递"><a href="#使用-useContext-来解耦组件之间的状态、事件传递" class="headerlink" title="使用 useContext 来解耦组件之间的状态、事件传递"></a>使用 <code>useContext</code> 来解耦组件之间的状态、事件传递</h2><p>上面的例子我们只传递了两层，Root -&gt; TodoList -&gt; TodoItem，实际开发可能会存在更多的状态传递层级，还用这种方式显然有些笨拙了。</p>
+<p>我们还有其他方法么？当然，我们还可以使用 ViewModel，通过它持有状态、改变状态的函数，这都很好，很符合开发 Android 的既往路线。</p>
+<p>但是我们还可以试一试更好玩的方法，使用<a target="_blank" rel="noopener" href="https://github.com/junerver">junerver</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a> 中的 <code>useContext</code> 函数，在无需创建 vm 文件的情况下，更函数式的处理状态。</p>
+<h3 id="改造第一步：创建上下文"><a href="#改造第一步：创建上下文" class="headerlink" title="改造第一步：创建上下文"></a>改造第一步：创建上下文</h3><p>首先使用 <code>createContext</code> 创建一个上下文对象，同时传入默认值：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> TodoContext = createContext(tuple(</span><br><span class="line">    emptyList&lt;Todo&gt;(), <span class="comment">// 对应list状态</span></span><br><span class="line">    &#123; _: Todo -&gt; &#125;, <span class="comment">// 对应 addTodo函数 </span></span><br><span class="line">    &#123; _: String -&gt; &#125; <span class="comment">// 对应 delTodo函数</span></span><br><span class="line">))</span><br></pre></td></tr></table></figure>
+
+<p>这里我们传入的都是空值、空函数，tuple函数是我自定义的快速创建 <code>Triple</code> 的函数。</p>
+<h3 id="改造第二步：使用上下文对象提供的-Provider-组件"><a href="#改造第二步：使用上下文对象提供的-Provider-组件" class="headerlink" title="改造第二步：使用上下文对象提供的 Provider 组件"></a>改造第二步：使用上下文对象提供的 <code>Provider</code> 组件</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">TestStateHoisting</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> list = useList&lt;Todo&gt;()</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">addTodo</span><span class="params">(todo: <span class="type">Todo</span>)</span></span> &#123;</span><br><span class="line">        list.add(todo)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">delTodo</span><span class="params">(id: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        list.removeIf &#123; it.id == id &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 在这个组件之下的所有组件都能使用我们暴露出的这三个内容</span></span><br><span class="line">    TodoContext.Provider(</span><br><span class="line">        value = tuple(</span><br><span class="line">            list,</span><br><span class="line">            ::addTodo,</span><br><span class="line">            ::delTodo</span><br><span class="line">        )</span><br><span class="line">    ) &#123;</span><br><span class="line">        Surface &#123;</span><br><span class="line">            Column &#123;</span><br><span class="line">                <span class="comment">// Header、TodoList 都改造成无参组件</span></span><br><span class="line">                Header()</span><br><span class="line">                TodoList()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="改造第三步：改造子组件，使用-useContext-函数获取需要的状态、函数"><a href="#改造第三步：改造子组件，使用-useContext-函数获取需要的状态、函数" class="headerlink" title="改造第三步：改造子组件，使用 useContext 函数获取需要的状态、函数"></a>改造第三步：改造子组件，使用 <code>useContext</code> 函数获取需要的状态、函数</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Header</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 传入上下文，使用解构声明拿到对应顺序的函数</span></span><br><span class="line">    <span class="keyword">val</span> (_, addTodo) = useContext(context = TodoContext) </span><br><span class="line">    <span class="keyword">val</span> (input, setInput) = useState(<span class="string">&quot;&quot;</span>)</span><br><span class="line">    Row &#123;</span><br><span class="line">        OutlinedTextField(</span><br><span class="line">            value = input,</span><br><span class="line">            onValueChange = setInput,</span><br><span class="line">        )</span><br><span class="line">        TButton(text = <span class="string">&quot;add&quot;</span>) &#123;</span><br><span class="line">            addTodo(Todo(input, NanoId.generate()))</span><br><span class="line">            setInput(<span class="string">&quot;&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">TodoList</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 拿到的todos本身就是状态，可以直接使用</span></span><br><span class="line">    <span class="keyword">val</span> (todos) = useContext(context = TodoContext)</span><br><span class="line">    Column &#123;</span><br><span class="line">        todos.map &#123;</span><br><span class="line">            TodoItem(item = it)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">TodoItem</span><span class="params">(item: <span class="type">Todo</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 不使用的解构声明对象，可以使用`_` 作为占位符</span></span><br><span class="line">    <span class="keyword">val</span> (_, _, delTodo) = useContext(context = TodoContext)</span><br><span class="line">    Row(modifier = Modifier.fillMaxWidth()) &#123;</span><br><span class="line">        Text(text = item.name)</span><br><span class="line">        TButton(text = <span class="string">&quot;del&quot;</span>) &#123;</span><br><span class="line">            delTodo(item.id)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="完成：现在我们的组件互相之间不再耦合，无需传递状态、函数"><a href="#完成：现在我们的组件互相之间不再耦合，无需传递状态、函数" class="headerlink" title="完成：现在我们的组件互相之间不再耦合，无需传递状态、函数"></a>完成：现在我们的组件互相之间不再耦合，无需传递状态、函数</h3><p>对比改造前后，我们再也不用关心状态的传递，后续代码更新也不用担心牵一发而动全身。</p>
+<p>总结：</p>
+<ol>
+<li>使用 <code>createContex</code> 创建上下文对象</li>
+<li>使用 <code>上下文对象.Provider</code> 作为根组件</li>
+<li>在需要使用状态、函数的组件中使用 <code>useContext(上下文对象)</code>获取</li>
+</ol>
+<h2 id="探索更多"><a href="#探索更多" class="headerlink" title="探索更多"></a>探索更多</h2><p>项目开源地址：<a target="_blank" rel="noopener" href="https://github.com/junerver">junerver</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a></p>
+<p>MavenCentral：<a target="_blank" rel="noopener" href="https://central.sonatype.com/artifact/xyz.junerver.compose/hooks">hooks</a></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation(<span class="string">&quot;xyz.junerver.compose:hooks:1.0.3&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>欢迎使用、勘误、pr、star。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Compose/" rel="tag"># Compose</a>
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/ahooks/" rel="tag"># ahooks</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/" rel="prev" title="在Compose中使用useRequest轻松管理网络请求">
+                  <i class="fa fa-angle-left"></i> 在Compose中使用useRequest轻松管理网络请求
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/13/%E5%9C%A8Compose%E4%B8%AD%E7%88%B6%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E7%9A%84%E5%87%BD%E6%95%B0%EF%BC%9F/" rel="next" title="在Compose中父组件如何调用子组件的函数？">
+                  在Compose中父组件如何调用子组件的函数？ <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

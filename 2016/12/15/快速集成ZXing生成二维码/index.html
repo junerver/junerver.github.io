@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="首先需要依赖ZXing的核心库compile &#39;com.google.zxing:core:3.2.1&#39;  查看最新的ZXing release版本  新建生成二维码的工具类：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速集成ZXing生成二维码">
+<meta property="og:url" content="https://junerver.xyz/2016/12/15/%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90ZXing%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="首先需要依赖ZXing的核心库compile &#39;com.google.zxing:core:3.2.1&#39;  查看最新的ZXing release版本  新建生成二维码的工具类：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-12-15T01:05:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.547Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="ZXing">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2016/12/15/%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90ZXing%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2016/12/15/%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90ZXing%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81/","path":"2016/12/15/快速集成ZXing生成二维码/","title":"快速集成ZXing生成二维码"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>快速集成ZXing生成二维码 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2016/12/15/%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90ZXing%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="快速集成ZXing生成二维码 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          快速集成ZXing生成二维码
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2016-12-15 09:05:00" itemprop="dateCreated datePublished" datetime="2016-12-15T09:05:00+08:00">2016-12-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>首先需要依赖ZXing的核心库<code>compile &#39;com.google.zxing:core:3.2.1&#39;</code></p>
+<blockquote>
+<p>查看最新的ZXing <a target="_blank" rel="noopener" href="https://github.com/zxing/zxing/releases">release版本</a></p>
+</blockquote>
+<p>新建生成二维码的工具类：</p>
+<span id="more"></span>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">QRCodeUtil</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 生成二维码Bitmap</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content   内容</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> widthPix  图片宽度</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> heightPix 图片高度</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> logoBm    二维码中心的Logo图标（可以为null）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> filePath  用于存储二维码图片的文件路径</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 生成二维码及保存文件是否成功</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">createQRImage</span><span class="params">(String content, <span class="type">int</span> widthPix, <span class="type">int</span> heightPix, Bitmap logoBm, String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (content == <span class="literal">null</span> || <span class="string">&quot;&quot;</span>.equals(content) || content.length() &lt; <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//配置参数</span></span><br><span class="line">            Map&lt;EncodeHintType, Object&gt; hints = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">            hints.put(EncodeHintType.CHARACTER_SET, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">            <span class="comment">//容错级别</span></span><br><span class="line">            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);</span><br><span class="line">            <span class="comment">//设置空白边距的宽度</span></span><br><span class="line">            hints.put(EncodeHintType.MARGIN, <span class="number">0</span>); <span class="comment">//default is 4</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 图像数据转换，使用了矩阵转换</span></span><br><span class="line">            <span class="type">BitMatrix</span> <span class="variable">bitMatrix</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">QRCodeWriter</span>().encode(content, BarcodeFormat.QR_CODE, widthPix, heightPix, hints);</span><br><span class="line">            <span class="type">int</span>[] pixels = <span class="keyword">new</span> <span class="title class_">int</span>[widthPix * heightPix];</span><br><span class="line">            <span class="comment">// 下面这里按照二维码的算法，逐个生成二维码的图片，</span></span><br><span class="line">            <span class="comment">// 两个for循环是图片横列扫描的结果</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> <span class="number">0</span>; y &lt; heightPix; y++) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">0</span>; x &lt; widthPix; x++) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (bitMatrix.get(x, y)) &#123;</span><br><span class="line">                        pixels[y * widthPix + x] = <span class="number">0xff000000</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        pixels[y * widthPix + x] = <span class="number">0xffffffff</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 生成二维码图片的格式，使用ARGB_8888</span></span><br><span class="line">            <span class="type">Bitmap</span> <span class="variable">bitmap</span> <span class="operator">=</span> Bitmap.createBitmap(widthPix, heightPix, Bitmap.Config.ARGB_8888);</span><br><span class="line">            bitmap.setPixels(pixels, <span class="number">0</span>, widthPix, <span class="number">0</span>, <span class="number">0</span>, widthPix, heightPix);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (logoBm != <span class="literal">null</span>) &#123;</span><br><span class="line">                bitmap = addLogo(bitmap, logoBm);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//必须使用compress方法将bitmap保存到文件中再进行读取。直接返回的bitmap是没有任何压缩的，内存消耗巨大！</span></span><br><span class="line">            <span class="keyword">return</span> bitmap != <span class="literal">null</span> &amp;&amp; bitmap.compress(Bitmap.CompressFormat.JPEG, <span class="number">100</span>, <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(filePath));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (WriterException | IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 在二维码中间添加Logo图案</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Bitmap <span class="title function_">addLogo</span><span class="params">(Bitmap src, Bitmap logo)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (src == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (logo == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> src;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取图片的宽高</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">srcWidth</span> <span class="operator">=</span> src.getWidth();</span><br><span class="line">        <span class="type">int</span> <span class="variable">srcHeight</span> <span class="operator">=</span> src.getHeight();</span><br><span class="line">        <span class="type">int</span> <span class="variable">logoWidth</span> <span class="operator">=</span> logo.getWidth();</span><br><span class="line">        <span class="type">int</span> <span class="variable">logoHeight</span> <span class="operator">=</span> logo.getHeight();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (srcWidth == <span class="number">0</span> || srcHeight == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (logoWidth == <span class="number">0</span> || logoHeight == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> src;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//logo大小为二维码整体大小的1/5</span></span><br><span class="line">        <span class="type">float</span> <span class="variable">scaleFactor</span> <span class="operator">=</span> srcWidth * <span class="number">1.0f</span> / <span class="number">5</span> / logoWidth;</span><br><span class="line">        <span class="type">Bitmap</span> <span class="variable">bitmap</span> <span class="operator">=</span> Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Canvas</span> <span class="variable">canvas</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Canvas</span>(bitmap);</span><br><span class="line">            canvas.drawBitmap(src, <span class="number">0</span>, <span class="number">0</span>, <span class="literal">null</span>);</span><br><span class="line">            canvas.scale(scaleFactor, scaleFactor, srcWidth / <span class="number">2</span>, srcHeight / <span class="number">2</span>);</span><br><span class="line">            canvas.drawBitmap(logo, (srcWidth - logoWidth) / <span class="number">2</span>, (srcHeight - logoHeight) / <span class="number">2</span>, <span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">            canvas.save(Canvas.ALL_SAVE_FLAG);</span><br><span class="line">            canvas.restore();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            bitmap = <span class="literal">null</span>;</span><br><span class="line">            e.getStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> bitmap;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Activity中使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OnClick(R.id.btn_create_qrcode)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">File</span> <span class="variable">outputPic</span> <span class="operator">=</span> makeTempFile(mContext, Environment.getExternalStorageDirectory().getPath() + <span class="string">&quot;/uerb/test/&quot;</span>, <span class="string">&quot;qr_&quot;</span>, <span class="string">&quot;.jpg&quot;</span>);</span><br><span class="line">    <span class="comment">//二维码图片较大时，生成图片、保存文件的时间可能较长，因此放在新线程中</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> QRCodeUtil.createQRImage(mEtQrcodeContent.getText().toString().trim(), mIvQrcodeImage.getWidth(), mIvQrcodeImage.getWidth(), <span class="literal">null</span>, outputPic.getAbsolutePath());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (success) &#123;</span><br><span class="line">                runOnUiThread(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                        mIvQrcodeImage.setImageBitmap(BitmapFactory.decodeFile(outputPic.getAbsolutePath()));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@SuppressWarnings(&#123;&quot;ConstantConditions&quot;, &quot;ResultOfMethodCallIgnored&quot;&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> File <span class="title function_">makeTempFile</span><span class="params">(<span class="meta">@NonNull</span> Context context, <span class="meta">@Nullable</span> String saveDir, String prefix, String extension)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (saveDir == <span class="literal">null</span>)</span><br><span class="line">        saveDir = context.getExternalCacheDir().getAbsolutePath();</span><br><span class="line">    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">timeStamp</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyyMMdd_HHmmss&quot;</span>, Locale.getDefault()).format(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">    <span class="keyword">final</span> <span class="type">File</span> <span class="variable">dir</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(saveDir);</span><br><span class="line">    dir.mkdirs();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">File</span>(dir, prefix + timeStamp + extension);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>常用的生成二维码的一些配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;EncodeHintType, Object&gt; hints = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line"><span class="comment">//指定字符集</span></span><br><span class="line">hints.put(EncodeHintType.CHARACTER_SET, <span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line"><span class="comment">//容错级别，容错级别越高生成的二维码越复杂</span></span><br><span class="line">hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);</span><br><span class="line"><span class="comment">//设置空白边距的宽度</span></span><br><span class="line">hints.put(EncodeHintType.MARGIN, <span class="number">0</span>); <span class="comment">//default is 4</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ZXing/" rel="tag"># ZXing</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2016/12/08/RxJava%E4%B8%8ERetrofit%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/" rel="prev" title="RxJava与Retrofit的简单使用">
+                  <i class="fa fa-angle-left"></i> RxJava与Retrofit的简单使用
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2016/12/15/%E4%B8%80%E6%AD%A5%E4%B8%80%E6%AD%A5%E5%AE%8C%E6%88%90-Android-USB%E5%BC%80%E5%8F%91/" rel="next" title="一步一步完成 Android USB开发">
+                  一步一步完成 Android USB开发 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

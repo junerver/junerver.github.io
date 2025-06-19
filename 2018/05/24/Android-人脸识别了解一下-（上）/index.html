@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="转载请注明作者及出处：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;ca3a12bc4911   引言人脸识别这件事想来早已经不新鲜，在 Android 中的应用也并不广泛，所以网上相关资料乏善可陈。但是在面对特殊的应用场景时，人脸识别的功能还是有一定的用处的，比如在考勤领域。 网上能搜到的很多示例比较多的是基于科大讯飞或者face++实现的，其中有一个示例做的非常漂亮，推荐大家看一看，*">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 人脸识别了解一下 （上）">
+<meta property="og:url" content="https://junerver.xyz/2018/05/24/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%8A%EF%BC%89/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="转载请注明作者及出处：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;ca3a12bc4911   引言人脸识别这件事想来早已经不新鲜，在 Android 中的应用也并不广泛，所以网上相关资料乏善可陈。但是在面对特殊的应用场景时，人脸识别的功能还是有一定的用处的，比如在考勤领域。 网上能搜到的很多示例比较多的是基于科大讯飞或者face++实现的，其中有一个示例做的非常漂亮，推荐大家看一看，*">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-05-24T05:19:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.417Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="ArcFace">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2018/05/24/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%8A%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/05/24/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%8A%EF%BC%89/","path":"2018/05/24/Android-人脸识别了解一下-（上）/","title":"Android 人脸识别了解一下 （上）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android 人脸识别了解一下 （上） | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E7%9A%84%E5%87%A0%E4%B8%AA%E9%87%8D%E8%A6%81%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">人脸识别的几个重要的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%BA%E8%84%B8%E6%B3%A8%E5%86%8C"><span class="nav-number">3.</span> <span class="nav-text">人脸注册</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/05/24/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%8A%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Android 人脸识别了解一下 （上） | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android 人脸识别了解一下 （上）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-05-24 13:19:00" itemprop="dateCreated datePublished" datetime="2018-05-24T13:19:00+08:00">2018-05-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>转载请注明作者及出处：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ca3a12bc4911">https://www.jianshu.com/p/ca3a12bc4911</a></p>
+</blockquote>
+<hr>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>人脸识别这件事想来早已经不新鲜，在 Android 中的应用也并不广泛，所以网上相关资料乏善可陈。但是在面对特殊的应用场景时，人脸识别的功能还是有一定的用处的，比如在考勤领域。</p>
+<p>网上能搜到的很多示例比较多的是基于科大讯飞或者face++实现的，其中有一个示例做的非常漂亮，推荐大家看一看，**<a target="_blank" rel="noopener" href="https://github.com/tony-Shx/Swface">SwFace</a>**。该项目基于讯飞SDK实现的人脸检测，使用face++的webapi实现的人脸注册以及人脸识别。</p>
+<span id="more"></span>
+
+<p>这些示例都有一个缺点，就是不支持动态识别（可以通过一些巧妙的方法，使用户无法感知这一过程），无论讯飞的SDK还是face++的webapi都是通过<strong>拍摄上传一张图片来进行人脸识别</strong>，其中讯飞的SDK使用起来很麻烦，官方的接入文档语焉不详，但是用来做<strong>人脸检测</strong>还是不错的。</p>
+<p>这些平台都有一个共同的缺点，就是<strong>依赖网络</strong>，所有操作都是调用云端接口，需要良好的网络环境才能实现人脸的注册与识别。这对于签到考勤这一场景（需要较快的识别速度、设备可能处于无网络状态）还是很不方便的，另外他们都是<strong>收费</strong>的。</p>
+<p>所以本文将介绍另一个功能完备，性能还算不错的第三方开发工具，<a target="_blank" rel="noopener" href="http://www.arcsoft.com.cn/">虹软中国</a>，而且它是免费的。</p>
+<p>鉴于本文实质是我理解人脸识别这一需求的一个思维过程，所谓文章整体会比较墨迹，干货部分我会加黑处理，大家可以选择性阅读。</p>
+<p>该项目的地址为：<a target="_blank" rel="noopener" href="https://github.com/asdfqwrasdf/ArcFaceDemo">https://github.com/asdfqwrasdf/ArcFaceDemo</a></p>
+<p>我整理并加注释的项目地址为：<a target="_blank" rel="noopener" href="https://github.com/junerver/ArcFaceDemo">https://github.com/junerver/ArcFaceDemo</a> （clone 到本地后可以直接 import 后运行）</p>
+<h2 id="人脸识别的几个重要的概念"><a href="#人脸识别的几个重要的概念" class="headerlink" title="人脸识别的几个重要的概念"></a>人脸识别的几个重要的概念</h2><p>人脸识别，我们可以理解为从一个专门保存人脸特征值的数据集合中找到最匹配的一组特征值。所以在整个流程中应该包含以下几个步骤</p>
+<ol>
+<li><strong>人脸检测</strong> （FD引擎）<br>即从摄像头预览中检测到人脸的存在，并且使用一个矩形框出人脸的范围。</li>
+<li><strong>人脸注册</strong><br>即将一张图片中的人脸信息，提取出特征值，将该特征值与人员信息建立联系。</li>
+<li><strong>人脸识别</strong> （FR引擎）<br>当检测出人脸时，对人脸进行识别，如果人脸特征集合中存在该人脸信息，读取出该人脸信息及人员信息。</li>
+</ol>
+<h2 id="人脸注册"><a href="#人脸注册" class="headerlink" title="人脸注册"></a>人脸注册</h2><p>人脸注册可以说是整个识别流程的基础，原因不言而喻，来看看官方demo是如何处理的。</p>
+<p>PS：demo非常简单，我们不做过于详细的解释，只介绍流程。</p>
+<p>所有人脸注册的流程都在 RegsiterActivity 文件中处理的，该页面启动的时候接受 Intent 中传来的 <code>imagePath</code> 信息（图片地址）；</p>
+<p>第一步：<br>将拍照获得的图片转为 Bitmap，然后将其<strong>转化成 NV21 格式的 Byte 数组</strong>，因为我们使用的sdk只能处理 NV21 格式的数据，NV21 格式限制<strong>高度不能为奇数</strong>；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mBitmap = Application.decodeImage(mFilePath);</span><br><span class="line"><span class="comment">//创建字节数组 大小由拍照传来的图片尺寸决定</span></span><br><span class="line"><span class="type">byte</span>[] data = <span class="keyword">new</span> <span class="title class_">byte</span>[mBitmap.getWidth() * mBitmap.getHeight() * <span class="number">3</span> / <span class="number">2</span>];</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//将bitmap转换成nv21，结果保存到data数组中</span></span><br><span class="line">	<span class="type">ImageConverter</span> <span class="variable">convert</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ImageConverter</span>();</span><br><span class="line">	convert.initial(mBitmap.getWidth(), mBitmap.getHeight(), ImageConverter.CP_PAF_NV21);<span class="comment">//此处高度不能为奇数</span></span><br><span class="line">	<span class="keyword">if</span> (convert.convert(mBitmap, data)) &#123;</span><br><span class="line">		Log.d(TAG, <span class="string">&quot;convert ok!&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	convert.destroy();</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二步：<br>获得 NV21 格式的图片信息数据后，我们使用sdk提供的 <strong>FD 人脸检测引擎</strong>，检测图片中的<strong>人脸信息（人脸 Rect、角度）</strong>，此处的 Rect 是图片中人脸位置的矩形。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建FD人脸检测引擎</span></span><br><span class="line"><span class="type">AFD_FSDKEngine</span> <span class="variable">engine</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AFD_FSDKEngine</span>();</span><br><span class="line"><span class="type">AFD_FSDKVersion</span> <span class="variable">version</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AFD_FSDKVersion</span>();</span><br><span class="line">List&lt;AFD_FSDKFace&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;AFD_FSDKFace&gt;(); <span class="comment">//人脸探测结果（探测引擎可以识别图片中的全部人联系信息，所以此处是一个List）</span></span><br><span class="line"><span class="comment">//初始化引擎</span></span><br><span class="line"><span class="type">AFD_FSDKError</span> <span class="variable">err</span> <span class="operator">=</span> engine.AFD_FSDK_InitialFaceEngine(</span><br><span class="line">        FaceDB.appid, FaceDB.fd_key, AFD_FSDKEngine.AFD_OPF_0_HIGHER_EXT, <span class="number">16</span>, <span class="number">300</span>);</span><br><span class="line"><span class="keyword">if</span> (err.getCode() != AFD_FSDKError.MOK) &#123;</span><br><span class="line">    <span class="comment">//引擎初始化失败</span></span><br><span class="line">	<span class="type">Message</span> <span class="variable">reg</span> <span class="operator">=</span> Message.obtain();</span><br><span class="line">	reg.what = MSG_CODE;</span><br><span class="line">	reg.arg1 = MSG_EVENT_FD_ERROR;</span><br><span class="line">	reg.arg2 = err.getCode();</span><br><span class="line">	mUIHandler.sendMessage(reg);</span><br><span class="line">&#125;</span><br><span class="line">err = engine.AFD_FSDK_GetVersion(version);</span><br><span class="line"><span class="comment">//FD人脸探测，转化的nv21数据数组，传入图片的宽度、高度、NV21、探测结果</span></span><br><span class="line">err  = engine.AFD_FSDK_StillImageFaceDetection(data, mBitmap.getWidth(), mBitmap.getHeight(), AFD_FSDKEngine.CP_PAF_NV21, result);</span><br></pre></td></tr></table></figure>
+<p>至此我们就获得了一张图片中的全部人脸数据了，他们都被保存在result这个List列表中了。<br>第三步：<br>经过上述的两部，我们已经成功的从图片中识别到了人脸，并且将该人脸在图片中的位置获取到了，接下来我们要做的就是使用 <strong>FR 人脸识别引擎识别该位置人脸中的特征信息</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!result.isEmpty()) &#123;</span><br><span class="line">    <span class="comment">//探测结果不为空-存在人脸，初始化FR人脸识别引擎</span></span><br><span class="line">	<span class="type">AFR_FSDKVersion</span> <span class="variable">version1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AFR_FSDKVersion</span>();</span><br><span class="line">	<span class="type">AFR_FSDKEngine</span> <span class="variable">engine1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AFR_FSDKEngine</span>();</span><br><span class="line">	<span class="type">AFR_FSDKFace</span> <span class="variable">result1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AFR_FSDKFace</span>(); <span class="comment">//人脸特征实例</span></span><br><span class="line">	<span class="type">AFR_FSDKError</span> <span class="variable">error1</span> <span class="operator">=</span> engine1.AFR_FSDK_InitialEngine(FaceDB.appid, FaceDB.fr_key);</span><br><span class="line">	<span class="keyword">if</span> (error1.getCode() != AFD_FSDKError.MOK) &#123;</span><br><span class="line">	    <span class="comment">//人脸识别引擎初始化失败</span></span><br><span class="line">		<span class="type">Message</span> <span class="variable">reg</span> <span class="operator">=</span> Message.obtain();</span><br><span class="line">		reg.what = MSG_CODE;</span><br><span class="line">		reg.arg1 = MSG_EVENT_FR_ERROR;</span><br><span class="line">		reg.arg2 = error1.getCode();</span><br><span class="line">		mUIHandler.sendMessage(reg);</span><br><span class="line">	&#125;</span><br><span class="line">	error1 = engine1.AFR_FSDK_GetVersion(version1);</span><br><span class="line">    <span class="comment">//提取人脸识别特征 传入值为：传入的图片（NV21转换后）、图片的宽度、高度、格式、人脸检测结果列表中取出的人脸Rect、角度、提取出的人脸特征</span></span><br><span class="line">	error1 = engine1.AFR_FSDK_ExtractFRFeature(data, mBitmap.getWidth(), mBitmap.getHeight(), AFR_FSDKEngine.CP_PAF_NV21, <span class="keyword">new</span> <span class="title class_">Rect</span>(result.get(<span class="number">0</span>).getRect()), result.get(<span class="number">0</span>).getDegree(), result1);</span><br><span class="line">	<span class="keyword">if</span>(error1.getCode() == error1.MOK) &#123;</span><br><span class="line">	    <span class="comment">//提取出了特征</span></span><br><span class="line">		mAFR_FSDKFace = result1.clone(); <span class="comment">//clone提取出的人脸特征</span></span><br><span class="line">		<span class="type">int</span> <span class="variable">width</span> <span class="operator">=</span> result.get(<span class="number">0</span>).getRect().width();</span><br><span class="line">		<span class="type">int</span> <span class="variable">height</span> <span class="operator">=</span> result.get(<span class="number">0</span>).getRect().height();</span><br><span class="line">		<span class="type">Bitmap</span> <span class="variable">face_bitmap</span> <span class="operator">=</span> Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);<span class="comment">//人脸位置Rect的bitmap</span></span><br><span class="line">		<span class="type">Canvas</span> <span class="variable">face_canvas</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Canvas</span>(face_bitmap);</span><br><span class="line">		face_canvas.drawBitmap(mBitmap, result.get(<span class="number">0</span>).getRect(), <span class="keyword">new</span> <span class="title class_">Rect</span>(<span class="number">0</span>, <span class="number">0</span>, width, height), <span class="literal">null</span>); <span class="comment">//将检测到的人脸位置图片提取到face_bitmap中</span></span><br><span class="line">		<span class="type">Message</span> <span class="variable">reg</span> <span class="operator">=</span> Message.obtain();</span><br><span class="line">		reg.what = MSG_CODE;</span><br><span class="line">		reg.arg1 = MSG_EVENT_REG;</span><br><span class="line">		reg.obj = face_bitmap;</span><br><span class="line">		mUIHandler.sendMessage(reg);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	    <span class="comment">//没有提取出特征</span></span><br><span class="line">		<span class="type">Message</span> <span class="variable">reg</span> <span class="operator">=</span> Message.obtain();</span><br><span class="line">		reg.what = MSG_CODE;</span><br><span class="line">		reg.arg1 = MSG_EVENT_NO_FEATURE;</span><br><span class="line">		mUIHandler.sendMessage(reg);</span><br><span class="line">	&#125;</span><br><span class="line">	error1 = engine1.AFR_FSDK_UninitialEngine();<span class="comment">//结束人脸识别FR引擎</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//人脸检测结果为空，图片中不存在人脸</span></span><br><span class="line">	<span class="type">Message</span> <span class="variable">reg</span> <span class="operator">=</span> Message.obtain();</span><br><span class="line">	reg.what = MSG_CODE;</span><br><span class="line">	reg.arg1 = MSG_EVENT_NO_FACE;</span><br><span class="line">	mUIHandler.sendMessage(reg);</span><br><span class="line">&#125;</span><br><span class="line">err = engine.AFD_FSDK_UninitialFaceEngine(); <span class="comment">//结束人脸检测FD引擎</span></span><br></pre></td></tr></table></figure>
+<p>第四步：<br>到此我们已经获得了整个人脸注册流程中所需要的几个关键值了：</p>
+<ol>
+<li>人脸位置 Rect 及该 Rect 的 Bitmap；</li>
+<li>人脸特征信息实例 mAFR_FSDKFace；</li>
+</ol>
+<p>接下来我们来将人脸特征信息与人员信息建立关联，并且将人脸特征信息保存到本地，这个数据将会用于人脸识别获取人员信息的流程。</p>
+<p>我们先来看看官方的 Demo 是如何处理的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (msg.arg1 == MSG_EVENT_REG) &#123;</span><br><span class="line">    <span class="comment">//人脸特征信息识别成功，弹出一个对话框，输入该特征的注册名字（关联的人员信息，此处根据业务需求处理）</span></span><br><span class="line"><span class="comment">//**********省略*********</span></span><br><span class="line"><span class="comment">//****关键代码****添加人脸结果 用名字作为key</span></span><br><span class="line">((Application)RegisterActivity.<span class="built_in">this</span>.getApplicationContext())</span><br><span class="line">    .mFaceDB.addFace(mEditText.getText().toString(), mAFR_FSDKFace);</span><br><span class="line"><span class="comment">//**********省略*********</span></span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<p>获取 Application 中的 mFaceDB 对象，调用其中的 addFace 方法。FaceDb 类是 demo 中官方写的一个人脸特征管理类，其实现是文件方式实现的，当然我们可以采用其他方式来实现暂且按下不表。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//addface</span></span><br><span class="line"><span class="keyword">public</span>	<span class="keyword">void</span> <span class="title function_">addFace</span><span class="params">(String name, AFR_FSDKFace face)</span> &#123;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		<span class="comment">//检查全部已注册的人脸特征信息</span></span><br><span class="line">		<span class="type">boolean</span> <span class="variable">add</span> <span class="operator">=</span> <span class="literal">true</span>;<span class="comment">//默认需要注册新增人员</span></span><br><span class="line">		<span class="keyword">for</span> (FaceRegist frface : mRegister) &#123;</span><br><span class="line">			<span class="keyword">if</span> (frface.mName.equals(name)) &#123;</span><br><span class="line">			    <span class="comment">//存在该人员的信息，直接向其特征list中添加新的特征</span></span><br><span class="line">				frface.mFaceList.add(face);</span><br><span class="line">				add = <span class="literal">false</span>;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (add) &#123; <span class="comment">//该人员信息没有注册过</span></span><br><span class="line">			<span class="type">FaceRegist</span> <span class="variable">frface</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FaceRegist</span>(name); <span class="comment">//创建一个人员人脸特征类</span></span><br><span class="line">			frface.mFaceList.add(face);<span class="comment">//添加一个人脸特征</span></span><br><span class="line">			mRegister.add(frface);</span><br><span class="line">		&#125;</span><br><span class="line">        <span class="comment">//saveInfo()方法会清空原有txt文件，重新向其中添加sdk版本信息</span></span><br><span class="line">		<span class="keyword">if</span> (saveInfo()) &#123;</span><br><span class="line">			<span class="comment">//update all names</span></span><br><span class="line">            <span class="comment">//把当前全部数据的人员名称重新添加到txt文件</span></span><br><span class="line">			<span class="type">FileOutputStream</span> <span class="variable">fs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(mDBPath + <span class="string">&quot;/face.txt&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">			<span class="type">ExtOutputStream</span> <span class="variable">bos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExtOutputStream</span>(fs);</span><br><span class="line">			<span class="keyword">for</span> (FaceRegist frface : mRegister) &#123;</span><br><span class="line">				bos.writeString(frface.mName);</span><br><span class="line">			&#125;</span><br><span class="line">			bos.close();</span><br><span class="line">			fs.close();</span><br><span class="line">			<span class="comment">//将人脸特征信息写入.data文件中</span></span><br><span class="line">			fs = <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(mDBPath + <span class="string">&quot;/&quot;</span> + name + <span class="string">&quot;.data&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">			bos = <span class="keyword">new</span> <span class="title class_">ExtOutputStream</span>(fs);</span><br><span class="line">			bos.writeBytes(face.getFeatureData());</span><br><span class="line">			bos.close();</span><br><span class="line">			fs.close();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>至此人脸注册的整个流程就已经完毕了，其中有很多方法我们不必细究其实现细节，只要先了解其流程即可，毕竟我们第一步是把项目运行起来，并且能参照官方的 Demo 集成到自己项目中去。</p>
+<p>在下一篇中，我们再来看看官方 Demo 中人脸识别是如何实现的。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ArcFace/" rel="tag"># ArcFace</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/05/19/%E9%80%9A%E8%BF%87%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E5%AE%9E%E7%8E%B0%E4%BB%BF%E7%BE%8E%E5%9B%A2%E5%A4%96%E5%8D%96%E7%9A%84%E5%9C%B0%E5%9B%BE%E9%80%89%E7%82%B9%E7%A1%AE%E5%AE%9A%E6%94%B6%E8%B4%A7%E5%9C%B0%E5%9D%80/" rel="prev" title="通过百度地图实现仿美团外卖的地图选点确定收货地址">
+                  <i class="fa fa-angle-left"></i> 通过百度地图实现仿美团外卖的地图选点确定收货地址
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/05/28/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%AD%EF%BC%89/" rel="next" title="Android 人脸识别了解一下 （中）">
+                  Android 人脸识别了解一下 （中） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

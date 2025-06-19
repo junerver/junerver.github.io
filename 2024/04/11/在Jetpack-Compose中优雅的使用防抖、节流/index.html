@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专心于业务与UI组件。 这是系列文章的第8篇，前文：  在Compose中使用useRequest轻松管理网络请求 在Compose中使用状态提升？我提升个P…Provider 在Compose">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Jetpack Compose中优雅的使用防抖、节流">
+<meta property="og:url" content="https://junerver.xyz/2024/04/11/%E5%9C%A8Jetpack-Compose%E4%B8%AD%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专心于业务与UI组件。 这是系列文章的第8篇，前文：  在Compose中使用useRequest轻松管理网络请求 在Compose中使用状态提升？我提升个P…Provider 在Compose">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-04-11T02:56:09.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.521Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Compose">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="ahooks">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2024/04/11/%E5%9C%A8Jetpack-Compose%E4%B8%AD%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2024/04/11/%E5%9C%A8Jetpack-Compose%E4%B8%AD%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81/","path":"2024/04/11/在Jetpack-Compose中优雅的使用防抖、节流/","title":"在Jetpack Compose中优雅的使用防抖、节流"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>在Jetpack Compose中优雅的使用防抖、节流 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E7%8A%B6%E6%80%81%E5%80%BC%E8%BF%9B%E8%A1%8C%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81"><span class="nav-number">2.</span> <span class="nav-text">对状态值进行防抖、节流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E5%87%BD%E6%95%B0%E8%BF%9B%E8%A1%8C%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81"><span class="nav-number">3.</span> <span class="nav-text">对函数进行防抖、节流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%E7%94%A8%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">进阶用法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E5%89%AF%E4%BD%9C%E7%94%A8%E8%BF%9B%E8%A1%8C%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81"><span class="nav-number">4.</span> <span class="nav-text">对副作用进行防抖、节流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E6%9B%B4%E5%A4%9A"><span class="nav-number">5.</span> <span class="nav-text">探索更多</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2024/04/11/%E5%9C%A8Jetpack-Compose%E4%B8%AD%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="在Jetpack Compose中优雅的使用防抖、节流 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在Jetpack Compose中优雅的使用防抖、节流
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-11 10:56:09" itemprop="dateCreated datePublished" datetime="2024-04-11T10:56:09+08:00">2024-04-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文中提及的 <code>use</code>开头的函数，都出自与我的 <a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a> 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专心于业务与UI组件。</p>
+<p>这是系列文章的第8篇，前文：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7342793007938371594">在Compose中使用useRequest轻松管理网络请求</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7344927519923011594">在Compose中使用状态提升？我提升个P…Provider</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7345396671423250441">在Compose中父组件如何调用子组件的函数？</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7347851786134978610">在Compose中方便的使用MVI思想？试试useReducer！</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352527589247336458">在Compose中像使用redux一样轻松管理全局状态</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352785768094433289">在Compose中轻松使用异步dispatch管理全局状态</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7353156196935434290">在Jetpack Compose中管理网络请求竟然如此简单！</a></li>
+</ul>
+<span id="more"></span>
+
+<p>防抖、节流的概念不必细说，使用 ComposeHooks 可以帮助我们在Compose中轻松的使用防抖节流！</p>
+<h2 id="对状态值进行防抖、节流"><a href="#对状态值进行防抖、节流" class="headerlink" title="对状态值进行防抖、节流"></a>对<strong>状态值</strong>进行防抖、节流</h2><p>例如我们的状态来源是一个输入框，我们要对输入框的输入内容进行模糊匹配，这种场景就需要进行节流操作：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> (state, setState) = useState(<span class="string">&quot;&quot;</span>)</span><br><span class="line"><span class="keyword">val</span> throttledState = useThrottle(value = state)</span><br><span class="line"></span><br><span class="line">TextField(</span><br><span class="line">    value = state,</span><br><span class="line">    onValueChange = setState,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>我们使用 <code>useState</code> 为 <code>TextField</code> 组件创建状态，然后将状态值传入 <code>useThrottle</code> 即可；</p>
+<p>现在我们直接使用 <code>throttledState</code> 传递给服务端即可；</p>
+<p>与之前介绍的 <code>useRequest</code> 钩子一样，你可以通过 <code>optionsOf</code> 设置节流钩子的相应配置，默认配置如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">ThrottleOptions</span> <span class="keyword">internal</span> <span class="keyword">constructor</span>(</span><br><span class="line">    <span class="keyword">var</span> wait: Duration = <span class="number">1.</span>seconds, <span class="comment">// 节流时长</span></span><br><span class="line">    <span class="keyword">var</span> leading: <span class="built_in">Boolean</span> = <span class="literal">true</span>, <span class="comment">// 是否在延迟开始前调用函数</span></span><br><span class="line">    <span class="keyword">var</span> trailing: <span class="built_in">Boolean</span> = <span class="literal">true</span>, <span class="comment">// 是否在延迟开始后调用函数</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>防抖操作与之类似，自己是效果不同而已：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> (state, setState) = useState(<span class="string">&quot;&quot;</span>)</span><br><span class="line"><span class="keyword">val</span> debouncedState = useDebounce(value = state)</span><br><span class="line"></span><br><span class="line">TextField(</span><br><span class="line">    value = state,</span><br><span class="line">    onValueChange = setState,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>防抖的默认值为：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">DebounceOptions</span> <span class="keyword">internal</span> <span class="keyword">constructor</span>(</span><br><span class="line">    <span class="keyword">var</span> wait: Duration = <span class="number">1.</span>seconds, <span class="comment">// 防抖间隔</span></span><br><span class="line">    <span class="keyword">var</span> leading: <span class="built_in">Boolean</span> = <span class="literal">false</span>, <span class="comment">// 是否在延迟开始前调用函数</span></span><br><span class="line">    <span class="keyword">var</span> trailing: <span class="built_in">Boolean</span> = <span class="literal">true</span>, <span class="comment">// 是否在延迟开始后调用函数</span></span><br><span class="line">    <span class="keyword">var</span> maxWait: Duration = <span class="number">0.</span>seconds, <span class="comment">// 最大等待时长，防抖超过该时长则不再拦截，默认为0（永远防抖）</span></span><br><span class="line">) </span><br></pre></td></tr></table></figure>
+
+<h2 id="对函数进行防抖、节流"><a href="#对函数进行防抖、节流" class="headerlink" title="对函数进行防抖、节流"></a>对函数进行防抖、节流</h2><p>除了状态值的防抖节流，ComposeHooks 同样支持对函数进行防抖节流：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> (state, setState) = useState(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">val</span> throttledFn = useThrottleFn(fn = &#123; setState(state + <span class="number">1</span>) &#125;)</span><br><span class="line"></span><br><span class="line">Text(text = <span class="string">&quot;current: <span class="variable">$stateFn</span>&quot;</span>)</span><br><span class="line">TButton(text = <span class="string">&quot;throttled +1&quot;</span>) &#123;</span><br><span class="line">    <span class="comment">/** Manual import：`import xyz.junerver.compose.hooks.invoke` */</span></span><br><span class="line">    throttledFn()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以给 <code>useThrottleFn</code> 传递一个函数闭包，这里是一个简单的计数器累加的函数，它的返回值是<strong>节流</strong>版的的函数，我们只需要将按钮的点击事件替换为这个 <code>throttledFn</code>函数即可实现对原函数的防抖操作！非常简单</p>
+<p>tips: 同样的我们可以对函数进行防抖，代码几乎一样，我就不赘述了！</p>
+<h3 id="进阶用法"><a href="#进阶用法" class="headerlink" title="进阶用法"></a>进阶用法</h3><p>在上面的例子中，我们的原函数的签名是 <code>()-&gt;Unit</code>， <code>useThrottleFn</code> 同样支持外部参数的传入，还用上面的例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> (stateFn, setStateFn) = useState(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">val</span> throttledFn = useThrottleFn(fn = &#123; params -&gt; setStateFn((params[<span class="number">0</span>] <span class="keyword">as</span>? <span class="built_in">Int</span> ?: <span class="number">0</span>) + <span class="number">1</span>) &#125;)</span><br><span class="line"></span><br><span class="line">Text(text = <span class="string">&quot;current: <span class="variable">$stateFn</span>&quot;</span>)</span><br><span class="line">TButton(text = <span class="string">&quot;throttled +1&quot;</span>) &#123;</span><br><span class="line">    <span class="comment">/** Manual import：`import xyz.junerver.compose.hooks.invoke` */</span></span><br><span class="line">    throttledFn(Random.nextInt())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在节流函数可以从外部接受参数，在一些场景下他很有必要，需要注意的是 <code>params</code>的类型是 <code>Array&lt;Any?&gt;</code>，你需要在闭包中对参数进行处理、转型</p>
+<h2 id="对副作用进行防抖、节流"><a href="#对副作用进行防抖、节流" class="headerlink" title="对副作用进行防抖、节流"></a>对副作用进行防抖、节流</h2><p>与直接使用副作用区别不大，只是对副作用闭包进行了防抖节流：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> (stateEf, setStateEf) = useState(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">val</span> (result, setResult) = useState(<span class="string">&quot;&quot;</span>)</span><br><span class="line">useThrottleEffect(stateEf) &#123;</span><br><span class="line">    setResult(<span class="string">&quot;loading&quot;</span>)</span><br><span class="line">    <span class="comment">// 与 effect相同，这里可以执行协程挂起函数</span></span><br><span class="line">    <span class="keyword">val</span> result = NetApi.SERVICE.userInfo(<span class="string">&quot;junerver&quot;</span>)</span><br><span class="line">    setResult(result.toString().subStringIf())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Text(text = <span class="string">&quot;deps: <span class="variable">$stateEf</span>&quot;</span>)</span><br><span class="line">TButton(text = <span class="string">&quot;+1 trigger effect execute&quot;</span>) &#123;</span><br><span class="line">    setStateEf(stateEf + <span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line">Text(text = result)</span><br></pre></td></tr></table></figure>
+
+<p>这里的计数 <code>stateEf</code> 模拟一个快速变化的值，他会触发 effect 副作用闭包的执行，如果我们直接使用 <code>useEffect</code> 或者官方的的 <code>LaunchedEffect</code> 这个副作用闭包也会不停的执行。</p>
+<p>但是使用 <code>useThrottleEffect</code>，他会节流执行副作用，与上面两个钩子一样，他的也可通过 <code>optionsOf</code> 配置具体的节流参数。</p>
+<p>tips: 同样的我们可以对副作用进行防抖，代码几乎一样，我就不赘述了！</p>
+<h2 id="探索更多"><a href="#探索更多" class="headerlink" title="探索更多"></a>探索更多</h2><p>项目开源地址：<a target="_blank" rel="noopener" href="https://github.com/junerver">junerver</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a></p>
+<p>MavenCentral：<a target="_blank" rel="noopener" href="https://central.sonatype.com/artifact/xyz.junerver.compose/hooks">hooks</a></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation(<span class="string">&quot;xyz.junerver.compose:hooks:1.0.11&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>欢迎使用、勘误、pr、star。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Compose/" rel="tag"># Compose</a>
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/ahooks/" rel="tag"># ahooks</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/03/%E5%9C%A8Compose%E4%B8%AD%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%AB%9F%E7%84%B6%E5%A6%82%E6%AD%A4%E7%AE%80%E5%8D%95%EF%BC%81/" rel="prev" title="在Compose中管理网络请求竟然如此简单！">
+                  <i class="fa fa-angle-left"></i> 在Compose中管理网络请求竟然如此简单！
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/28/Kotlin-%E5%87%BD%E6%95%B0%E4%BD%9C%E7%94%A8%E5%9F%9F-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-Compose-%E4%B8%AD%E7%9A%84-DisposeEffect-%E5%89%AF%E4%BD%9C%E7%94%A8%E5%87%BD%E6%95%B0/" rel="next" title="Kotlin 函数作用域 - 深入理解 Compose 中的 DisposeEffect 副作用函数">
+                  Kotlin 函数作用域 - 深入理解 Compose 中的 DisposeEffect 副作用函数 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

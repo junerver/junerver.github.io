@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="我正在参加「掘金·启航计划」 关注 Kotlin 的大多数开发中可能都是 Android 开发者吧，大家基本也都是慢慢从 Java 逐步迁移到 Kotlin。 得益于 Kotlin 与 Java 之间良好的互通性，有的时候可能我们写代码还是比较随性的，尤其是依旧按照自己过去写 Java 的编程习惯，书写 Kotlin 代码。 但实际上 Kotlin 与 Java 之间编码风格还是有很大的差异的，你">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你可能一直在kt文件中写Java代码">
+<meta property="og:url" content="https://junerver.xyz/2023/06/08/%E4%BD%A0%E5%8F%AF%E8%83%BD%E4%B8%80%E7%9B%B4%E5%9C%A8kt%E6%96%87%E4%BB%B6%E4%B8%AD%E5%86%99Java%E4%BB%A3%E7%A0%81/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="我正在参加「掘金·启航计划」 关注 Kotlin 的大多数开发中可能都是 Android 开发者吧，大家基本也都是慢慢从 Java 逐步迁移到 Kotlin。 得益于 Kotlin 与 Java 之间良好的互通性，有的时候可能我们写代码还是比较随性的，尤其是依旧按照自己过去写 Java 的编程习惯，书写 Kotlin 代码。 但实际上 Kotlin 与 Java 之间编码风格还是有很大的差异的，你">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="article:published_time" content="2023-06-08T04:10:02.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.500Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2023/06/08/%E4%BD%A0%E5%8F%AF%E8%83%BD%E4%B8%80%E7%9B%B4%E5%9C%A8kt%E6%96%87%E4%BB%B6%E4%B8%AD%E5%86%99Java%E4%BB%A3%E7%A0%81/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2023/06/08/%E4%BD%A0%E5%8F%AF%E8%83%BD%E4%B8%80%E7%9B%B4%E5%9C%A8kt%E6%96%87%E4%BB%B6%E4%B8%AD%E5%86%99Java%E4%BB%A3%E7%A0%81/","path":"2023/06/08/你可能一直在kt文件中写Java代码/","title":"你可能一直在kt文件中写Java代码"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>你可能一直在kt文件中写Java代码 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E5%88%A4%E6%96%AD"><span class="nav-number">1.</span> <span class="nav-text">空判断</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2%EF%BC%9A%E5%85%B3%E4%BA%8E%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E7%9A%84%E9%A2%9D%E5%A4%96%E8%A1%A5%E5%85%85"><span class="nav-number">1.1.</span> <span class="nav-text">写在前面：关于代码风格的额外补充</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%85%B3%E4%BA%8E%E9%93%BE%E5%BC%8F%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E3%80%81%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. 关于链式函数调用、函数式编程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%85%B3%E4%BA%8E%E4%BD%BF%E7%94%A8-%E7%A9%BA%E5%88%A4%E6%96%AD"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.关于使用?空判断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="nav-number">2.</span> <span class="nav-text">作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Elvis-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">?: Elvis 表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%9E%E7%A9%BA%E8%B5%8B%E5%80%BC"><span class="nav-number">3.0.1.</span> <span class="nav-text">非空赋值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E5%90%88-takeIf-%E5%AE%9E%E7%8E%B0%E7%89%B9%E6%AE%8A%E7%9A%84%E4%B8%89%E5%85%83%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">3.0.2.</span> <span class="nav-text">配合 takeIf{} 实现特殊的三元表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E5%89%8D%E8%BF%94%E5%9B%9E"><span class="nav-number">3.0.3.</span> <span class="nav-text">提前返回</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1"><span class="nav-number">4.</span> <span class="nav-text">使用函数对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-KDoc"><span class="nav-number">5.</span> <span class="nav-text">使用 KDoc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">6.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2023/06/08/%E4%BD%A0%E5%8F%AF%E8%83%BD%E4%B8%80%E7%9B%B4%E5%9C%A8kt%E6%96%87%E4%BB%B6%E4%B8%AD%E5%86%99Java%E4%BB%A3%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="你可能一直在kt文件中写Java代码 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          你可能一直在kt文件中写Java代码
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-06-08 12:10:02" itemprop="dateCreated datePublished" datetime="2023-06-08T12:10:02+08:00">2023-06-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>我正在参加「掘金·启航计划」</p>
+<p>关注 Kotlin 的大多数开发中可能都是 Android 开发者吧，大家基本也都是慢慢从 Java 逐步迁移到 Kotlin。</p>
+<p>得益于 Kotlin 与 Java 之间良好的互通性，有的时候可能我们写代码还是比较随性的，尤其是依旧按照自己过去写 Java 的编程习惯，书写 Kotlin 代码。</p>
+<p>但实际上 Kotlin 与 Java 之间编码风格还是有很大的差异的，你的代码可能还是 Java 的咖啡味。现在请你“暂时”忘记 Java 编码规范，放下成见，看一下 Kotlin 有哪些有趣之处。</p>
+<span id="more"></span>
+
+<h2 id="空判断"><a href="#空判断" class="headerlink" title="空判断"></a>空判断</h2><p>你大概早就听腻了 Kotlin 的空安全，可是你在代码里是否还在写<code>if (xx != null)</code> 这样满是咖啡味的代码呢？</p>
+<p>现在把你的空判断代码都删除掉吧。使用 <code>?.</code> 安全调用来操作你的对象。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">authWechat</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (api != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!api.isWXAppInstalled) &#123;</span><br><span class="line">            ToastUtils.showErrorToast(<span class="string">&quot;您还未安装微信客户端&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">val</span> req = SendAuth.Req()</span><br><span class="line">        req.scope = <span class="string">&quot;snsapi_userinfo&quot;</span></span><br><span class="line">        req.state = <span class="string">&quot;none&quot;</span></span><br><span class="line">        api.sendReq(req)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码粗略看没什么问题吧，判断 <code>IWXAPI</code> 实例是否存在，存在的话判断是否安装了微信，未安装就 toast 提示</p>
+<p>但是更符合 Kotlin 味道的代码可以是这样的</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// after</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">authWechat</span><span class="params">(callbackContext: <span class="type">CallbackContext</span>?)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> api = DsApplication.getDsInstance().wxapi</span><br><span class="line">    api?.takeIf &#123; it.isWXAppInstalled &#125;?.let &#123;</span><br><span class="line">        <span class="comment">// do something else</span></span><br><span class="line">        it.sendReq(</span><br><span class="line">            SendAuth.Req().apply &#123;</span><br><span class="line">                scope = <span class="string">&quot;snsapi_userinfo&quot;</span></span><br><span class="line">                state = <span class="string">&quot;none&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125; ?: run &#123; ToastUtils.showErrorToast(<span class="string">&quot;您还未安装微信客户端&quot;</span>) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>?.</code>安全调用配合 <code>?:</code> Elvis 表达式，可以覆盖全部的空判断场景，再配合 <code>takeIf</code> 函数，可以让你的代码更加<strong>易读</strong>（字面意思上的）</p>
+<p>上述代码用文字表达其实就是：</p>
+<p><code>可空对象?.takeIf&#123;是否满足条件&#125;?.let&#123;不为空&amp;满足条件时执行的代码块&#125; ?： run &#123; 为空|不满足条件执行的代码块 &#125;</code></p>
+<p>这样是不是更加符合语义呢？</p>
+<h3 id="写在前面：关于代码风格的额外补充"><a href="#写在前面：关于代码风格的额外补充" class="headerlink" title="写在前面：关于代码风格的额外补充"></a>写在前面：关于代码风格的额外补充</h3><p>鉴于这一段引起了一些讨论，特意将这段说明移到前面，你如果有任何不同的观点，请先阅读完下面的说明。</p>
+<p>友好的讨论我是欢迎的，但是请不要在评论区输出情绪，不友好的评论我会直接删除。</p>
+<h4 id="1-关于链式函数调用、函数式编程"><a href="#1-关于链式函数调用、函数式编程" class="headerlink" title="1. 关于链式函数调用、函数式编程"></a>1. 关于链式函数调用、函数式编程</h4><blockquote>
+<p>#每天一个知识点# 之前我在 ⌈你可能一直在kt文件中写Java代码⌋ 中介绍过一些关于对对象非空判断然后调用的写法，有的jym表达了反对意见，认为这样写代码非常难以理解、是“屎山”代码，我不得不解释一下为什么要这样写。</p>
+<p>kotlin是支持多编程范式的，而高阶函数、函数是一等公民这种思想，都是函数式编程的重要思想。在文中我介绍作用域时简单介绍的<code>let</code>、<code>apply</code>、<code>run</code>、<code>with</code>、<code>also</code> 这几个函数都是kotlin内置的高阶函数，使用它们本就是为了遵循函数式编程。函数式编程思想中有一个重要的理念，用我的理解表达的话：<strong>函数是数据变形的过程</strong>。如果你用过 <strong>RxJava</strong>，你应该能深刻理解这一点，在 <strong>RxJava</strong> 中有大量的中间操作符（链式函数调用），每一个中间操作符其实都是在对 <em><code>Observable</code></em> 进行数据上的变形、或产生<strong>副作用</strong>。</p>
+<p>例如：<code>val other = obj?.let&#123;&#125;?.run&#123;&#125;?.takeIf&#123;&#125;</code> ，这样的代码并不是什么屎山代码，而是一个非常典型的数据（对象）的变形过程，一个可空对象<code>obj</code>，经过<code>let</code>函数进行自身数据处理返回值又被 <code>run</code> 函数接收并处理（之前说过<code>run</code>函数一般用于映射），最终产生的对象在经过<code>takeIf</code>条件判断，符合条件则采用，不符合条件则为null，而且中间的每个环节都是<strong>空安全</strong>的、都可以随时被<strong>空</strong>中断执行过程。</p>
+<p>只是在沸点中三言两语可能无法让你彻底理解这种思想理念，我还是之前对那位jy的回复：如果你对多个高阶函数链式调用觉得很难阅读、理解，可能是你不适合这种编程范式，而非这种写法不好，大可不必强求自己接收这种编程范式。</p>
+</blockquote>
+<h4 id="2-关于使用-空判断"><a href="#2-关于使用-空判断" class="headerlink" title="2.关于使用?空判断"></a>2.关于使用<code>?</code>空判断</h4><blockquote>
+<p><code>?.</code>表示的是<strong>非空对象的传递</strong>，其传递路径可以被<strong>空中断</strong>，它与<code>if-else</code>的流控制并不冲突，如果你的代码涉及到非空对象传递就用<code>?.</code>。这一设计思想个人猜测来自 Haskell 中的包装类型，不同的是 Kotlin 没有使用一个具体的类型类来实现这一效果，而是直接从语法层进行了近似的功能实现，在kotlin中使用<code>?</code>是一种规范的写法。如果你写过JS前端项目，对这种写法就不会有这么多的疑惑。</p>
+<p>另外在 Java 中虽然没有从语法层支持链式空判断，但是在 Java8 中引入的 <code>Optional</code> 类，就是用来实现这一效果的。其实 <code>Optional</code> 类非常像 Haskell 中的 Monad。</p>
+</blockquote>
+<h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><p>还是上面的例子，实例化一个<code>req</code>对象</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> req = SendAuth.Req()</span><br><span class="line">req.scope = <span class="string">&quot;snsapi_userinfo&quot;</span></span><br><span class="line">req.state = <span class="string">&quot;none&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>更有 Kotlin 味道的代码应该是：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SendAuth.Req().apply &#123;</span><br><span class="line">    scope = <span class="string">&quot;snsapi_userinfo&quot;</span></span><br><span class="line">    state = <span class="string">&quot;none&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>apply&#123;&#125;</code> 函数可以帮我们轻松的初始化对象，或者配置参数，它更好的组织了代码结构，明确了这个闭包处于某个对象的作用域内，所有的操作都是针对这个对象的。</p>
+<p>在 Kotlin 的顶层函数中，提供了数个作用域函数，包括上文中的 <code>let</code> 函数，他们大同小异，具体的使用其实更多看编码风格的取舍，例如在我司我们有如下约定：</p>
+<ul>
+<li><p><code>apply&#123;&#125;</code> 用于<strong>写</strong>，修改、配置对象</p>
+</li>
+<li><p><code>with(obj)&#123;&#125;</code> 用于<strong>读</strong>，读取对象的字段，用于赋值给其他变量</p>
+<p><code>with()</code> 可以显式的切换作用域，我们常将它用于某个大的闭包内，实现局部的作用域切换，</p>
+<p>而且仅用作读时无需考虑作用域的入参命名问题 (多个嵌套的作用域函数往往会带来<code>it</code>的冲突)</p>
+</li>
+<li><p><code>let&#123;&#125;</code> 用于配合<code>?.</code>用于非空安全调用，安全调用对象的函数</p>
+</li>
+<li><p><code>run&#123;&#125;</code> 执行代码块、对象映射</p>
+<p><code>run</code> 函数是有返回值的，其返回值是 <code>block</code>块的最后一行，所以它具备<strong>对象映射</strong>的能力，即将当前作用域映射为另外的对象</p>
+</li>
+<li><p><code>also&#123;&#125;</code> <strong>读</strong>对象，另作他用</p>
+</li>
+</ul>
+<p>当出现超过两行的同一对象使用，无论是读、写，我们就应该考虑使用作用域函数，规范组织我们的代码，使之更具有可读性。</p>
+<p>这几个函数其实作用效果可以互相转换，故而这只关乎编码风格，而无关对错之分。</p>
+<h2 id="Elvis-表达式"><a href="#Elvis-表达式" class="headerlink" title="?: Elvis 表达式"></a><code>?:</code> Elvis 表达式</h2><h4 id="非空赋值"><a href="#非空赋值" class="headerlink" title="非空赋值"></a>非空赋值</h4><p>虽然说在 Kotlin 中可空对象，使用 <code>?.</code> 可以轻松的安全调用，但是有的时候我们需要一个默认值，这种情况我们就需要用到 <code>?:</code> Elvis 表达式。</p>
+<p>例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> name: String = getName() ?: <span class="string">&quot;default&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>假如 <code>getName()</code> 返回的是一个 <code>String?</code> 可空对象，当他为空时，通过 <code>?:</code> Elvis 表达式直接给予一个默认值。</p>
+<h4 id="配合-takeIf-实现特殊的三元表达式"><a href="#配合-takeIf-实现特殊的三元表达式" class="headerlink" title="配合 takeIf{} 实现特殊的三元表达式"></a>配合 <code>takeIf&#123;&#125;</code> 实现特殊的三元表达式</h4><p>总所周知，kotlin 中<strong>没有三元表达式</strong> <code>条件 ? 真值 : 假值</code>，这一点其实比较遗憾，可能是因为 <code>?</code> 被用作了空表达。</p>
+<p>在kotlin 中我们如果需要一个<strong>三元表达</strong>该怎么做呢？<code>if 条件 真值 else 假值</code>，这样看起来也很简洁明了。</p>
+<p>还有一种比较特殊的情况，就是我们判断逻辑，实际上是这个对象是否满足什么条件，也就是说既要空判断，又要条件判断，返回的真值呢又是对象本身。</p>
+<p>这种情况代码可能会是这样的：</p>
+<pre><code>fun getUser(): User? = null
+fun useUser(user: User) &#123;&#125;
+// 从一个函数中获得了可空对象
+val _userNullable = getUser()
+// 判断非空+条件，返回对象或者构造不符合条件的值
+val user =  if (_userNullable != null &amp;&amp; _userNullable.user == &quot;admin&quot;) &#123;
+    _userNullable
+&#125; else &#123;
+    User(&quot;guess&quot;)
+&#125;
+//使用对象
+useUser(user)
+</code></pre>
+<p>这个语句如果我们将<code>if-else</code>塞到 <code>useUser()</code> 函数中作为<strong>三元</strong>也不是不可以，但是看起来就比较乱了，而且我们也不得不使用一个临时变量<code>_userNullable</code>。</p>
+<p>如果我们使用 <code>?:</code> Elvis 表达式 配合 <code>takeIf&#123;&#125;</code> 可以看起来更为优雅的表达</p>
+<pre><code>fun getUser(): User? = null
+fun useUser(user: User) &#123;&#125;
+// 使用`?:` Elvis 表达式简化的写法
+useUser(getUser()?.takeIf &#123; it.user == &quot;admin&quot; &#125; ?: User(&quot;guest&quot;))
+</code></pre>
+<p>这看起来就像是一个特殊的三元 <code>真值.takeIf(条件) ?: 假值</code>，在这种语义表达下，使用<code>?:</code> Elvis 表达式起到了简化代码，清晰语义的作用。</p>
+<h4 id="提前返回"><a href="#提前返回" class="headerlink" title="提前返回"></a>提前返回</h4><p>当然 <code>?:</code> Elvis 表达式还有很多其他用途，例如代码块的提前返回</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> View.<span class="title">onClickLike</span><span class="params">(user: <span class="type">String</span>?, isGroup: <span class="type">Boolean</span> = <span class="literal">false</span>)</span></span> = <span class="keyword">this</span>.setOnClickListener &#123;</span><br><span class="line">    user?.takeUnless &#123; it.isEmpty() &#125; ?: <span class="keyword">return</span><span class="symbol">@setOnClickListener</span></span><br><span class="line">    StatisticsUtils.onClickLike(<span class="keyword">this</span>.context, user, isGroup)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们对入参进行了非空判断与字符长度判断，在<code>?:</code> Elvis 表达式后提前 <code>return </code>避免了后续代码被执行，这很优雅也更符合语义。</p>
+<p>这里不是说不能用 <code>if</code> 判断，那样虽然可以实现相同效果，但是额外增加了一层代码块嵌套，看起来不够整洁明了。</p>
+<p>这些应用本质上都是利用了 <code>?:</code> Elvis 表达式的特性，即前者为空时，执行后者。</p>
+<h2 id="使用函数对象"><a href="#使用函数对象" class="headerlink" title="使用函数对象"></a>使用函数对象</h2><p>很多时候我们的函数会被复用，或者作为参数传递，例如在 Android 一个点击事件的函数可能会被多次复用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line">btnA.setOnClickListener &#123; sendEndCommand() &#125;</span><br><span class="line">btnB.setOnClickListener &#123; sendEndCommand() &#125;</span><br><span class="line">btnC.setOnClickListener &#123; sendEndCommand() &#125;</span><br></pre></td></tr></table></figure>
+
+<p>例如这是三个不同帧布局中的三个结束按钮，他们对于的点击事件是同一个，这样写其实也没什么问题，但是他不够 Kotlin 味，我们可以进一步改写</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">btnA.setOnClickListener(::sendEndCommand)</span><br><span class="line">btnB.setOnClickListener(::sendEndCommand)</span><br><span class="line">btnC.setOnClickListener(::sendEndCommand)</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>::</code> 双冒号，将函数作为函数对象直接传递给一个接收函数参数的函数（高阶函数），这对于大量使用高阶函数的链式调用场合更加清晰明了，也更加<strong>函数式</strong>。</p>
+<p>ps：这里需要注意函数签名要对应，例如<code>setOnClickListener</code> 的函数签名是<code>View-&gt;Unit</code>，故而我们要修改函数与之一致</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@JvmOverloads</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">sendEndCommand</span><span class="params">(<span class="meta">@Suppress(<span class="string">&quot;UNUSED_PARAMETER&quot;</span>)</span> v: <span class="type">View</span>? = <span class="literal">null</span>)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用-KDoc"><a href="#使用-KDoc" class="headerlink" title="使用 KDoc"></a>使用 KDoc</h2><p>你还在用 BugKotlinDocument 这样的插件帮你生成函数注释么？你的函数注释看起来是这样的么？</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 获取全部题目的正确率，x：题目序号，y：正确率数值（float）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> format ((quesNum: Int) -&gt; String)? 格式化X轴label文字</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> denominator Int  计算正确率使用的分母</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> BarData?</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p>这样的注释看起来没什么问题，也能正确的定位到代码中的参数，但实际上这是 JavaDoc ，并不是 KDoc，KDoc使用的是类似 Markdown 语法，我们可以改写成这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 获取全部题目的正确率的BarData，其中，x：题目序号，y：正确率数值（float）。</span></span><br><span class="line"><span class="comment"> * [format] 默认值为null，用于格式化X轴label文字，</span></span><br><span class="line"><span class="comment"> * [denominator] 除数，作为计算正确率使用的分母，</span></span><br><span class="line"><span class="comment"> * 返回值是直接可以用在BarChart中的[BarData]。</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p>KDoc 非常强大，你可以使用 <strong>```</strong> 在注释块中写示例代码，或者JSON格式</p>
+<p>例如:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 使用json填充视图的默认实现，必须遵循下面的数据格式</span></span><br><span class="line"><span class="comment"> * ```json</span></span><br><span class="line"><span class="comment"> *  [</span></span><br><span class="line"><span class="comment"> *      &#123;&quot;index&quot;:0,&quot;answer&quot;:[&quot;对&quot;]&#125;,</span></span><br><span class="line"><span class="comment"> *      &#123;&quot;index&quot;:1,&quot;answer&quot;:[&quot;错&quot;]&#125;,</span></span><br><span class="line"><span class="comment"> *      &#123;&quot;index&quot;:2,&quot;answer&quot;:[&quot;对&quot;]&#125;,</span></span><br><span class="line"><span class="comment"> *  ]</span></span><br><span class="line"><span class="comment"> * ```</span></span><br><span class="line"><span class="comment"> * [result] 必须是一个JSONArray字符串</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p>在AS中他会被折叠成非常美观的注释块：</p>
+<p><img src="/1" alt="image.png"></p>
+<hr>
+<hr>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>文章最后我们看一段 ”Java“ 代码与 Kotlin 代码的对比吧：</p>
+<pre><code>// before
+override fun onResponse(
+    call: Call&lt;AvatarPathResult?&gt;,
+    response: Response&lt;AvatarPathResult?&gt;
+) &#123;
+    val avatarPathResult = response.body()
+    if (avatarPathResult != null) &#123;
+        val status = avatarPathResult.status
+        if (status == 200) &#123;
+            val data = avatarPathResult.data
+            MMKVUtils.saveAvatarPath(data)
+        &#125; else &#123;
+            MMKVUtils.saveAvatarPath(&quot;&quot;)
+        &#125;
+    &#125; else &#123;
+        MMKVUtils.saveAvatarPath(&quot;&quot;)
+    &#125;
+&#125;
+
+// after
+override fun onResponse(
+    call: Call&lt;AvatarPathResult?&gt;,
+    response: Response&lt;AvatarPathResult?&gt;,
+) &#123;
+    with(response.body()) &#123;
+        MMKVUtils.saveAvatarPath(this?.data?.takeIf &#123; status == 200 &#125; ?: &quot;&quot;)
+    &#125;
+&#125;
+</code></pre>
+<p>鉴于有些同学对本文的观点有一些疑惑，这里我贴上 JetBrains 官方开发的 <a target="_blank" rel="noopener" href="https://github.com/ktorio/ktor">Ktor</a> 项目中对各种语法糖使用的统计(基于 main 分支，23-6-9)</p>
+<table>
+<thead>
+<tr>
+<th>语句</th>
+<th>计数</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>if.*!= null</code></td>
+<td>331</td>
+<td>非空判断</td>
+</tr>
+<tr>
+<td><code>if.*== null</code></td>
+<td>216</td>
+<td>空判断</td>
+</tr>
+<tr>
+<td><code>.let &#123;&#125;</code></td>
+<td><strong>1210</strong></td>
+<td>let作用域</td>
+</tr>
+<tr>
+<td><code>?.let &#123;&#125;</code></td>
+<td>441</td>
+<td>?非空</td>
+</tr>
+<tr>
+<td><code>.apply &#123;&#125;</code></td>
+<td>469</td>
+<td>apply作用域</td>
+</tr>
+<tr>
+<td><code>?.apply &#123;&#125;</code></td>
+<td>11</td>
+<td>?非空</td>
+</tr>
+<tr>
+<td><code>run &#123;&#125;</code></td>
+<td>37</td>
+<td>run作用域</td>
+</tr>
+<tr>
+<td><code>with\(.*\) \&#123;</code></td>
+<td>219</td>
+<td>with作用域</td>
+</tr>
+<tr>
+<td><code>.also&#123;&#125;</code></td>
+<td>119</td>
+<td>also作用域</td>
+</tr>
+<tr>
+<td><code>?:</code></td>
+<td><strong>1066</strong></td>
+<td>Elvis</td>
+</tr>
+<tr>
+<td><code>?.</code></td>
+<td><strong>1239</strong></td>
+<td>?.非空调用</td>
+</tr>
+<tr>
+<td><code>\?\..*\?\.</code></td>
+<td><strong>134</strong></td>
+<td>?.单行使用两次（非空传递）</td>
+</tr>
+<tr>
+<td><code>.takeIf</code></td>
+<td>54</td>
+<td>链式判断</td>
+</tr>
+<tr>
+<td><code>\.takeIf.*\?:</code></td>
+<td><strong>13</strong></td>
+<td>链式判断配合Elvis</td>
+</tr>
+<tr>
+<td><code>.takeUnless</code></td>
+<td>2</td>
+<td>链式判断（很少用）</td>
+</tr>
+</tbody></table>
+<p>这个项目可以说很能代表 JetBrains 官方对 Kotlin 语法的一些看法与标准了吧，前文我们也说了，如何取舍只关乎编码风格，而无关对错之分。</p>
+<p>用 Java 风格是错的吗？那自然不是，只是显然空判断与安全调用两者相比，安全调用更符合 Kotlin 的风格。</p>
+<p>重复的写对象名是错误的么？自然也不是，只是使用 <code>apply</code> 更优雅更 Kotlin。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/" rel="prev" title="使用 ahooks 中的 useRequest 轻松管理React中的网络请求">
+                  <i class="fa fa-angle-left"></i> 使用 ahooks 中的 useRequest 轻松管理React中的网络请求
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/" rel="next" title="在Compose中使用useRequest轻松管理网络请求">
+                  在Compose中使用useRequest轻松管理网络请求 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

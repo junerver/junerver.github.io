@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="从零开始学习React：了解当前React常用技术，编写第一个React组件从零开始学习React：了解组件的三大属性从零开始学习React：react中事件处理与柯里化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零开始学习React：react中事件处理与柯里化">
+<meta property="og:url" content="https://junerver.xyz/2022/05/23/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React%EF%BC%9Areact%E4%B8%AD%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E4%B8%8E%E6%9F%AF%E9%87%8C%E5%8C%96/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="从零开始学习React：了解当前React常用技术，编写第一个React组件从零开始学习React：了解组件的三大属性从零开始学习React：react中事件处理与柯里化">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-23T07:33:27.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.499Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2022/05/23/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React%EF%BC%9Areact%E4%B8%AD%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E4%B8%8E%E6%9F%AF%E9%87%8C%E5%8C%96/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2022/05/23/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React%EF%BC%9Areact%E4%B8%AD%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E4%B8%8E%E6%9F%AF%E9%87%8C%E5%8C%96/","path":"2022/05/23/从零开始学习React：react中事件处理与柯里化/","title":"从零开始学习React：react中事件处理与柯里化"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从零开始学习React：react中事件处理与柯里化 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">1. 事件处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BB%E6%AD%A2%E9%BB%98%E8%AE%A4%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.1.</span> <span class="nav-text">阻止默认行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">合成事件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%9F%AF%E9%87%8C%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">2. 柯里化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%AF%E9%87%8C%E5%8C%96%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="nav-number">2.1.</span> <span class="nav-text">柯里化的目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">2.2.</span> <span class="nav-text">一个简单的例子</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/05/23/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React%EF%BC%9Areact%E4%B8%AD%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E4%B8%8E%E6%9F%AF%E9%87%8C%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从零开始学习React：react中事件处理与柯里化 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从零开始学习React：react中事件处理与柯里化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-05-23 15:33:27" itemprop="dateCreated datePublished" datetime="2022-05-23T15:33:27+08:00">2022-05-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">Web前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011133887/article/details/124889341">从零开始学习React：了解当前React常用技术，编写第一个React组件</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011133887/article/details/124912413">从零开始学习React：了解组件的三大属性</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011133887/article/details/124928268">从零开始学习React：react中事件处理与柯里化</a></p>
+<span id="more"></span>
+
+<h2 id="1-事件处理"><a href="#1-事件处理" class="headerlink" title="1. 事件处理"></a>1. 事件处理</h2><p>React 中元素也可接受、处理事件，但是在语法上有一点不同。</p>
+<p>在React 中所有事件的命名采用的是小驼峰，而非原生 DOM 的纯小写，所有事件需要我们传入一个函数，而非字符串。</p>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Button</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleClick</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;click&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleClick&#125;</span>&gt;</span>click button<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当事件的回调函数比较简单时，我们也可以简写箭头匿名函数，例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Button</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> console.log(&#x27;click&#x27;)&#125;</span></span><br><span class="line"><span class="language-xml">        &gt;</span></span><br><span class="line"><span class="language-xml">            click button</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="阻止默认行为"><a href="#阻止默认行为" class="headerlink" title="阻止默认行为"></a>阻止默认行为</h3><p>在React 中不能通过返回 <code>false</code> 来阻止默认行为，例如表单提交、a标签跳转。我们必须要通过显式调用 <code>preventDefault</code> 函数，来阻止这些默认行为。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Link</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">a</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">href</span>=<span class="string">&quot;https://www.baidu.com&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;(e)</span> =&gt;</span> e.preventDefault()&#125;</span></span><br><span class="line"><span class="language-xml">    &gt;</span></span><br><span class="line"><span class="language-xml">        link</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="合成事件"><a href="#合成事件" class="headerlink" title="合成事件"></a>合成事件</h3><p>在 React 中几乎所有的事件处理函数，都是一个 <code>(event)=&gt;void</code> 函数，如果我们使用 typescript，可以清晰的看到每个事件对应的函数类型，React 自身也声明了很多的事件与事件处理函数类型，例如鼠标事件：<code>MouseEvent&lt;T = Element&gt;</code> 与 <code>MouseEventHandler&lt;T = Element&gt;</code>，我们在使用时可以根据自己的喜欢，是定义函数类型还是定义参数类型，就像这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Link</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleClick</span> = (<span class="params">e: MouseEvent</span>) =&gt; &#123;</span><br><span class="line">        e.<span class="title function_">preventDefault</span>()</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;click&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">handleMouseEnter</span>:<span class="title class_">MouseEventHandler</span> = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;mouse enter&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">a</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">href</span>=<span class="string">&quot;https://www.baidu.com&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onMouseEnter</span>=<span class="string">&#123;handleMouseEnter&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;handleClick&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    &gt;</span></span></span><br><span class="line"><span class="language-xml">        link</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 React 中，所有事件都是 React 根据 W3C 规范定义的合成事件，所以我们完全不用担心兼容性问题，React 事件与原生事件不完全相同。</p>
+<p><a target="_blank" rel="noopener" href="https://zh-hans.reactjs.org/docs/events.html#">点击此处查看合成事件文档</a></p>
+<h2 id="2-柯里化"><a href="#2-柯里化" class="headerlink" title="2. 柯里化"></a>2. 柯里化</h2><p>柯里化这个名称对于 Android 开发可能有点陌生，因为我们一般使用 Java 开发，因为早期的 Java 不支持函数式编程（FP），而柯里化是一个函数式编程思想。</p>
+<p>简而言之是将一个<strong>多参函数</strong>变成<strong>单参数函数</strong>，举个栗子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//柯里化后的单参数函数</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">sumCurrying</span>(<span class="params">a</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">c</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> a + b + c;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//普通的多参数函数</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">sumNormal</span>(<span class="params">a, b, c</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> a + b + c</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">sumCurrying</span>(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>));</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">sumNormal</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>));</span><br></pre></td></tr></table></figure>
+
+<p>柯里化的本质，就是高阶函数的一个特性：函数的返回值可以是一个函数。</p>
+<p>上面的例子，似乎有点脱裤子放屁，看似毫无意义。但实际工程中，柯里化是一个非常实用的小 trick。最常用在事件处理需要传入值的场景。</p>
+<p>我们在上面说过了，React 中的事件回调函数是有固定的函数类型的，几乎都是 <code>(event)=&gt;void</code> 函数。我们需要传入一些参数给这个事件处理函数呢？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">List</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> list = [</span><br><span class="line">        &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">name</span>: <span class="string">&#x27;tom&#x27;</span> &#125;,</span><br><span class="line">        &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">name</span>: <span class="string">&#x27;jerry&#x27;</span> &#125;,</span><br><span class="line">        &#123; <span class="attr">id</span>: <span class="number">3</span>, <span class="attr">name</span>: <span class="string">&#x27;jack&#x27;</span> &#125;,</span><br><span class="line">        &#123; <span class="attr">id</span>: <span class="number">4</span>, <span class="attr">name</span>: <span class="string">&#x27;lily&#x27;</span> &#125;,</span><br><span class="line">    ]</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">handleClick</span> = (<span class="params">id: number</span>) =&gt; &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(id)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;list.map(item =&gt; <span class="tag">&lt;<span class="name">li</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> handleClick(item.id)&#125;</span></span><br><span class="line"><span class="language-xml">                key=&#123;item.id&#125;</span></span><br><span class="line"><span class="language-xml">            &gt;</span></span><br><span class="line"><span class="language-xml">                &#123;item.name&#125;</span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        )&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这看起来似乎很不优雅，我们已经声明了 handle 函数，却又不得不在事件处理函数中写行内的箭头函数，如何才能更加优雅的处理呢？</p>
+<p>其实很简单，我们只需要在原本的 handle 函数中，插入一个箭头即可，就像这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//before</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">handleClick</span> = (<span class="params">id: number</span>) =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(id)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//after</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">handleClick</span> = (<span class="params">id: number</span>) =&gt; <span class="function">(<span class="params">e:MouseEvent</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(id)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们的 onClick 事件回调函数就可以改成 <code>onClick=&#123;handleClick(item.id)&#125;</code> ，这样看起来是不是就更加优雅了呢？</p>
+<p>其实这种设计思想可以说是一说就透，只不过我现在告诉你，这种思想就叫做：<strong>柯里化</strong>。</p>
+<h3 id="柯里化的目的"><a href="#柯里化的目的" class="headerlink" title="柯里化的目的"></a>柯里化的目的</h3><p>你可能会问我柯里化看起来只是让我们的代码优雅了一点，在目前看来似乎没有什么本质上的变化。</p>
+<p>但其实柯里化帮助我们实现了函数的一变多，我们用一个日志输出的函数作为例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//原始函数</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">log</span> = (<span class="params">date, importance, message</span>) =&gt; &#123;</span><br><span class="line">  <span class="title function_">alert</span>(<span class="string">`[<span class="subst">$&#123;date.getHours()&#125;</span>:<span class="subst">$&#123;date.getMinutes()&#125;</span>] [<span class="subst">$&#123;importance&#125;</span>] <span class="subst">$&#123;message&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//柯里化</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">logCurry</span> = (<span class="params">date</span>) =&gt; <span class="function">(<span class="params">importance</span>) =&gt;</span> <span class="function">(<span class="params">message</span>) =&gt;</span> &#123; </span><br><span class="line">  <span class="title function_">alert</span>(<span class="string">`[<span class="subst">$&#123;date.getHours()&#125;</span>:<span class="subst">$&#123;date.getMinutes()&#125;</span>] [<span class="subst">$&#123;importance&#125;</span>] <span class="subst">$&#123;message&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>柯里化后，函数变成这样调用：<code>logCurry(new Date())(&quot;DEBUG&quot;)(&quot;some debug&quot;);</code></p>
+<p>现在我们相当于拥有这些函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// logNow 会是带有固定第一个参数的日志的函数</span></span><br><span class="line"><span class="keyword">let</span> logNow = <span class="title function_">logCurry</span>(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用它</span></span><br><span class="line"><span class="title function_">logNow</span>(<span class="string">&quot;INFO&quot;</span>, <span class="string">&quot;message&quot;</span>); <span class="comment">// [HH:mm] INFO message</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// debugNow 会是带有固定第一个参数与第二个参数的函数</span></span><br><span class="line"><span class="keyword">let</span> debugNow = <span class="title function_">logNow</span>(<span class="string">&quot;DEBUG&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_">debugNow</span>(<span class="string">&quot;message&quot;</span>); <span class="comment">// [HH:mm] DEBUG message</span></span><br></pre></td></tr></table></figure>
+
+<p>看起来只是增加了几个箭头，实际上我们函数的灵活性大为增加。通过固定不同的参数，我们从一个函数声明获得了多个函数。</p>
+<h3 id="一个简单的例子"><a href="#一个简单的例子" class="headerlink" title="一个简单的例子"></a>一个简单的例子</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Form</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">   <span class="keyword">const</span> [form, setForm] = <span class="title class_">React</span>.<span class="title function_">useState</span>(&#123;&#125;);</span><br><span class="line">   <span class="keyword">const</span> <span class="title function_">update</span> = (<span class="params">name</span>) =&gt; <span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</span><br><span class="line">     <span class="title function_">setForm</span>(&#123;</span><br><span class="line">       ...form,</span><br><span class="line">       [name]: event.<span class="property">target</span>.<span class="property">value</span>,</span><br><span class="line">     &#125;);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">const</span> <span class="title function_">handleSubmit</span> = (<span class="params">event</span>) =&gt; &#123;</span><br><span class="line">     event.<span class="title function_">preventDefault</span>();</span><br><span class="line">     <span class="title function_">alert</span>(<span class="string">`<span class="subst">$&#123;<span class="built_in">JSON</span>.stringify(form)&#125;</span>`</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> (</span><br><span class="line">     <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">       <span class="tag">&lt;<span class="name">h1</span>&gt;</span>柯里化表单<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">       <span class="tag">&lt;<span class="name">FormItem</span> <span class="attr">label</span>=<span class="string">&quot;用户名&quot;</span> <span class="attr">name</span>=<span class="string">&#x27;username&#x27;</span> <span class="attr">update</span>=<span class="string">&#123;update&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">       <span class="tag">&lt;<span class="name">FormItem</span> <span class="attr">label</span>=<span class="string">&quot;昵称&quot;</span> <span class="attr">name</span>=<span class="string">&#x27;nickname&#x27;</span> <span class="attr">update</span>=<span class="string">&#123;update&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">       <span class="tag">&lt;<span class="name">FormItem</span> <span class="attr">label</span>=<span class="string">&quot;邮箱&quot;</span> <span class="attr">name</span>=<span class="string">&#x27;email&#x27;</span> <span class="attr">update</span>=<span class="string">&#123;update&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">       <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleSubmit&#125;</span>&gt;</span>提交<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">     <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">   )</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">const</span> <span class="title function_">FormItem</span> = (<span class="params">&#123; label, name, update &#125;</span>) =&gt; &#123;</span><br><span class="line">   <span class="keyword">return</span> (</span><br><span class="line">     <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span> &#x27;<span class="attr">display</span>&#x27;<span class="attr">:</span> &#x27;<span class="attr">flex</span>&#x27; &#125;&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">       <span class="tag">&lt;<span class="name">label</span>&gt;</span>&#123;label&#125;<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">       <span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;update(name)&#125;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">placeholder</span>=<span class="string">&#123;</span>`<span class="attr">请输入</span>$&#123;<span class="attr">label</span>&#125;`&#125; /&gt;</span></span></span><br><span class="line"><span class="language-xml">     <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">   );</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/05/22/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React%EF%BC%9A%E4%BA%86%E8%A7%A3%E7%BB%84%E4%BB%B6%E7%9A%84%E4%B8%89%E5%A4%A7%E5%B1%9E%E6%80%A7/" rel="prev" title="从零开始学习React：了解组件的三大属性">
+                  <i class="fa fa-angle-left"></i> 从零开始学习React：了解组件的三大属性
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/06/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0React-4%EF%BC%9A%E7%94%A8%E8%84%9A%E6%89%8B%E6%9E%B6%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%EF%BC%8C%E9%85%8D%E7%BD%AEPrettier%E8%A7%84%E8%8C%83%E9%A1%B9%E7%9B%AE/" rel="next" title="从零开始学习React-4：用脚手架创建项目，配置Prettier规范项目">
+                  从零开始学习React-4：用脚手架创建项目，配置Prettier规范项目 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

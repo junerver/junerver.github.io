@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="经过上文的介绍，想必你对 Kotlin 有了一定的兴趣了吧，Kotlin 简化了很多在 Java 里需要写大量代码的操作，稍安勿躁，我们来看看都有哪些 “常规操作”。 集合对于集合，想必你已经熟悉得不能再熟了，我就不废话了，我们来看看在 Kotlin 里怎么使用集合吧。 上文中我们曾经提到过，在 Kotlin 中 使用 var val 来声明 可变变量 只读变量。类似的，在集合中也存在这样的概念：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin 集合类与扩展函数-都是常规操作">
+<meta property="og:url" content="https://junerver.xyz/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="经过上文的介绍，想必你对 Kotlin 有了一定的兴趣了吧，Kotlin 简化了很多在 Java 里需要写大量代码的操作，稍安勿躁，我们来看看都有哪些 “常规操作”。 集合对于集合，想必你已经熟悉得不能再熟了，我就不废话了，我们来看看在 Kotlin 里怎么使用集合吧。 上文中我们曾经提到过，在 Kotlin 中 使用 var val 来声明 可变变量 只读变量。类似的，在集合中也存在这样的概念：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-06-08T07:22:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.462Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/","path":"2018/06/08/Kotlin-集合类与扩展函数-都是常规操作/","title":"Kotlin 集合类与扩展函数-都是常规操作"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kotlin 集合类与扩展函数-都是常规操作 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E5%90%88"><span class="nav-number">1.</span> <span class="nav-text">集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0%E4%BB%A5%E5%8F%8A%E5%85%B6%E4%BB%96%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">扩展函数以及其他高级特性</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kotlin 集合类与扩展函数-都是常规操作 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kotlin 集合类与扩展函数-都是常规操作
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-06-08 15:22:00" itemprop="dateCreated datePublished" datetime="2018-06-08T15:22:00+08:00">2018-06-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>经过上文的介绍，想必你对 Kotlin 有了一定的兴趣了吧，Kotlin 简化了很多在 Java 里需要写大量代码的操作，稍安勿躁，我们来看看都有哪些 “常规操作”。</p>
+<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><p>对于集合，想必你已经熟悉得不能再熟了，我就不废话了，我们来看看在 Kotlin 里怎么使用集合吧。</p>
+<p>上文中我们曾经提到过，在 Kotlin 中 使用 <code>var</code> <code>val</code> 来声明 <em>可变变量</em> <em>只读变量</em>。类似的，在集合中也存在这样的概念：</p>
+<span id="more"></span>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list: List&lt;String&gt; = listOf(<span class="string">&quot;1&quot;</span>, <span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="string">&quot;4&quot;</span>) <span class="comment">//初始化一个只读集合</span></span><br><span class="line"><span class="keyword">val</span> mutableList: MutableList&lt;String&gt; = mutableListOf(<span class="string">&quot;1&quot;</span>, <span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="string">&quot;4&quot;</span>) <span class="comment">//初始化一个可变集合</span></span><br><span class="line">list.<span class="keyword">get</span>(<span class="number">1</span>)</span><br><span class="line">mutableList.add(<span class="string">&quot;5&quot;</span>)</span><br><span class="line">println(list)</span><br><span class="line">println(mutableList)</span><br></pre></td></tr></table></figure>
+<p>虽然我们使用了 <code>var</code> 来声明了变量 <code>list</code>，但是由于声明的是 <strong>List</strong> 类型，所以他是一个只读的集合。虽然我们使用了 <code>val</code> 声明了一个只读变量 <code>mutableList</code>，但是我们仍然可以对他进行数据操作。</p>
+<p>这里我们需要明确 <code>var</code> <code>val</code>真正的作用意义，<code>var</code>无需多言，<code>val</code> 并不是向我们想象的声明任意一个变量后这个变量就是不可变的了。此处的不可变在我理解只是引用的不可变，如果是基础类型的话，就是其值不可变。</p>
+<p>显然对于集合而言，我们操作集合并不会修改这个集合的引用，只是修改这个集合所在内存中的内容而已，所以才会出现我们上面代码中的那种情况。</p>
+<p>在 Kotlin 中声明一个只读集合，我们可以使用 <code>Set</code> <code>List</code> <code>Map</code>，声明可变集合需要使用到 <code>MutableSet</code> <code>MutableList</code> <code>MutableMap</code>。</p>
+<p>Kotlin 并没有专门的语法结构创建 list 或 set，要用标准库的方法，如 listOf()、 mutableListOf()、 setOf()、 mutableSetOf()来创建。当然我们还可以直接引入 Java 的这些类：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = listOf(<span class="string">&quot;1&quot;</span>,<span class="string">&quot;2&quot;</span>,<span class="string">&quot;3&quot;</span>) <span class="comment">//初始化一个只读集合</span></span><br><span class="line"><span class="keyword">val</span> mutableList = mutableListOf(<span class="string">&quot;1&quot;</span>, <span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="string">&quot;4&quot;</span>) <span class="comment">//初始化一个可变集合</span></span><br><span class="line"><span class="keyword">var</span> listJava = ArrayList&lt;String&gt;() <span class="comment">//调用 Java 中的集合类</span></span><br><span class="line">println(list[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<p>Kotlin 还允许我们像数组那样读取 List 以及 Map ：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mutablemap = mutableMapOf(<span class="string">&quot;1&quot;</span> to <span class="string">&quot;one&quot;</span>,<span class="string">&quot;2&quot;</span> to <span class="string">&quot;two&quot;</span>)</span><br><span class="line">mutablemap.put(<span class="string">&quot;4&quot;</span> ,<span class="string">&quot;four&quot;</span>) <span class="comment">//Java 式新增</span></span><br><span class="line">mutablemap[<span class="string">&quot;5&quot;</span>] = <span class="string">&quot;FIVE&quot;</span>  <span class="comment">// Kotlin 式新增</span></span><br><span class="line">println(mutablemap.<span class="keyword">get</span>(<span class="string">&quot;1&quot;</span>)) <span class="comment">//Java 式读取</span></span><br><span class="line">println(mutablemap[<span class="string">&quot;2&quot;</span>])    <span class="comment">// Kotlin 式读取</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="扩展函数以及其他高级特性"><a href="#扩展函数以及其他高级特性" class="headerlink" title="扩展函数以及其他高级特性"></a>扩展函数以及其他高级特性</h2><p>扩展函数应该是 Kotlin 中最迷人的部分了，<em>Kotlin 同 C# 和 Gosu 类似，能够扩展一个类的新功能而无需继承该类或使用像装饰者这样的任何类型的设计模式。 这通过叫做 扩展 的特殊声明完成。Kotlin 支持 扩展函数 和 扩展属性。</em></p>
+<p>直接看代码吧：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> MutableList<span class="type">&lt;String&gt;</span>.<span class="title">changeIndex2</span><span class="params">()</span></span>:MutableList&lt;String&gt;&#123;</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0.</span>.<span class="keyword">this</span>.size) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i % <span class="number">2</span> ==<span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>[i]+=<span class="string">&quot;^&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 fun 关键字后面的是我们要扩展的类， “**.**” 隔开的是我们的扩展函数名，跟普通的函数一样，我们可以有传入参数以及返回值。在扩展函数中 <code>this</code> 关键字可以得到调用扩展函数的实例。</p>
+<p>我们在一段代码中调用这个扩展函数看看结果是什么样的:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mutableList = mutableListOf(<span class="string">&quot;1&quot;</span>, <span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="string">&quot;4&quot;</span>) <span class="comment">//初始化一个可变集合</span></span><br><span class="line">mutableList.apply &#123;</span><br><span class="line">    add(<span class="string">&quot;5&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">println(mutableList)</span><br><span class="line"><span class="keyword">var</span> newlist = mutableList.changeIndex2().filter &#123;</span><br><span class="line">    it.endsWith(<span class="string">&quot;^&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">println(mutableList)</span><br><span class="line">println(newlist)</span><br><span class="line"></span><br><span class="line">---------------</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line">[<span class="number">1</span>^, <span class="number">2</span>, <span class="number">3</span>^, <span class="number">4</span>, <span class="number">5</span>^]</span><br><span class="line">[<span class="number">1</span>^, <span class="number">3</span>^, <span class="number">5</span>^]</span><br><span class="line">---------------</span><br></pre></td></tr></table></figure>
+
+<p>这段代码中我们展示了几种 Kotlin 的高级使用，例如 <code>apply</code>：<br>apply函数是这样的，调用某对象的apply函数，在函数范围内，可以任意调用该对象的任意方法，并返回该对象。</p>
+<p><code>mutableList.changeIndex2()</code> 这里我们调用了前文中提到的<em>扩展函数</em>，这个扩展函数的返回值还是这个 MutableList，所以我们可以对其调用 <code>filter</code> 这个函数，这个函数接受一个 Lambda 表达式作为参数，其传入值是集合中的元素，返回值是 Boolean。</p>
+<p>正常一个 Lambda 表达式的结构是这样的 <code>&#123; i: Int -&gt; i + 1 &#125;</code>， <strong>-&gt;</strong> 前面的是函数的传入值，后面的是函数体。一个 lambda 表达式只有一个参数是很常见的，如果编译器自己可以识别出签名，也可以不用声明唯一的参数并忽略 -&gt;。，该参数会隐式声明为 it a</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/08/Bugly-%E4%BD%BF%E7%94%A8%E5%B0%8F%E8%AE%A1/" rel="prev" title="Bugly 使用小计">
+                  <i class="fa fa-angle-left"></i> Bugly 使用小计
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/06/15/Kotlin-%E9%81%8D%E5%8E%86%E9%9B%86%E5%90%88%E3%80%81%E6%8E%A7%E5%88%B6%E6%B5%81%E4%B8%8E%E4%BC%B4%E7%94%9F%E5%AF%B9%E8%B1%A1/" rel="next" title="Kotlin 遍历集合、控制流与伴生对象">
+                  Kotlin 遍历集合、控制流与伴生对象 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

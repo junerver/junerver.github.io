@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文普适性比较低，仅限于需要在项目里使用多个变体（variant）的开发者。对于gradle打包多变体可以参考我之前写的文章Gradle —— 使用 Gradle 打包多个变体（variant）  太长不看：项目地址：junerver&#x2F;flavor_cli">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用python编写可以快速在 Android 多变体项目中创建 sourceSet 的脚本">
+<meta property="og:url" content="https://junerver.xyz/2021/10/12/%E7%94%A8python%E7%BC%96%E5%86%99%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E5%9C%A8-Android-%E5%A4%9A%E5%8F%98%E4%BD%93%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-sourceSet-%E7%9A%84%E8%84%9A%E6%9C%AC/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="本文普适性比较低，仅限于需要在项目里使用多个变体（variant）的开发者。对于gradle打包多变体可以参考我之前写的文章Gradle —— 使用 Gradle 打包多个变体（variant）  太长不看：项目地址：junerver&#x2F;flavor_cli">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="og:image" content="https://junerver.xyz/2">
+<meta property="article:published_time" content="2021-10-12T02:34:39.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.548Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Gradle">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2021/10/12/%E7%94%A8python%E7%BC%96%E5%86%99%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E5%9C%A8-Android-%E5%A4%9A%E5%8F%98%E4%BD%93%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-sourceSet-%E7%9A%84%E8%84%9A%E6%9C%AC/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2021/10/12/%E7%94%A8python%E7%BC%96%E5%86%99%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E5%9C%A8-Android-%E5%A4%9A%E5%8F%98%E4%BD%93%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-sourceSet-%E7%9A%84%E8%84%9A%E6%9C%AC/","path":"2021/10/12/用python编写可以快速在-Android-多变体项目中创建-sourceSet-的脚本/","title":"用python编写可以快速在 Android 多变体项目中创建 sourceSet 的脚本"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>用python编写可以快速在 Android 多变体项目中创建 sourceSet 的脚本 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%AA%E9%95%BF%E4%B8%8D%E7%9C%8B%EF%BC%9A%E9%A1%B9%E7%9B%AE%E5%9C%B0%E5%9D%80%EF%BC%9Ajunerver-flavor-cli"><span class="nav-number">1.</span> <span class="nav-text">太长不看：项目地址：junerver&#x2F;flavor_cli</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%A8%E5%8F%A8%E5%8F%A8"><span class="nav-number">2.</span> <span class="nav-text">叨叨叨</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95-%E6%89%A7%E8%A1%8C%E9%80%BB%E8%BE%91"><span class="nav-number">3.</span> <span class="nav-text">使用方法 &amp; 执行逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F-%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">注意 &amp; 局限性</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2021/10/12/%E7%94%A8python%E7%BC%96%E5%86%99%E5%8F%AF%E4%BB%A5%E5%BF%AB%E9%80%9F%E5%9C%A8-Android-%E5%A4%9A%E5%8F%98%E4%BD%93%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%88%9B%E5%BB%BA-sourceSet-%E7%9A%84%E8%84%9A%E6%9C%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="用python编写可以快速在 Android 多变体项目中创建 sourceSet 的脚本 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用python编写可以快速在 Android 多变体项目中创建 sourceSet 的脚本
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-12 10:34:39" itemprop="dateCreated datePublished" datetime="2021-10-12T10:34:39+08:00">2021-10-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>本文普适性比较低，仅限于需要在项目里使用多个变体（variant）的开发者。对于gradle打包多变体可以参考我之前写的文章<a target="_blank" rel="noopener" href="https://blog.csdn.net/u011133887/article/details/64919136">Gradle —— 使用 Gradle 打包多个变体（variant）</a></p>
+</blockquote>
+<h2 id="太长不看：项目地址：junerver-flavor-cli"><a href="#太长不看：项目地址：junerver-flavor-cli" class="headerlink" title="太长不看：项目地址：junerver&#x2F;flavor_cli"></a>太长不看：<strong>项目地址：</strong><a target="_blank" rel="noopener" href="https://github.com/junerver/flavor_cli">junerver&#x2F;flavor_cli</a></h2><span id="more"></span>
+
+<hr>
+<h2 id="叨叨叨"><a href="#叨叨叨" class="headerlink" title="叨叨叨"></a>叨叨叨</h2><p>在多变体项目中有一个工作是比较麻烦而且折磨人的，那就是给不同的变体添加自己的 sourceSet。</p>
+<p>每当我们需要将一个 Java 文件，通过变体来实现差异化时，都需要将该文件从 main 中拷贝，移动到所有变体各自的 sourceSet 中，需要根据原 Java 文件的目录结构，在各个变体 sourceSet 中创建相同的目录结构。</p>
+<p>这一工作当变体数量一多、源文件的目录层级一深，简直就是地狱级折磨。</p>
+<p>所以为了节省时间、减轻折磨程度，我使用 python 编写了一个快速移动文件到各个变体 sourceSet 的脚本。使用效果如下：</p>
+<p><img src="/1" alt="在这里插入图片描述"></p>
+<p><img src="/2" alt="在这里插入图片描述"></p>
+<p>图中是运行后的结果将原本 main 中文件，拷贝到变体的 sourceSet 下，并删除了源文件。</p>
+<h2 id="使用方法-执行逻辑"><a href="#使用方法-执行逻辑" class="headerlink" title="使用方法 &amp; 执行逻辑"></a>使用方法 &amp; 执行逻辑</h2><ol>
+<li>根据提示输入需要从main中移动到变体的文件，这是最关键的，不能输入错误</li>
+<li>根据提示输入需要创建的变体名称，输入该名称就会创建该变体文件夹，如果不需要创建新变体直接回车即可</li>
+<li>如果是新变体，会检查当前工作目录是否有已存在的变体，提示选择复制，因为旧变体中一般包含多个文件需要复制到新变体中使用</li>
+<li>如果存在多个同名文件，会提示选择具体文件，请按提示输入</li>
+<li>执行完毕会删除main中的源文件，避免文件冲突</li>
+</ol>
+<h2 id="注意-局限性"><a href="#注意-局限性" class="headerlink" title="注意 &amp; 局限性"></a>注意 &amp; 局限性</h2><p>注意本脚本具有一定的局限性，比如无需从 main 移动文件（你直接复制不就好了？），与危险性（删除文件），测试覆盖并不全面，对于使用中出现的各种文件丢失概不负责（你的项目居然没用git？？？）！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+              <a href="/tags/Python/" rel="tag"># Python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/04/20/Flutter-%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B01/" rel="prev" title="Flutter 学习日记1">
+                  <i class="fa fa-angle-left"></i> Flutter 学习日记1
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/01/28/Android-Gradle-%E5%8D%87%E7%BA%A7-7-1-0-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%B8%8E%E5%A4%87%E5%BF%98/" rel="next" title="Android Gradle 升级 7.1.0 的一些注意事项与备忘">
+                  Android Gradle 升级 7.1.0 的一些注意事项与备忘 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

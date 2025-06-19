@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="想必各位小伙伴早就都有收到各大应用市场下发的关于《软件高 API 公告》吧！ 升级我们项目的 API 版本等级已经是必须提上日程了，同时 AS 版本等级、Gradle 版本也是我们升级绕不开的一环，总不能 API 等级提高了，项目还基于低版本的 Gradle 吧。下文我们将简单讲讲，在升级 Gradle 版本时需要注意的一些问题，以及出现相关问题时的解决方法，愿各位小伙伴都愉快的升级。 环境为：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Studio 项目 Gradle 升级经验总结">
+<meta property="og:url" content="https://junerver.xyz/2018/11/05/Android-Studio-%E9%A1%B9%E7%9B%AE-Gradle-%E5%8D%87%E7%BA%A7%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="想必各位小伙伴早就都有收到各大应用市场下发的关于《软件高 API 公告》吧！ 升级我们项目的 API 版本等级已经是必须提上日程了，同时 AS 版本等级、Gradle 版本也是我们升级绕不开的一环，总不能 API 等级提高了，项目还基于低版本的 Gradle 吧。下文我们将简单讲讲，在升级 Gradle 版本时需要注意的一些问题，以及出现相关问题时的解决方法，愿各位小伙伴都愉快的升级。 环境为：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="og:image" content="https://junerver.xyz/2">
+<meta property="article:published_time" content="2018-11-05T01:36:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.411Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Gradle">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2018/11/05/Android-Studio-%E9%A1%B9%E7%9B%AE-Gradle-%E5%8D%87%E7%BA%A7%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/11/05/Android-Studio-%E9%A1%B9%E7%9B%AE-Gradle-%E5%8D%87%E7%BA%A7%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/","path":"2018/11/05/Android-Studio-项目-Gradle-升级经验总结/","title":"Android Studio 项目 Gradle 升级经验总结"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android Studio 项目 Gradle 升级经验总结 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E4%BF%AE%E6%94%B9-Gradle-%E7%89%88%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">1、修改 Gradle 版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E4%BF%AE%E6%94%B9%E5%9B%A0-Gradle-%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E5%AF%BC%E8%87%B4%E7%9A%84%E5%BC%82%E5%B8%B8"><span class="nav-number">2.</span> <span class="nav-text">2、修改因 Gradle 版本升级导致的异常</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/11/05/Android-Studio-%E9%A1%B9%E7%9B%AE-Gradle-%E5%8D%87%E7%BA%A7%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Android Studio 项目 Gradle 升级经验总结 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Studio 项目 Gradle 升级经验总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-11-05 09:36:00" itemprop="dateCreated datePublished" datetime="2018-11-05T09:36:00+08:00">2018-11-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>想必各位小伙伴早就都有收到各大应用市场下发的关于《软件高 API 公告》吧！<br><img src="/1" alt="应用宝公告"></p>
+<p>升级我们项目的 API 版本等级已经是必须提上日程了，同时 AS 版本等级、Gradle 版本也是我们升级绕不开的一环，总不能 API 等级提高了，项目还基于低版本的 Gradle 吧。下文我们将简单讲讲，在升级 Gradle 版本时需要注意的一些问题，以及出现相关问题时的解决方法，愿各位小伙伴都愉快的升级。</p>
+<p>环境为： MacOS + AS 3.1.3 + Gradle 4.4 + Gradle Plugin 3.1.3</p>
+<span id="more"></span>
+
+<h2 id="1、修改-Gradle-版本"><a href="#1、修改-Gradle-版本" class="headerlink" title="1、修改 Gradle 版本"></a>1、修改 Gradle 版本</h2><p>首先我们修改项目根目录下的 build.gradle 文件中 Gradle Plugin 的版本为 3.1.3：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">        google()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath <span class="string">&#x27;com.android.tools.build:gradle:3.1.3&#x27;</span></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改根目录 <code>gradle\wrapper</code> 文件夹下 <code>gradle-wrapper.properties</code> 文件中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">distributionUrl=https\://services.gradle.org/distributions/gradle-4.4-all.zipg</span><br></pre></td></tr></table></figure>
+<p>一般会出现如下提示：<br><img src="/2" alt="无法找到 gradle 插件"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Could not find com.android.tools.build:gradle:3.1.3.</span><br><span class="line">Searched in the following locations:</span><br><span class="line">    https://jcenter.bintray.com/com/android/tools/build/gradle/3.1.3/gradle-3.1.3.pom</span><br><span class="line">    https://jcenter.bintray.com/com/android/tools/build/gradle/3.1.3/gradle-3.1.3.jar</span><br><span class="line">Required by:</span><br><span class="line">    project :</span><br><span class="line">Add Google Maven repository and sync project</span><br><span class="line">Open File</span><br><span class="line">Enable embedded Maven repository and sync project</span><br></pre></td></tr></table></figure>
+<p>按照提示操作，添加 Google 仓库依赖即可。</p>
+<h2 id="2、修改因-Gradle-版本升级导致的异常"><a href="#2、修改因-Gradle-版本升级导致的异常" class="headerlink" title="2、修改因 Gradle 版本升级导致的异常"></a>2、修改因 Gradle 版本升级导致的异常</h2><p><strong>1. 修改输出apk文件名：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cannot set the value of read-only property &#x27;outputFile&#x27; for ApkVariantOutputImpl_Decorated&#123;apkData=Main&#123;type=MAIN, fullName=uerblybUerb, filters=[]&#125;&#125; of type com.android.build.gradle.internal.api.ApkVariantOutputImpl.</span><br><span class="line">Open File</span><br></pre></td></tr></table></figure>
+<p>该问题是因为我们在模块级的 build.gradle 文件中设置了对打包输出文件的文件名进行修改，我们只要将原来的代码改写成如下形式即可：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> releaseTime() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Date().format(<span class="string">&quot;yyyy-MM-dd&quot;</span>, TimeZone.getTimeZone(<span class="string">&quot;UTC&quot;</span>))</span><br><span class="line">&#125;</span><br><span class="line">android &#123;</span><br><span class="line">            <span class="comment">// 自定义文件名输出配置</span></span><br><span class="line">             applicationVariants.all &#123; variant -&gt;</span><br><span class="line">                 variant.outputs.all &#123; output -&gt;</span><br><span class="line">                     <span class="comment">//要被替换的源字符串</span></span><br><span class="line">                     <span class="keyword">def</span> sourceFile = <span class="string">&quot;app-$&#123;variant.flavorName&#125;-$&#123;variant.buildType.name&#125;&quot;</span></span><br><span class="line">                     <span class="comment">//替换的字符串</span></span><br><span class="line">                     <span class="keyword">def</span> replaceFile = <span class="string">&quot;XXX_V$&#123;variant.versionName&#125;_c$&#123;variant.versionCode&#125;_$&#123;variant.flavorName&#125;_$&#123;variant.buildType.name&#125;_$&#123;releaseTime()&#125;&quot;</span></span><br><span class="line">                     outputFileName = output.outputFile.name.replace(sourceFile, replaceFile)</span><br><span class="line">                 &#125;</span><br><span class="line">             &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 因 apt 插件带来的问题：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Cannot choose between the following configurations of project :mainnavigatetabbar:</span><br><span class="line">  - debugApiElements</span><br><span class="line">  - debugRuntimeElements</span><br><span class="line">  - releaseApiElements</span><br><span class="line">  - releaseRuntimeElements</span><br><span class="line">All of them match the consumer attributes:</span><br><span class="line">  - Configuration &#x27;debugApiElements&#x27;:</span><br><span class="line">      - Found com.android.build.api.attributes.BuildTypeAttr &#x27;debug&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found com.android.build.api.attributes.VariantAttr &#x27;debug&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found com.android.build.gradle.internal.dependency.AndroidTypeAttr &#x27;Aar&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found org.gradle.usage &#x27;java-api&#x27; but wasn&#x27;t required.</span><br><span class="line">  - Configuration &#x27;debugRuntimeElements&#x27;:</span><br><span class="line">      - Found com.android.build.api.attributes.BuildTypeAttr &#x27;debug&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found com.android.build.api.attributes.VariantAttr &#x27;debug&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found com.android.build.gradle.internal.dependency.AndroidTypeAttr &#x27;Aar&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found org.gradle.usage &#x27;java-runtime&#x27; but wasn&#x27;t required.</span><br><span class="line">  - Configuration &#x27;releaseApiElements&#x27;:</span><br><span class="line">      - Found com.android.build.api.attributes.BuildTypeAttr &#x27;release&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found com.android.build.api.attributes.VariantAttr &#x27;release&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found com.android.build.gradle.internal.dependency.AndroidTypeAttr &#x27;Aar&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found org.gradle.usage &#x27;java-api&#x27; but wasn&#x27;t required.</span><br><span class="line">  - Configuration &#x27;releaseRuntimeElements&#x27;:</span><br><span class="line">      - Found com.android.build.api.attributes.BuildTypeAttr &#x27;release&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found com.android.build.api.attributes.VariantAttr &#x27;release&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found com.android.build.gradle.internal.dependency.AndroidTypeAttr &#x27;Aar&#x27; but wasn&#x27;t required.</span><br><span class="line">      - Found org.gradle.usage &#x27;java-runtime&#x27; but wasn&#x27;t required.</span><br></pre></td></tr></table></figure>
+<p>解决办法：<br>project 的 build.gradle 文件中删除<br><code>classpath &#39;com.neenbedankt.gradle.plugins:android-apt:1.8&#39;</code></p>
+<p>module 的 build.gradle 文件中删除<br><code>apply plugin: &#39;com.neenbedankt.android-apt&#39;</code></p>
+<p>module 的build.gradle 文件中替换</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">implementation&#x27;com.jakewharton:butterknife:9.0.0-rc1&#x27;</span><br><span class="line">annotationProcessor &#x27;com.jakewharton:butterknife-compiler:9.0.0-rc1&#x27;  </span><br></pre></td></tr></table></figure>
+
+<p><strong>3. Android SDK Build Tools版本过低：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">The specified Android SDK Build Tools version (23.0.3) is ignored, as it is below the minimum supported version (27.0.3) for Android Gradle Plugin 3.1.3.</span><br><span class="line">Android SDK Build Tools 27.0.3 will be used.</span><br><span class="line">To suppress this warning, remove &quot;buildToolsVersion &#x27;23.0.3&#x27;&quot; from your build.gradle file, as each version of the Android Gradle Plugin now has a default version of the build tools.</span><br><span class="line">Update Build Tools version and sync project</span><br><span class="line">Open File</span><br></pre></td></tr></table></figure>
+<p>解决： 修改模块下 build.gradle 文件中的 <code>compileSdkVersion 28</code> 、修改<code>buildToolsVersion &#39;28.0.3&#39;</code> 、修改 <code>targetSdkVersion 28</code><br>如果项目中，以模块形式依赖了其他的项目，也需要一并修改。</p>
+<p><strong>4. 项目中存在 Flavor：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">All flavors must now belong to a named flavor dimension. Learn more at https://d.android.com/r/tools/flavorDimensions-missing-error-message.html</span><br></pre></td></tr></table></figure>
+
+<p>解决方法：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">    defaultConfig &#123;</span><br><span class="line">        ...</span><br><span class="line">        flavorDimensions <span class="string">&quot;versionCode&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>4. 修改各个模块的 BuildType</strong><br>注意：如果你的项目包含了数个 Flavor，并且自定义了数个 buildType，同时又以模块的形式依赖了别的项目，那么你需要将每个模块的 buildTypes 修改成同 app 模块一致。<br>否则会出现如下错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Unable to resolve dependency for &#x27;:app@xxxxXXXX(flavor + buildtype)/compileClasspath&#x27;: Could not resolve project :xxxxxx(依赖的模块).</span><br><span class="line">Open File</span><br><span class="line">Show Details</span><br></pre></td></tr></table></figure>
+
+<p><strong>5. AAPT2 检查错误：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FAILURE: Build failed with an exception.</span><br><span class="line"></span><br><span class="line">* What went wrong:</span><br><span class="line">Execution failed for task &#x27;:app:mergeUerblUerbResources&#x27;.</span><br><span class="line">&gt; Error: java.util.concurrent.ExecutionException: com.android.builder.internal.aapt.v2.Aapt2Exception: AAPT2 error: check logs for details</span><br></pre></td></tr></table></figure>
+<p>解决方法：在项目根目录下的 <code>gradle.properties</code> 文件中增加：<br><code>android.enableAapt2=false</code> 禁用 AAPT2。</p>
+<p><strong>其他错误：</strong><br>其他的错误多出现在重复依赖，这里就不多赘述了，还有升级 API 等级也不多赘述了，这些都有大量文章可供参考。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/11/02/Android-%E4%BB%BF%E5%BE%AE%E4%BF%A1%E5%BD%95%E5%88%B6%E7%9F%AD%E8%A7%86%E9%A2%91%EF%BC%88%E4%B8%8D%E4%BD%BF%E7%94%A8-FFmpeg%EF%BC%89/" rel="prev" title="Android 仿微信录制短视频（不使用 FFmpeg）">
+                  <i class="fa fa-angle-left"></i> Android 仿微信录制短视频（不使用 FFmpeg）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/11/10/%E6%8B%BF%E6%9D%A5%E5%B0%B1%E7%94%A8%E7%9A%84-RecyclerView-%E4%B8%8A%E6%8B%89%E5%8A%A0%E8%BD%BD/" rel="next" title="拿来就用的 RecyclerView 上拉加载">
+                  拿来就用的 RecyclerView 上拉加载 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

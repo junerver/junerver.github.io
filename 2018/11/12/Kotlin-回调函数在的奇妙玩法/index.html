@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文涉及到的知识点有：扩展函数、Lambda 表达式的高级应用  在 Android 6.0 之后系统加强了对敏感权限的管理，一些敏感权限必须要通过动态权限申请来获得，本文的内容就从这里展开； 一个正常的权限申请流程大致是这样的：  检查是否存在权限 如果不存在则申请，存在则进入功能 如果用户拒绝则弹出对话框告知用户权限的用处，并提供跳转到设置页面的功能；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin 回调函数在的奇妙玩法">
+<meta property="og:url" content="https://junerver.xyz/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="本文涉及到的知识点有：扩展函数、Lambda 表达式的高级应用  在 Android 6.0 之后系统加强了对敏感权限的管理，一些敏感权限必须要通过动态权限申请来获得，本文的内容就从这里展开； 一个正常的权限申请流程大致是这样的：  检查是否存在权限 如果不存在则申请，存在则进入功能 如果用户拒绝则弹出对话框告知用户权限的用处，并提供跳转到设置页面的功能；">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="og:image" content="https://junerver.xyz/2">
+<meta property="og:image" content="https://junerver.xyz/3">
+<meta property="article:published_time" content="2018-11-12T08:39:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.452Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/","path":"2018/11/12/Kotlin-回调函数在的奇妙玩法/","title":"Kotlin 回调函数在的奇妙玩法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kotlin 回调函数在的奇妙玩法 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">实际应用</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kotlin 回调函数在的奇妙玩法 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kotlin 回调函数在的奇妙玩法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-11-12 16:39:00" itemprop="dateCreated datePublished" datetime="2018-11-12T16:39:00+08:00">2018-11-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>本文涉及到的知识点有：扩展函数、Lambda 表达式的高级应用</p>
+</blockquote>
+<p>在 Android 6.0 之后系统加强了对敏感权限的管理，一些敏感权限必须要通过动态权限申请来获得，本文的内容就从这里展开；</p>
+<p>一个正常的权限申请流程大致是这样的：</p>
+<ol>
+<li>检查是否存在权限</li>
+<li>如果不存在则申请，存在则进入功能</li>
+<li>如果用户拒绝则弹出对话框告知用户权限的用处，并提供跳转到设置页面的功能；</li>
+</ol>
+<span id="more"></span>
+
+<p>我使用的是网上比较流行的一个权限申请框架 # <a target="_blank" rel="noopener" href="https://github.com/tbruyelle">tbruyelle</a>&#x2F;<strong><a target="_blank" rel="noopener" href="https://github.com/tbruyelle/RxPermissions">RxPermissions</a></strong> ，当然本文的重点并不是如何使用这个库。</p>
+<p>如上所述，我们在一个应用中可能会有很多需要申请不同权限的位置，我们应该为每处需要敏感权限的位置做类似的处理。虽然我们使用了 RxPermissions，但是还是需要在用户拒绝的位置写大量重复的弹窗提示代码，这一点也不优雅。</p>
+<p>我们都知道在 Kotlin 中函数也是可以作为参数传入的，说道到这里不知道你有没有想起点什么，我们在使用 Java 编写 Android 代码时时常使用的各种 Listener，不就是类似这样的一个情况么？</p>
+<p>我们调用 setXXXListener 函数，并且传入一个接口的匿名内部类实现，这样的操作我们称之为<strong>回调</strong>，我们传入的这个 Listener 被中的方法称为回调函数，在 Kotlin 里我们也可以按照这种方式来书写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Java中的匿名内部类，在 Kotlin 中可以使用 object 实现</span></span><br><span class="line">mBtnCallback.setOnClickListener(<span class="keyword">object</span> :View.OnClickListener&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onClick</span><span class="params">(v: <span class="type">View</span>?)</span></span> &#123;</span><br><span class="line">        println(<span class="string">&quot;onclick&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>也许你在书写类似代码时已经发现了一些端倪：<br><img src="/1" alt="Lambda 表达式"></p>
+<p>所有的类似接口，在 Kotlin 中都有一些新的签名，这是因为在 Kotlin 里<strong>函数</strong>也是参数的一种，在 Java 中只包含一个方法的接口，在 Kotlin 中都可以使用 Lambda 表达式来达成一样的效果。</p>
+<p>这样做最大的好处就是简化代码，当我们在阅读代码时更加简洁易读，比如上述代码完全可以简化成：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mBtnCallback.setOnClickListener &#123; println(<span class="string">&quot;onclick&quot;</span>) &#125;</span><br></pre></td></tr></table></figure>
+
+<p>非但如此，以前我们在写一些耗时操作时，通常需要申明一些接口作为回调函数使用，在调用时再用匿名内部类来操作得到的结果，现在你可以这样书写了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">doSomeThingNeedTime</span><span class="params">(call: (<span class="type">response</span>:<span class="type">String</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    Thread.sleep(<span class="number">4000</span>)</span><br><span class="line">    <span class="keyword">var</span> response = <span class="string">&quot;xxxx&quot;</span>  <span class="comment">//我们假装这里进行了网络请求</span></span><br><span class="line">    call(response)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doSomeThingNeedTime &#123; response-&gt;</span><br><span class="line">            println(response)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h3><p>在我们实际应用时其实十分简单，下面的代码也许可以帮你加深对其了解：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//传入权限与权限描述，在需要权限的功能打开之前调用</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> Activity.<span class="title">rxRequestPermissions</span><span class="params">(<span class="keyword">vararg</span> permissions: <span class="type">String</span>, describe: <span class="type">String</span>, onGranted:()-&gt;<span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> keylistener = DialogInterface.OnKeyListener &#123; _, keyCode, event -&gt;</span><br><span class="line">        keyCode == KeyEvent.KEYCODE_BACK &amp;&amp; event.repeatCount == <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> dialog = AlertDialog.Builder(<span class="keyword">this</span>)</span><br><span class="line">            .setTitle(<span class="string">&quot;权限申请&quot;</span>)</span><br><span class="line">            .setMessage(<span class="string">&quot;<span class="subst">$&#123;describe&#125;</span>为必选项，开通后方可正常使用APP,请在设置中开启。&quot;</span>)</span><br><span class="line">            .setOnKeyListener(keylistener)</span><br><span class="line">            .setCancelable(<span class="literal">false</span>)</span><br><span class="line">            .setPositiveButton(<span class="string">&quot;去开启&quot;</span>) &#123; _, _ -&gt;</span><br><span class="line"><span class="comment">//                JumpPermissionManagement.GoToSetting(this)</span></span><br><span class="line">                finish()</span><br><span class="line">            &#125;</span><br><span class="line">            .setNegativeButton(<span class="string">&quot;结束&quot;</span>) &#123; _, _ -&gt;</span><br><span class="line">                Toast.makeText(<span class="keyword">this</span>, <span class="string">&quot;<span class="subst">$&#123;describe&#125;</span>权限未开启，不能使用该功能！&quot;</span>, Toast.LENGTH_SHORT).show()</span><br><span class="line">                finish()</span><br><span class="line">            &#125;</span><br><span class="line">            .create()</span><br><span class="line">    <span class="keyword">val</span> rxPermissions = RxPermissions(<span class="keyword">this</span>)</span><br><span class="line">    <span class="comment">//传递kotlin的可变长参数给Java的可变参数的时候需要使用修饰符 * ；这个修饰符叫做Speread Operator</span></span><br><span class="line">    <span class="comment">// 它只支持展开的Array 数组，不支持List集合，它只用于变长参数列表的实参，不能重载，它也不是运算符；</span></span><br><span class="line">    rxPermissions.request(*permissions)</span><br><span class="line">            .subscribe &#123;granted -&gt;</span><br><span class="line">                <span class="keyword">if</span> (granted) &#123;</span><br><span class="line">                    onGranted()</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    dialog.show()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码就是我写的 Activity 的一个扩展函数，用于实现我们前文提到的更方便的动态申请权限，请看我们的函数申明：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Activity.<span class="title">rxRequestPermissions</span><span class="params">(<span class="keyword">vararg</span> permissions: <span class="type">String</span>, describe: <span class="type">String</span>, onGranted:()-&gt;<span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>我们传入的前三个参数是分别是：要申请的权限（对于我们的扩展函数而言是一个可变长参数），第二个参数我们使用“key &#x3D; value” 这种形式传递，第三个参数就一个回调函数<code>onGranted:()-&gt;Unit</code>；</p>
+<p>其中 onGranted，是我们自己命名的函数名，冒号后面是我们的函数描述即：没有传入参数，返回值类型为 Unit。在我们的扩展函数体中直接将他作为一个函数调用即可，需要注意的是必须要填写括号，AS的自动补全并不会补全这个括号，没有括号时编译器也不会报错。</p>
+<p><strong>如何使用</strong></p>
+<p>在打开需要申请权限的功能位置，我们只要写下以下的数行代码即可：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mBtnRecord.setOnClickListener &#123;</span><br><span class="line">    rxRequestPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, describe = <span class="string">&quot;相机、存储、录音&quot;</span>) &#123;</span><br><span class="line">        startActivityForResult(Intent(<span class="keyword">this</span><span class="symbol">@MainActivity</span>, VideoRecordActivity::<span class="keyword">class</span>.java), REQUEST_VIDEO)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先传入需要申请的权限、权限描述（key &#x3D; value），第三个参数为一个Lambda表达式，这里进行的是存在权限时需要执行的操作。Lambda 表达式作为函数的最后的一个参数时，我们可以把它放在圆括号外书写。</p>
+<p>最终使用时的效果如下：<br><img src="/2" alt="点击时请求权限"></p>
+<p><img src="/3" alt="未授予全部权限"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/11/10/%E6%8B%BF%E6%9D%A5%E5%B0%B1%E7%94%A8%E7%9A%84-RecyclerView-%E4%B8%8A%E6%8B%89%E5%8A%A0%E8%BD%BD/" rel="prev" title="拿来就用的 RecyclerView 上拉加载">
+                  <i class="fa fa-angle-left"></i> 拿来就用的 RecyclerView 上拉加载
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/12/03/Kotlin-Koans-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C/" rel="next" title="Kotlin-Koans 学习笔记-集合操作">
+                  Kotlin-Koans 学习笔记-集合操作 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

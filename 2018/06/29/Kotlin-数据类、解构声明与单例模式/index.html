@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在之前的三篇文章中，我们已经了解了一下的内容：  如何在项目中使用 Kotlin，Kotlin 的空安全 集合的相关操作，扩展函数以及 Lambda 表达式等高级特性 for 与集合遍历，强大的 if 、when 表达式，可以用来做单例模式的伴生对象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin 数据类、解构声明与单例模式">
+<meta property="og:url" content="https://junerver.xyz/2018/06/29/Kotlin-%E6%95%B0%E6%8D%AE%E7%B1%BB%E3%80%81%E8%A7%A3%E6%9E%84%E5%A3%B0%E6%98%8E%E4%B8%8E%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="在之前的三篇文章中，我们已经了解了一下的内容：  如何在项目中使用 Kotlin，Kotlin 的空安全 集合的相关操作，扩展函数以及 Lambda 表达式等高级特性 for 与集合遍历，强大的 if 、when 表达式，可以用来做单例模式的伴生对象">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="og:image" content="https://junerver.xyz/2">
+<meta property="og:image" content="https://junerver.xyz/3">
+<meta property="og:image" content="https://junerver.xyz/4">
+<meta property="article:published_time" content="2018-06-29T07:44:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.457Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2018/06/29/Kotlin-%E6%95%B0%E6%8D%AE%E7%B1%BB%E3%80%81%E8%A7%A3%E6%9E%84%E5%A3%B0%E6%98%8E%E4%B8%8E%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/06/29/Kotlin-%E6%95%B0%E6%8D%AE%E7%B1%BB%E3%80%81%E8%A7%A3%E6%9E%84%E5%A3%B0%E6%98%8E%E4%B8%8E%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/","path":"2018/06/29/Kotlin-数据类、解构声明与单例模式/","title":"Kotlin 数据类、解构声明与单例模式"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kotlin 数据类、解构声明与单例模式 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">1、数据类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1%E3%80%81%E5%A4%8D%E5%88%B6%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">1.1、复制一个数据类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E8%A7%A3%E6%9E%84%E5%A3%B0%E6%98%8E"><span class="nav-number">2.</span> <span class="nav-text">2、解构声明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E3%80%81%E5%9C%A8-Lambda-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%A7%A3%E6%9E%84%E5%A3%B0%E6%98%8E"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、在 Lambda 表达式中使用解构声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%87%BD%E6%95%B0%E4%B8%AD%E8%BF%94%E5%9B%9E%E6%95%B0%E4%B8%AA%E5%8F%82%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">在函数中返回数个参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">3、单例模式</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/06/29/Kotlin-%E6%95%B0%E6%8D%AE%E7%B1%BB%E3%80%81%E8%A7%A3%E6%9E%84%E5%A3%B0%E6%98%8E%E4%B8%8E%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kotlin 数据类、解构声明与单例模式 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kotlin 数据类、解构声明与单例模式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-06-29 15:44:00" itemprop="dateCreated datePublished" datetime="2018-06-29T15:44:00+08:00">2018-06-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>在之前的三篇文章中，我们已经了解了一下的内容：</p>
+<ol>
+<li>如何在项目中使用 Kotlin，Kotlin 的空安全</li>
+<li>集合的相关操作，扩展函数以及 Lambda 表达式等高级特性</li>
+<li>for 与集合遍历，强大的 if 、when 表达式，可以用来做单例模式的伴生对象</li>
+</ol>
+<span id="more"></span>
+
+<h2 id="1、数据类"><a href="#1、数据类" class="headerlink" title="1、数据类"></a>1、数据类</h2><p>你是否已经厌烦了一个项目中大量的 POJO ？是的，虽然我们有大量的插件来帮助我们简化这些创建过程，但是满天的 <code>getter</code> 与 <code>setter</code> 还有那些 <code>equals()/hashCode()</code> 大量机械的、重复的方法，早已让我们厌烦不堪。</p>
+<p>Kotlin 为我们提供了更强大数据类，如下所示：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">User</span>(<span class="keyword">var</span> name: String=<span class="string">&quot;&quot;</span>, <span class="keyword">var</span> age:<span class="built_in">Int</span> = <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> nickname:String = <span class="string">&quot;&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 data 关键字来告知系统这是一个数据类，其主构造函数需要至少有一个参数，如果生成的类需要含有一个无参的构造函数，则所有的属性必须指定默认值。</p>
+<p>请注意，对于那些自动生成的函数，编译器只使用在主构造函数内部定义的属性。如需在生成的实现中排除一个属性，请将其声明在类体中。</p>
+<p><img src="/1" alt="自动生成的函数只使用主构造函数定义的属性"></p>
+<h3 id="1-1、复制一个数据类"><a href="#1-1、复制一个数据类" class="headerlink" title="1.1、复制一个数据类"></a>1.1、复制一个数据类</h3><p><img src="/2" alt="复制数据类的两个方式"></p>
+<p>当我们使用 <code>copy</code> 函数时，系统会找到该类的主构造函数的签名，此时我们可以按顺序填入参数（无需完全填写，会从第一位开始自动匹配），还可以采用类似 Python 的方式 <code>参数名 = 值</code>的方式来修改我们需要的参数值。</p>
+<h2 id="2、解构声明"><a href="#2、解构声明" class="headerlink" title="2、解构声明"></a>2、<a target="_blank" rel="noopener" href="https://www.kotlincn.net/docs/reference/multi-declarations.html">解构声明</a></h2><p>这四个字对于 Android + Java 开发者是挺陌生的，大家可以点击到 Kotlin 中文站查看详细的定义，下面我们通过代码来了解一下他的用法，首先我们来看一张熟悉的图：<br><img src="/3" alt="for 循环遍历 Map 集合"></p>
+<p>注意这里的 <code>(k,v)</code> 这就是一个解构声明，标准库已经帮我们实现了解构声明，另外数据类也已经实现了主构造函数包含参数的解构声明。</p>
+<p>比如刚刚我们创建的 User 类，我们可以通过如下的方式来获取其中指定的值：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (name,age) = c</span><br><span class="line"><span class="keyword">var</span> (_,aged) = d  <span class="comment">//用下划线占位不需要的参数</span></span><br><span class="line"><span class="keyword">var</span> aged1 = d.component2()  <span class="comment">//直接使用 componentN 函数来获取对应的值</span></span><br><span class="line">println(<span class="string">&quot;c&#x27;s name = <span class="variable">$name</span> c&#x27;s age = <span class="variable">$age</span>&quot;</span>)</span><br><span class="line">println(<span class="string">&quot;don&#x27;t need d&#x27;s name, d&#x27;s age = <span class="variable">$aged</span>&quot;</span>)</span><br><span class="line">println(<span class="string">&quot;other way to get d&#x27;s age is <span class="variable">$aged1</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>我们可以任意的在类中进行解构声明，比如我们可以使用解构声明来扩展刚刚我们定义的 User 类：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">User</span>(<span class="keyword">var</span> name: String=<span class="string">&quot;&quot;</span>, <span class="keyword">var</span> age:<span class="built_in">Int</span> = <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> nickname:String = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">component3</span><span class="params">()</span></span> = nickname</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，数据类默认为我们实现了主构造函数的参数解构声明，所以我们的解构声明只能接着主构造函数的序号往后使用</p>
+<p><img src="/4" alt="自定义的解构声明"></p>
+<h3 id="2-1、在-Lambda-表达式中使用解构声明"><a href="#2-1、在-Lambda-表达式中使用解构声明" class="headerlink" title="2.1、在 Lambda 表达式中使用解构声明"></a>2.1、在 Lambda 表达式中使用解构声明</h3><p>当这个类进行了解构声明时，我们可以直接在 Lambda 表达式中使用其解构，如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c.let &#123; (a,b,c) -&gt;</span><br><span class="line">            println(<span class="string">&quot;c&#x27;s name = <span class="variable">$a</span> , c&#x27;s age = <span class="variable">$b</span> , c&#x27;s nickname = <span class="variable">$c</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>请注意解构声明对于 Lambda 表达式而言是一个参数：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123; a <span class="comment">//-&gt; …… &#125; // 一个参数</span></span><br><span class="line">&#123; a, b <span class="comment">//-&gt; …… &#125; // 两个参数</span></span><br><span class="line">&#123; (a, b) <span class="comment">//-&gt; …… &#125; // 一个解构对</span></span><br><span class="line">&#123; (a, b), c <span class="comment">//-&gt; …… &#125; // 一个解构对以及其他参数</span></span><br></pre></td></tr></table></figure>
+<h3 id="在函数中返回数个参数"><a href="#在函数中返回数个参数" class="headerlink" title="在函数中返回数个参数"></a>在函数中返回数个参数</h3><p>有的时候我们经常会希望一个函数能返给我们多个结果，例如曾经我做过一个小功能：传入 PM2.5 的值，返回当前  PM2.5 严重程度的介绍以及需要显示的颜色代码。当时我采用的做法是返回一个 Map，然后再需要的地方在使用固定的 key  将值提取出来，这一点也不优雅。</p>
+<p>但是在 Kotlin 里 你可以这样做：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">getPM25DescAndColor</span><span class="params">(pm25: <span class="type">Int</span>)</span></span>:Pair&lt;String,String&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">when</span> (pm25) &#123;</span><br><span class="line">        <span class="keyword">in</span> <span class="number">0.</span><span class="number">.50</span> -&gt; Pair(<span class="string">&quot;优秀&quot;</span>,<span class="string">&quot;#009900&quot;</span>)</span><br><span class="line">        <span class="keyword">in</span> <span class="number">51.</span><span class="number">.100</span> -&gt; Pair(<span class="string">&quot;良好&quot;</span>,<span class="string">&quot;#FFCC33&quot;</span>)</span><br><span class="line">        <span class="keyword">in</span> <span class="number">101.</span><span class="number">.150</span> -&gt; Pair(<span class="string">&quot;轻度&quot;</span>,<span class="string">&quot;#FF9900&quot;</span>)</span><br><span class="line">        <span class="keyword">in</span> <span class="number">151.</span><span class="number">.200</span> -&gt; Pair(<span class="string">&quot;中度&quot;</span>,<span class="string">&quot;#FF3300&quot;</span>)</span><br><span class="line">        <span class="keyword">in</span> <span class="number">201.</span><span class="number">.300</span> -&gt; Pair(<span class="string">&quot;重度&quot;</span>,<span class="string">&quot;#9900FF&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span> -&gt; Pair(<span class="string">&quot;严重&quot;</span>,<span class="string">&quot;#663300&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>标准库提供了 <code>Pair</code> 和 <code>Triple</code> 这两个类，前者表示两个参数，后者表示三个参数。尽管在很多情况下命名数据类是更好的设计选择， 因为它们通过为属性提供有意义的名称使代码更具可读性。</p>
+<h2 id="3、单例模式"><a href="#3、单例模式" class="headerlink" title="3、单例模式"></a>3、单例模式</h2><p>不要在考虑单例模式的几种写法了，也不要在关注什么线程安全、线程不安全了。</p>
+<p>不知道你有没有疑惑过，Java 是一个面向对象编程的语言（OOP），但是 Java 里有些东西似乎不那么 OOP，比如单例模式，又比如公共静态方法。这两者都必须在一个 class 下面，他们却都不应该是一个类。一个单例模式，既然是一个 class 为什么不能处处实例化它？一个个公共静态方法，调用它为什么还要先写一个 class？这并不符合直觉！</p>
+<p>Kotlin 帮我们彻底的解决了这一迷思！本篇我们先来说说在 Kotlin 里如何写好一个单例模式。</p>
+<p>在 Java 里我最常用的单例模式是静态内部类，因为他即是线程安全又是懒加载的，我们来看一下一个最简单的静态内部类单例模式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构造方法私有</span></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//在访问HttpMethods时创建单例</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">SingletonHolder</span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Singleton</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取单例</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonHolder.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们通过私有的构造函数来使得外部类不能创建这个类的实例，在私有的内部静态类中实例化这个类，然后提供一个公共静态访问内部类中的成员。</p>
+<p>我们来看看这样一个单例我们在 Kotlin 中应该如何处理：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> Singleton &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是的就是这么简单，我们只要使用 <code>object</code> 关键字就可以声明一个单例，这是真正意义上的单例，因为他本身就是一个对象！在 Kotlin 中这被称作对象声明，就像变量声明一样，对象声明不是一个表达式，不能用在赋值语句的右边。</p>
+<p>对象声明的初始化过程是线程安全的。</p>
+<p>如需引用该对象，我们直接使用其名称即可：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Singleton.doSomething()</span><br></pre></td></tr></table></figure>
+<p>如果你只是在某个 kt 文件中需要使用一个单例模式的对象，我们还可以使用 object 关键字来实现 Java 中的匿名内部类：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> e = <span class="keyword">object</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">print</span><span class="params">(index: <span class="type">Int</span>)</span></span>: String &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;你输入的数字是：<span class="variable">$index</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">println(e.print(<span class="number">34</span>))</span><br></pre></td></tr></table></figure>
+<p>当然这个对象还可存在继承与实现：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> <span class="keyword">class</span> <span class="title class_">A</span>(x: <span class="built_in">Int</span>) &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">open</span> <span class="keyword">val</span> y: <span class="built_in">Int</span> = x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">B</span> &#123;……&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> ab: A = <span class="keyword">object</span> : A(<span class="number">1</span>), B &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">val</span> y = <span class="number">15</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>PS：诚如本篇文章的标题，简单就是美，Kotlin 中还有很多这样充满美感的设计或是语法糖，请继续关注后续文章！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/15/Kotlin-%E9%81%8D%E5%8E%86%E9%9B%86%E5%90%88%E3%80%81%E6%8E%A7%E5%88%B6%E6%B5%81%E4%B8%8E%E4%BC%B4%E7%94%9F%E5%AF%B9%E8%B1%A1/" rel="prev" title="Kotlin 遍历集合、控制流与伴生对象">
+                  <i class="fa fa-angle-left"></i> Kotlin 遍历集合、控制流与伴生对象
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/" rel="next" title="Kotlin 委托模式 - 一个管理人员的一天">
+                  Kotlin 委托模式 - 一个管理人员的一天 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

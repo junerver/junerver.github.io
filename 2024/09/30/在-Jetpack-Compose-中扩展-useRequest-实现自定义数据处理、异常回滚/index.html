@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="写在前面本文中提及的use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专注于业务与 UI 组件。 这是系列文章的第 9 篇，前文：  在 Compose 中使用 useRequest 轻松管理网络请求 在 Compose 中使用状态提升？我提升个 P…Provide">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Jetpack Compose 中扩展 useRequest 实现自定义数据处理、异常回滚">
+<meta property="og:url" content="https://junerver.xyz/2024/09/30/%E5%9C%A8-Jetpack-Compose-%E4%B8%AD%E6%89%A9%E5%B1%95-useRequest-%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E3%80%81%E5%BC%82%E5%B8%B8%E5%9B%9E%E6%BB%9A/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="写在前面本文中提及的use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专注于业务与 UI 组件。 这是系列文章的第 9 篇，前文：  在 Compose 中使用 useRequest 轻松管理网络请求 在 Compose 中使用状态提升？我提升个 P…Provide">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-30T06:45:43.000Z">
+<meta property="article:modified_time" content="2025-06-19T09:07:04.074Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Compose">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="ahooks">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2024/09/30/%E5%9C%A8-Jetpack-Compose-%E4%B8%AD%E6%89%A9%E5%B1%95-useRequest-%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E3%80%81%E5%BC%82%E5%B8%B8%E5%9B%9E%E6%BB%9A/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2024/09/30/%E5%9C%A8-Jetpack-Compose-%E4%B8%AD%E6%89%A9%E5%B1%95-useRequest-%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E3%80%81%E5%BC%82%E5%B8%B8%E5%9B%9E%E6%BB%9A/","path":"2024/09/30/在-Jetpack-Compose-中扩展-useRequest-实现自定义数据处理、异常回滚/","title":"在 Jetpack Compose 中扩展 useRequest 实现自定义数据处理、异常回滚"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>在 Jetpack Compose 中扩展 useRequest 实现自定义数据处理、异常回滚 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E3%80%81%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8"><span class="nav-number">2.</span> <span class="nav-text">自定义数据处理、自定义异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8F%92%E4%BB%B6%E6%89%A9%E5%B1%95-useRequest-%E5%AE%9E%E7%8E%B0-mutate-%E5%9B%9E%E6%BB%9A"><span class="nav-number">3.</span> <span class="nav-text">自定义插件扩展 useRequest 实现 mutate 回滚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E6%9B%B4%E5%A4%9A"><span class="nav-number">4.</span> <span class="nav-text">探索更多</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2024/09/30/%E5%9C%A8-Jetpack-Compose-%E4%B8%AD%E6%89%A9%E5%B1%95-useRequest-%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E3%80%81%E5%BC%82%E5%B8%B8%E5%9B%9E%E6%BB%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="在 Jetpack Compose 中扩展 useRequest 实现自定义数据处理、异常回滚 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在 Jetpack Compose 中扩展 useRequest 实现自定义数据处理、异常回滚
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-09-30 14:45:43" itemprop="dateCreated datePublished" datetime="2024-09-30T14:45:43+08:00">2024-09-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 17:07:04" itemprop="dateModified" datetime="2025-06-19T17:07:04+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文中提及的<code>use</code>开头的函数，都出自与我的 <a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a> 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专注于业务与 UI 组件。</p>
+<p>这是系列文章的第 9 篇，前文：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7342793007938371594">在 Compose 中使用 useRequest 轻松管理网络请求</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7344927519923011594">在 Compose 中使用状态提升？我提升个 P…Provider</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7345396671423250441">在 Compose 中父组件如何调用子组件的函数？</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7347851786134978610">在 Compose 中方便的使用 MVI 思想？试试 useReducer！</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352527589247336458">在 Compose 中像使用 redux 一样轻松管理全局状态</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352785768094433289">在 Compose 中轻松使用异步 dispatch 管理全局状态</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7353156196935434290">在 Jetpack Compose 中管理网络请求竟然如此简单！</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7356177721997279242">在 Jetpack Compose 中优雅的使用防抖、节流</a></li>
+</ul>
+<p>在前面的文章中，我们简单的介绍过 <code>useRequest</code> 这个 hook，他被设计的高度抽象，同时也极易扩展，在下面的两个章节中，我将举两个例子，让你在业务中更好的使用它</p>
+<span id="more"></span>
+
+<h2 id="自定义数据处理、自定义异常"><a href="#自定义数据处理、自定义异常" class="headerlink" title="自定义数据处理、自定义异常"></a>自定义数据处理、自定义异常</h2><p>一般来说我们的后台数据都有一个统一的包装格式，大概这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Serializable</span></span><br><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">BaseResp</span>&lt;<span class="type">T</span>&gt;(</span><br><span class="line">  <span class="keyword">val</span> <span class="keyword">data</span>: T? = <span class="literal">null</span>,</span><br><span class="line">  <span class="keyword">val</span> status: <span class="built_in">Int</span>,</span><br><span class="line">  <span class="keyword">val</span> message: String? = <span class="literal">null</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>通常我们只关心我们的业务数据，也就是 <code>data</code>，如果直接使用 <code>useRequest</code> ,我们就需要在 UI 代码中进行解包装，这多少有点麻烦。</p>
+<p>另一个就是后台的自定义错误类型，后台将接口报错进行更友好的包装，我们需要判断返回值的状态码 <code>status</code> 来确定业务是否错误，而不是简单的将数据填充到 <code>useRequest</code> 的 data 中。</p>
+<p>我们只需要进行如下操作，即可扩展：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;TData : Any&gt;</span> <span class="title">useAsyncRequest</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">  requestFn: <span class="type">suspend</span> (<span class="type">TParams</span>) -&gt; <span class="type">BaseResp</span>&lt;<span class="type">TData</span>&gt;, <span class="comment">// 实际请求的结果是包装类型</span></span></span></span><br><span class="line"><span class="params"><span class="function">  optionsOf: <span class="type">RequestOptions</span>&lt;<span class="type">BaseResp</span>&lt;<span class="type">TData</span>&gt;&gt;.() -&gt; <span class="type">Unit</span> = &#123;&#125;,</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>: RequestHolder&lt;TData&gt; &#123;</span><br><span class="line">  <span class="keyword">val</span> holder = useRequest(</span><br><span class="line">    requestFn,</span><br><span class="line">    optionsOf = optionsOf</span><br><span class="line">  )</span><br><span class="line">  <span class="keyword">val</span> resp <span class="keyword">by</span> holder.<span class="keyword">data</span></span><br><span class="line">  <span class="keyword">val</span> reqErr <span class="keyword">by</span> holder.error</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 自定义的最终返回data与错误</span></span><br><span class="line">  <span class="keyword">var</span> myData <span class="keyword">by</span> _useState&lt;TData?&gt;(<span class="literal">null</span>)</span><br><span class="line">  <span class="keyword">var</span> myError <span class="keyword">by</span> _useState&lt;Throwable?&gt;(<span class="literal">null</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">//监听真实请求</span></span><br><span class="line">  useEffect(resp, reqErr) &#123;</span><br><span class="line">    <span class="keyword">if</span> (resp.asBoolean()) &#123;</span><br><span class="line">      <span class="keyword">if</span> (resp.status == <span class="number">200</span>) &#123;</span><br><span class="line">        myData = holder.<span class="keyword">data</span>?.<span class="keyword">data</span> <span class="comment">// 业务状态为 200 是才设置 data的值</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        myError = BusinessErrors(resp.status, resp.message) <span class="comment">// 否则设置为业务错误</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (reqErr.asBoolean()) &#123;</span><br><span class="line">      myError = reqErr</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">fun</span> <span class="title">mutate</span><span class="params">(mutateFn: (<span class="type">TData</span>?) -&gt; <span class="type">TData</span>)</span></span> &#123;</span><br><span class="line">    myData = mutateFn(myData)</span><br><span class="line">  &#125; <span class="comment">//mutate函数修改自定义的状态</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> with(holder) &#123;</span><br><span class="line">    RequestHolder(</span><br><span class="line">      <span class="keyword">data</span> = myData, <span class="comment">//替换为自定义的data</span></span><br><span class="line">      isLoading = isLoading,</span><br><span class="line">      error = myError,<span class="comment">//替换为自定义error</span></span><br><span class="line">      request = request,</span><br><span class="line">      mutate = ::mutate, <span class="comment">// 替换为自定义mutate函数</span></span><br><span class="line">      refresh = refresh,</span><br><span class="line">      cancel = cancel</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的返回值并不需要与我一致，你如果不需要那么多函数完全可以自定义一个类型，或者使用 tuple 元组直接返回暴露</p>
+<blockquote>
+<p>ps: 在后续版本，data、loading、error 将会转为 <code>State&lt;TData&gt;</code>\ <code>State&lt;Boolean&gt;</code> \ <code>State&lt;Throwable&gt;</code>，届时，你需要使用<code>by</code>来获取值<br>进行自定义封装时如果使用 <code>RequestHolder</code> 作为返回值要注意类型区别</p>
+</blockquote>
+<h2 id="自定义插件扩展-useRequest-实现-mutate-回滚"><a href="#自定义插件扩展-useRequest-实现-mutate-回滚" class="headerlink" title="自定义插件扩展 useRequest 实现 mutate 回滚"></a>自定义插件扩展 <code>useRequest</code> 实现 <code>mutate</code> 回滚</h2><p>之前我们介绍过，可以通过调用 <code>mutate</code> 函数实现<a target="_blank" rel="noopener" href="https://juejin.cn/spost/7342793007938371594#heading-6">乐观更新</a>，乐观更新的概念我们不再复述.</p>
+<p>如果乐观更新失败我们如何对数据回滚呢？</p>
+<p>在直接使用 <code>useRequest</code> 的情况下，可以调用 <code>usePrevious</code> 来暂存 data 的上一个状态，在失败后调用 mutate 将上个状态回滚</p>
+<p>例如一个修改用户名的场景 ：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> (userInfoState, loadingState, _, _, mutate) = useRequest(</span><br><span class="line">    requestFn = &#123; NetApi.userInfo(it[<span class="number">0</span>] <span class="keyword">as</span> String) &#125;,</span><br><span class="line">    optionsOf = &#123;</span><br><span class="line">        defaultParams = arrayOf(<span class="string">&quot;junerver&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br><span class="line"><span class="keyword">val</span> userInfo <span class="keyword">by</span> userInfoState</span><br><span class="line"><span class="keyword">val</span> previous <span class="keyword">by</span> usePrevious(present = userInfo) <span class="comment">// previous保存上一个状态</span></span><br><span class="line"></span><br><span class="line">Row &#123;</span><br><span class="line">    TButton(text = <span class="string">&quot;changeName&quot;</span>) &#123;</span><br><span class="line">        mockFnChangeName(input.value) <span class="comment">// 在这里发起修改名称的请求</span></span><br><span class="line">        <span class="keyword">if</span> (userInfo.asBoolean()) &#123;</span><br><span class="line">            <span class="comment">// 调用mutate函数实施乐观更新</span></span><br><span class="line">            mutate &#123;</span><br><span class="line">                it!!.copy(name = input.value)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        setInput(<span class="string">&quot;&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    TButton(text = <span class="string">&quot;rollback&quot;</span>) &#123;</span><br><span class="line">        <span class="comment">// 回滚</span></span><br><span class="line">        previous?.let &#123; mutate &#123; _ -&gt; it &#125; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>previous?.let &#123; mutate &#123; _ -&gt; it &#125; &#125;</code> 这行代码可以放到 <code>mockFnChangeName</code> 的 <code>onError</code> 生命周期之下，这样在修改名称失败后就对乐观更新实施回滚</p>
+<p>如果你有大量的乐观更新场景，每次都要写这么一堆代码，无疑是很麻烦的一件事，那么我们是否可以在每次请求成功之后保存成功状态，然后对外暴露一个函数，使用这个成功状态用作回滚。</p>
+<p>完全可以，我们只需要写一个自定义插件就可以实现这一目标：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;TData : Any&gt;</span> <span class="title">useRollbackPlugin</span><span class="params">(ref: <span class="type">MutableRef</span>&lt;() -&gt; <span class="type">Unit</span>&gt;)</span></span>: Plugin&lt;TData&gt; = remember &#123;</span><br><span class="line">    <span class="keyword">object</span> : Plugin&lt;TData&gt;() &#123;</span><br><span class="line">        <span class="keyword">var</span> pervState: FetchState&lt;TData&gt;? = <span class="literal">null</span> <span class="comment">// 保存上一次请求成功的状态</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 最终实现的rollback函数</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">rollback</span><span class="params">()</span></span> &#123;</span><br><span class="line">            pervState?.let &#123; fetchInstance.setState(it.asMap()) &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="keyword">val</span> invoke: GenPluginLifecycleFn&lt;TData&gt;</span><br><span class="line">            <span class="keyword">get</span>() = &#123; fetch: Fetch&lt;TData&gt;, options: RequestOptions&lt;TData&gt; -&gt;</span><br><span class="line">                initFetch(fetch, options) <span class="comment">// 自定义插件必须要调用 initFetch 函数</span></span><br><span class="line">                <span class="keyword">object</span> : PluginLifecycle&lt;TData&gt;() &#123;</span><br><span class="line">                    <span class="keyword">override</span> <span class="keyword">val</span> onMutate: PluginOnMutate&lt;TData&gt;</span><br><span class="line">                        <span class="keyword">get</span>() = &#123;</span><br><span class="line">                            pervState = fetch.fetchState <span class="comment">//我们将状态保存时机放在 onMutate 这个生命周期中</span></span><br><span class="line">                        &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;.also &#123; ref.current = it::rollback &#125; <span class="comment">//将rollback函数通过ref进行回传，实现子向父转递</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用自定义插件扩展后的 useRequest</span></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;TData : Any&gt;</span> <span class="title">useCustomPluginRequest</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    requestFn: <span class="type">suspend</span> (<span class="type">TParams</span>) -&gt; <span class="type">TData</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">    optionsOf: <span class="type">RequestOptions</span>&lt;<span class="type">TData</span>&gt;.() -&gt; <span class="type">Unit</span> = &#123;&#125;,</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>: Tuple8&lt;State&lt;TData?&gt;, State&lt;<span class="built_in">Boolean</span>&gt;, State&lt;Throwable?&gt;, ReqFn, MutateFn&lt;TData&gt;, RefreshFn, CancelFn, RollbackFn&gt; &#123;</span><br><span class="line">    <span class="keyword">val</span> rollbackRef = useRef(default = &#123; &#125;) <span class="comment">// 在父hook创建 Ref 容器</span></span><br><span class="line">    <span class="keyword">val</span> requestHolder = useRequest(</span><br><span class="line">        requestFn = requestFn,</span><br><span class="line">        optionsOf = optionsOf,</span><br><span class="line">        plugins = arrayOf(&#123;</span><br><span class="line">            useRollbackPlugin(ref = rollbackRef) <span class="comment">//将ref传递给自定义插件函数</span></span><br><span class="line">        &#125;)</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> with(requestHolder) &#123;</span><br><span class="line">        tuple(</span><br><span class="line">            <span class="keyword">data</span>,</span><br><span class="line">            isLoading,</span><br><span class="line">            error,</span><br><span class="line">            request,</span><br><span class="line">            mutate,</span><br><span class="line">            refresh,</span><br><span class="line">            cancel,</span><br><span class="line">            eighth = &#123; rollbackRef.current.invoke() &#125; <span class="comment">// 最终通过 ref 来实现对外暴露 rollback 函数</span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="探索更多"><a href="#探索更多" class="headerlink" title="探索更多"></a>探索更多</h2><p>好了以上就是 使用 hooks 的一些小小技巧，现在你可以自由的扩展 <code>useRequest</code> 来满足你对网络请求的个性化需求。</p>
+<p>示例源码地址：<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks/blob/master/app/src/commonMain/kotlin/xyz/junerver/composehooks/example/request/Mutate.kt">Mutate</a> 、<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks/blob/master/app/src/commonMain/kotlin/xyz/junerver/composehooks/example/request/CustomPlugin.kt">CustomPlugin</a></p>
+<p>项目开源地址：<a target="_blank" rel="noopener" href="https://github.com/junerver">junerver</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a></p>
+<p>MavenCentral：<a target="_blank" rel="noopener" href="https://central.sonatype.com/artifact/xyz.junerver.compose/hooks2">hooks2</a></p>
+<p>本项目已经迁移到 Compose Multiplatform ，使用新的工件 id：<code>hooks2</code></p>
+<p>如果你在 CMP 依赖，直接使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation(<span class="string">&quot;xyz.junerver.compose:hooks2:2.1.0-alpha0&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果你在 Android 环境依赖，请使用 id：<code>hooks2-android</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation(<span class="string">&quot;xyz.junerver.compose:hooks2-android:2.1.0-alpha0&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>详细迁移说明请查看<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks/wiki/%E8%BF%81%E7%A7%BB%E5%88%B0hooks2-%E7%9A%84%E8%AF%B4%E6%98%8E#3">wiki</a></p>
+<p>欢迎使用、勘误、pr、star。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Compose/" rel="tag"># Compose</a>
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/ahooks/" rel="tag"># ahooks</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/25/%E5%9C%A8-Jetpack-Compose-%E4%B8%AD%E8%BD%BB%E6%9D%BE%E4%BD%BF%E7%94%A8%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%88%E4%BD%BF%E7%94%A8mmkv%E6%8C%81%E4%B9%85%E5%8C%96%E7%8A%B6%E6%80%81%EF%BC%89/" rel="prev" title="在 Jetpack Compose 中轻松使用持久化（使用mmkv持久化状态）">
+                  <i class="fa fa-angle-left"></i> 在 Jetpack Compose 中轻松使用持久化（使用mmkv持久化状态）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/06/18/Kotlin-2-1-0%E7%9A%84%E6%96%B0%E6%94%B9%E8%BF%9B%E5%B8%A6%E6%9D%A5%E5%93%AA%E4%BA%9B%E6%94%B9%E5%8F%98/" rel="next" title="Kotlin 2.1.0的新改进带来哪些改变">
+                  Kotlin 2.1.0的新改进带来哪些改变 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

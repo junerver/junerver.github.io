@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="highlight: androidstudio写在前面本文中提及的use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专注于业务与UI组件。 这是系列文章的第7篇，前文：  在Compose中使用useRequest轻松管理网络请求 在Compose中使用状态提升">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Compose中管理网络请求竟然如此简单！">
+<meta property="og:url" content="https://junerver.xyz/2024/04/03/%E5%9C%A8Compose%E4%B8%AD%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%AB%9F%E7%84%B6%E5%A6%82%E6%AD%A4%E7%AE%80%E5%8D%95%EF%BC%81/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="highlight: androidstudio写在前面本文中提及的use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专注于业务与UI组件。 这是系列文章的第7篇，前文：  在Compose中使用useRequest轻松管理网络请求 在Compose中使用状态提升">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-04-03T01:13:13.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.520Z">
+<meta property="article:author" content="Junerver">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2024/04/03/%E5%9C%A8Compose%E4%B8%AD%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%AB%9F%E7%84%B6%E5%A6%82%E6%AD%A4%E7%AE%80%E5%8D%95%EF%BC%81/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2024/04/03/%E5%9C%A8Compose%E4%B8%AD%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%AB%9F%E7%84%B6%E5%A6%82%E6%AD%A4%E7%AE%80%E5%8D%95%EF%BC%81/","path":"2024/04/03/在Compose中管理网络请求竟然如此简单！/","title":"在Compose中管理网络请求竟然如此简单！"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>在Compose中管理网络请求竟然如此简单！ | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#highlight-androidstudio"><span class="nav-number">1.</span> <span class="nav-text">highlight: androidstudio</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">2.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compose-%E4%B8%8B%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%9A%84%E7%97%9B%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">Compose 下网络请求的痛点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#show-time"><span class="nav-number">4.</span> <span class="nav-text">show time !!</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%88%9B%E5%BB%BA%E7%8A%B6%E6%80%81%E5%AD%98%E5%82%A8-store"><span class="nav-number">4.1.</span> <span class="nav-text">1. 创建状态存储 store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%9A%E8%BF%87-ReduxProvider-%E6%9A%B4%E9%9C%B2%E7%8A%B6%E6%80%81%E5%AD%98%E5%82%A8"><span class="nav-number">4.2.</span> <span class="nav-text">2. 通过 ReduxProvider 暴露状态存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%8C%89%E9%9C%80%E4%BD%BF%E7%94%A8"><span class="nav-number">4.3.</span> <span class="nav-text">3. 按需使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%B0%81%E8%A3%85%EF%BC%8C%E8%87%AA%E5%8A%A8%E5%A4%84%E7%90%86Loading%E3%80%81Error"><span class="nav-number">5.</span> <span class="nav-text">进一步封装，自动处理Loading、Error</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E8%BF%9B%E4%B8%80%E6%AD%A5%EF%BC%8C%E6%9C%80%E7%BB%88%E6%8E%A5%E8%BF%91%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E7%9A%84%E5%B0%81%E8%A3%85"><span class="nav-number">6.</span> <span class="nav-text">更进一步，最终接近实际使用的封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E4%B8%89%E5%89%91%E5%AE%A2"><span class="nav-number">7.</span> <span class="nav-text">状态管理三剑客</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E5%A4%96%E8%AF%9D"><span class="nav-number">7.1.</span> <span class="nav-text">题外话</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E6%9B%B4%E5%A4%9A"><span class="nav-number">8.</span> <span class="nav-text">探索更多</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2024/04/03/%E5%9C%A8Compose%E4%B8%AD%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%AB%9F%E7%84%B6%E5%A6%82%E6%AD%A4%E7%AE%80%E5%8D%95%EF%BC%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="在Compose中管理网络请求竟然如此简单！ | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在Compose中管理网络请求竟然如此简单！
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-04-03 09:13:13" itemprop="dateCreated datePublished" datetime="2024-04-03T09:13:13+08:00">2024-04-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><hr>
+<h2 id="highlight-androidstudio"><a href="#highlight-androidstudio" class="headerlink" title="highlight: androidstudio"></a>highlight: androidstudio</h2><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文中提及的<code>use</code>开头的函数，都出自与我的 <a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a> 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专注于业务与UI组件。</p>
+<p>这是系列文章的第7篇，前文：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7342793007938371594">在Compose中使用useRequest轻松管理网络请求</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7344927519923011594">在Compose中使用状态提升？我提升个P…Provider</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7345396671423250441">在Compose中父组件如何调用子组件的函数？</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7347851786134978610">在Compose中方便的使用MVI思想？试试useReducer！</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352527589247336458">在Compose中像使用redux一样轻松管理全局状态</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352785768094433289">在Compose中轻松使用异步dispatch管理全局状态</a></li>
+</ul>
+<span id="more"></span>
+
+<p>在上篇文章中我提到如果你项目中使用的是retrofit，并且已经做了协程改造，那么你可以轻松的将你的网络请求改造到 Compose 中，使用状态驱动你的UI。</p>
+<p>上一个例子比较粗糙，可能有小伙伴不理解，同时考虑到减少模板代码，我升级了 useRedux 系列钩子，下面我将演示如何在项目中轻松的使用网络请求，并且不用再担心<strong>重组导致请求状态消失</strong>！amazing！！！！</p>
+<h2 id="Compose-下网络请求的痛点"><a href="#Compose-下网络请求的痛点" class="headerlink" title="Compose 下网络请求的痛点"></a>Compose 下网络请求的痛点</h2><p>众所周知，Compose的组件是由状态驱动的，并且作为函数式组件，它会不断地重组。</p>
+<p>当我们的组件不可见时，状态从状态树移除，如果想要保留状态就需要使用 ViewModel 来进行一些状态保存，但是 viewModel 本身也会因为跨页面导航丢失状态，每次再进入页面都要重新发起请求，不能保存之前的请求状态无疑是非常制杖的！</p>
+<p>那么怎么才能丝滑的使用网络请求呢？如何避免网络请求因为重组再次发起？</p>
+<p>答案就是上两篇文章，我们通过 ReduxProvider 将状态提升到最根部，那么全局范围内，同一个网络请求在全局使用相同的状态，就不会出现各种场景下的状态丢失了。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352527589247336458">在Compose中像使用redux一样轻松管理全局状态</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352785768094433289">在Compose中轻松使用异步dispatch管理全局状态</a></li>
+</ul>
+<h2 id="show-time"><a href="#show-time" class="headerlink" title="show time !!"></a>show time !!</h2><h3 id="1-创建状态存储-store"><a href="#1-创建状态存储-store" class="headerlink" title="1. 创建状态存储 store"></a>1. 创建状态存储 store</h3>   <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 请求结果状态封装，同时这也是 Action</span></span><br><span class="line"><span class="keyword">sealed</span> <span class="keyword">interface</span> <span class="title class_">NetFetchResult</span> &#123;</span><br><span class="line">    <span class="comment">// 成功状态</span></span><br><span class="line">    <span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Success</span>&lt;<span class="type">T</span>&gt;(<span class="keyword">val</span> <span class="keyword">data</span>: T, <span class="keyword">val</span> code: <span class="built_in">Int</span>) : NetFetchResult</span><br><span class="line">    <span class="comment">// 错误状态</span></span><br><span class="line">    <span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Error</span>(<span class="keyword">val</span> msg: Throwable) : NetFetchResult</span><br><span class="line">    <span class="comment">// 初始空闲状态</span></span><br><span class="line">    <span class="keyword">data</span> <span class="keyword">object</span> Idle : NetFetchResult</span><br><span class="line">    <span class="comment">// 请求loading状态</span></span><br><span class="line">    <span class="keyword">data</span> <span class="keyword">object</span> Loading : NetFetchResult</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// reducer</span></span><br><span class="line"><span class="keyword">val</span> fetchReducer: Reducer&lt;NetFetchResult, NetFetchResult&gt; = &#123; _, action -&gt;</span><br><span class="line">    action</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建存储对象</span></span><br><span class="line"><span class="keyword">val</span> store = createStore &#123;</span><br><span class="line">    arrayOf(<span class="string">&quot;fetch1&quot;</span>,<span class="string">&quot;fetch2&quot;</span>).forEach &#123;</span><br><span class="line">        named(it) &#123;</span><br><span class="line">            fetchReducer with NetFetchResult.Idle</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上篇文章介绍了，在<code>createStore</code>函数的闭包作用域内，你可以使用中缀函数 <code>with</code>，来创建一条存储，并且将 <code>reducer</code> 函数与<strong>初始状态</strong>传递给store；</p>
+<p>同样的你可以使用 <code>named(alias)&#123;&#125;</code> 这个作用域函数，来创建一个带别名的状态存储，这里的<code>fetch1</code>、<code>fetch2</code>是请求状态的别名，你应该使用有实际意义的名称。</p>
+<p>所有的网络请求都是相同的逻辑，所以我们可以直接使用 forEach 来批量创建具有别名的状态存储；</p>
+<p>这里的reducer函数逻辑非常简单，因为我直接使用 Action 类型区分网络请求状态，所以Action 也同时是我们的 State，如果你使用的状态不同于我的封装你应该使用自己的 reducer 函数逻辑；</p>
+<h3 id="2-通过-ReduxProvider-暴露状态存储"><a href="#2-通过-ReduxProvider-暴露状态存储" class="headerlink" title="2. 通过 ReduxProvider 暴露状态存储"></a>2. 通过 <code>ReduxProvider</code> 暴露状态存储</h3>   <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MainActivity</span> : <span class="type">ComponentActivity</span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContent &#123;</span><br><span class="line">            ComposeHooksTheme &#123;</span><br><span class="line">                <span class="comment">// 在这里将 store 对象传递给 ReduxProvider 组件，向全部子组件暴露状态</span></span><br><span class="line">                ReduxProvider(store = store) &#123;</span><br><span class="line">                    Surface(</span><br><span class="line">                        modifier = Modifier.fillMaxSize(),</span><br><span class="line">                        color = MaterialTheme.colorScheme.background</span><br><span class="line">                    ) &#123;</span><br><span class="line">                        useRoutes(routes = routes)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将  <code>ReduxProvider</code> 置于根组件，全局共享状态</p>
+<h3 id="3-按需使用"><a href="#3-按需使用" class="headerlink" title="3. 按需使用"></a>3. 按需使用</h3>   <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">UseReduxFetch</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> fetchResult: NetFetchResult = useSelector(<span class="string">&quot;fetch1&quot;</span>)</span><br><span class="line">    <span class="keyword">val</span> dispatchAsync = useDispatchAsync&lt;NetFetchResult&gt;(<span class="string">&quot;fetch1&quot;</span>)</span><br><span class="line">    Column &#123;</span><br><span class="line">        Text(text = <span class="string">&quot;result: <span class="variable">$fetchResult</span>&quot;</span>)</span><br><span class="line">        TButton(text = <span class="string">&quot;fetch&quot;</span>) &#123;</span><br><span class="line">            dispatchAsync &#123;</span><br><span class="line">                it(NetFetchResult.Loading)</span><br><span class="line">                delay(<span class="number">2.</span>seconds)</span><br><span class="line">                <span class="comment">//网络请求结果</span></span><br><span class="line">                NetFetchResult.Success(<span class="string">&quot;success&quot;</span>, <span class="number">200</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">UseReduxFetch2</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> fetchResult: NetFetchResult = useSelector(<span class="string">&quot;fetch2&quot;</span>)</span><br><span class="line">    <span class="keyword">val</span> dispatchAsync = useDispatchAsync&lt;NetFetchResult&gt;(<span class="string">&quot;fetch2&quot;</span>)</span><br><span class="line">    Column &#123;</span><br><span class="line">        Text(text = <span class="string">&quot;result: <span class="variable">$fetchResult</span>&quot;</span>)</span><br><span class="line">        <span class="comment">// 使用 when 可以方便的判断请求结果状态</span></span><br><span class="line">        <span class="keyword">when</span>(fetchResult) &#123;</span><br><span class="line">            <span class="keyword">is</span> NetFetchResult.Success&lt;*&gt; -&gt; &#123;</span><br><span class="line">                <span class="comment">// 对成功结果进行转型</span></span><br><span class="line">                <span class="keyword">val</span> succ= fetchResult <span class="keyword">as</span> NetFetchResult.Success&lt;SimpleData&gt;</span><br><span class="line">                Text(text = succ.toString())</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>-&gt;&#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        TButton(text = <span class="string">&quot;fetch2&quot;</span>) &#123;</span><br><span class="line">            dispatchAsync &#123;</span><br><span class="line">                <span class="comment">// 请求开始</span></span><br><span class="line">                it(NetFetchResult.Loading)</span><br><span class="line">                <span class="comment">// 这里假装在进行异步操作</span></span><br><span class="line">                delay(<span class="number">2.</span>seconds)</span><br><span class="line">                <span class="comment">// 包装网络请求结果</span></span><br><span class="line">                NetFetchResult.Success(SimpleData(<span class="string">&quot;Tony Stark&quot;</span>, <span class="number">53</span>), <span class="number">200</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code> useSelector&lt;NetFetchResult&gt;(&quot;fetch1&quot;)</code> 即可拿到对应别名的状态，需要传递的泛型就是我们的网络请求结果的 sealed interface 类型。我们只需要对这个类型进 行when 判断，即可在组件中动态处理不同状态的显示逻辑。</p>
+<p><code>useDispatchAsync&lt;NetFetchResult&gt;(&quot;fetch1&quot;)</code> 则可以拿到对应的 异步<code>dispatch</code>函数，我们可以在这个函数中执行异步操作，最终返回结果将作为 Action 传递给 reducer 函数。</p>
+<blockquote>
+<p>dispatchAsync 的签名是 ：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typealias</span> DispatchAsync&lt;A&gt; = (block: <span class="keyword">suspend</span> CoroutineScope.(Dispatch&lt;A&gt;) -&gt; A) -&gt; <span class="built_in">Unit</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>现在你无需对你过去的网络请求做任何改动，不需要 ViewModel，不需要LaunchedEffect，直接在 dispatchAsync 中使用 retrofit 发起请求！</p>
+   <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dispatchAsync &#123; it-&gt;</span><br><span class="line">   it(NetFetchResult.Loading)</span><br><span class="line">   delay(<span class="number">2.</span>seconds) <span class="comment">//模拟在协程的耗时操作</span></span><br><span class="line">   NetFetchResult.Success(SimpleData(<span class="string">&quot;Tony Stark&quot;</span>, <span class="number">53</span>), <span class="number">200</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>it</code> 是 dispatch 函数，你可以在闭包内发起状态变更，对你的网络请求进行 <code>try-catch</code>，然后将结果或者异常使用 <code>NetFetchResult.Success</code> 或 <code>NetFetchResult.Error</code> 包装即可！</p>
+<h2 id="进一步封装，自动处理Loading、Error"><a href="#进一步封装，自动处理Loading、Error" class="headerlink" title="进一步封装，自动处理Loading、Error"></a>进一步封装，自动处理Loading、Error</h2><p>上边的代码，还是存在一些模板代码，例如： <code>lodaing</code> 状态、请求结果缺乏泛型、需要对请求手动<code>try-catch</code>，就如我之前评论所言，只需要简单的进行一个封装即可：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义函数一个高级函数ReduxFetch，它接收一个挂起函数作为参数</span></span><br><span class="line"><span class="keyword">typealias</span> ReduxFetch&lt;T&gt; = (block: <span class="keyword">suspend</span> CoroutineScope.() -&gt; T) -&gt; <span class="built_in">Unit</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;<span class="keyword">reified</span> T&gt;</span> <span class="title">useFetch</span><span class="params">(alias: <span class="type">String</span>)</span></span>: ReduxFetch&lt;T&gt; &#123;</span><br><span class="line">    <span class="comment">// 在函数调用时首先 dispatch Loading 状态</span></span><br><span class="line">    <span class="keyword">val</span> dispatchAsync=  useDispatchAsync&lt;NetFetchResult&gt;(alias, onBefore = &#123; it(NetFetchResult.Loading) &#125;)</span><br><span class="line">    <span class="keyword">return</span> &#123; block -&gt;</span><br><span class="line">        dispatchAsync&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 这里的block 就是上面定义的ReduxFetch的参数，是一个retrofit挂起函数</span></span><br><span class="line">                NetFetchResult.Success(block())</span><br><span class="line">            &#125; <span class="keyword">catch</span> (t: Throwable) &#123;</span><br><span class="line">                NetFetchResult.Error(t)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个封装非常简单，请求发出前首先 dispatch Loading状态，对网络请求的挂起函数执行<code>try-catch</code>，分别将<strong>结果</strong>|<strong>错误</strong> dispatch出去即可；</p>
+<p>将组件中原来使用 <code>useDispatchAsync</code> 函数的位置进行修改：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">WebService</span> &#123;</span><br><span class="line">    <span class="meta">@GET(<span class="string">&quot;users/&#123;user&#125;&quot;</span>)</span></span><br><span class="line">    <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">userInfo</span><span class="params">(<span class="meta">@Path(<span class="string">&quot;user&quot;</span>)</span> user: <span class="type">String</span>)</span></span>: UserInfo</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">UseReduxFetch2</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> fetchResult: NetFetchResult = useSelector(<span class="string">&quot;fetch2&quot;</span>)</span><br><span class="line">    <span class="keyword">val</span> dispatchFetch = useFetch&lt;UserInfo&gt;(<span class="string">&quot;fetch2&quot;</span>)</span><br><span class="line">    Column &#123;</span><br><span class="line">        Text(text = <span class="string">&quot;result: <span class="variable">$fetchResult</span>&quot;</span>)</span><br><span class="line">        TButton(text = <span class="string">&quot;fetch2&quot;</span>) &#123;</span><br><span class="line">            dispatchFetch &#123;</span><br><span class="line">                <span class="comment">// 这里是你的 retrofit suspend 请求，返回值是上面声明的泛型</span></span><br><span class="line">                NetApi.SERVICE.userInfo(<span class="string">&quot;junerver&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到简化后的 <code>dispatchFetch</code> 函数只需要在闭包内执行 retrofit 请求即可，状态的切换已经都由 <code>useFetch</code> 处理了，基本没有模板代码了。</p>
+<p>当然我们还可以更进一步，改造我们的 <code>sealed interface</code>，为其增加结果泛型，这样在使用 <code>useSelector</code>时可以提供更准确的结果泛型信息，例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">sealed</span> <span class="keyword">interface</span> <span class="title class_">NetFetchResult</span>&lt;<span class="type">out T</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Success</span>&lt;<span class="type">T</span>&gt;(<span class="keyword">val</span> <span class="keyword">data</span>: T) : NetFetchResult&lt;T&gt;</span><br><span class="line">    <span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Error</span>(<span class="keyword">val</span> msg: Throwable) : NetFetchResult&lt;<span class="built_in">Nothing</span>&gt;</span><br><span class="line">    <span class="keyword">data</span> <span class="keyword">object</span> Idle : NetFetchResult&lt;<span class="built_in">Nothing</span>&gt;</span><br><span class="line">    <span class="keyword">data</span> <span class="keyword">object</span> Loading : NetFetchResult&lt;<span class="built_in">Nothing</span>&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样在需要when判断结果状态时，利用 kotlin 的智能类型转换就能获取正确的类型，无需向上面示例代码进行强转，更加友好，详细代码可以看<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks/blob/master/app/src/main/java/xyz/junerver/composehooks/example/UseReduxExample.kt">示例代码</a>（已更新，提交历史可查看旧版本）</p>
+<p>现在我们迎来了在Compose下的终极网络请求状态管理，非常简单易用，你可以几乎没有额外成本的将你的 retrofit 网络请求迁移到 compose 下，无需 ViewModel、<br>无需操心重组导致的状态丢失，非常的鹅妹子嘤！！！！</p>
+<p>最后请说声：⌈ 多谢提升哥！⌋</p>
+<h2 id="更进一步，最终接近实际使用的封装"><a href="#更进一步，最终接近实际使用的封装" class="headerlink" title="更进一步，最终接近实际使用的封装"></a>更进一步，最终接近实际使用的封装</h2><p>经过上面的封装之后，我们其实已经可以很好的处理全局状态了。但是，既然 <code>useSelector</code> 和 <code>useDispatchAsync</code> 本就是同时出现的一对“欢喜冤家”，我们完全可以将它们封装成一个单独的钩子，这样所有的网络请求都可以通过一个函数派生出来，岂不美哉！</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里应该起名更有实际意义</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">val</span> FetchAlias1 = <span class="string">&quot;fetch1&quot;</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">val</span> FetchAlias2 = <span class="string">&quot;fetch2&quot;</span></span><br><span class="line"><span class="comment">// 用于创建在 createStore 中批量创建</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> NetworkFetchAliases = arrayOf(</span><br><span class="line">    FetchAlias1,</span><br><span class="line">    FetchAlias2,</span><br><span class="line">)</span><br><span class="line"><span class="keyword">val</span> fetchStore = createStore &#123;</span><br><span class="line">    NetworkFetchAliases.forEach &#123;</span><br><span class="line">        named(it) &#123;</span><br><span class="line">            fetchReducer with NetFetchResult.Idle</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用于派生自定义hook的函数</span></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">useFetchAliasFetch</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    alias: <span class="type">String</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">    autoFetch: <span class="type">Boolean</span> = <span class="literal">false</span>, <span class="comment">// 是否在组件挂载时自动发出请求</span></span></span></span><br><span class="line"><span class="params"><span class="function">    block: <span class="type">suspend</span> <span class="type">CoroutineScope</span>.() -&gt; <span class="type">T</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>: Tuple2&lt;NetFetchResult&lt;T&gt;, () -&gt; <span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">val</span> fetchResult: NetFetchResult&lt;T&gt; = useSelector(alias)</span><br><span class="line">    <span class="keyword">val</span> dispatchFetch = useFetch&lt;T&gt;(alias)</span><br><span class="line">    <span class="keyword">val</span> fetch = &#123;</span><br><span class="line">        dispatchFetch(block)</span><br><span class="line">    &#125;</span><br><span class="line">    useMount &#123;</span><br><span class="line">        <span class="keyword">if</span> (autoFetch) fetch()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tuple(</span><br><span class="line">        first = fetchResult,</span><br><span class="line">        second = fetch</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">useFetchError</span><span class="params">()</span></span> = useFetchAliasFetch(alias = FetchAlias1) &#123;</span><br><span class="line">    delay(<span class="number">2.</span>seconds)</span><br><span class="line">    error(<span class="string">&quot;fetch error&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">useFetchUserInfo</span><span class="params">(user: <span class="type">String</span> = <span class="string">&quot;junerver&quot;</span>)</span></span> = useFetchAliasFetch(alias = FetchAlias2, autoFetch = <span class="literal">true</span>) &#123;</span><br><span class="line">    NetApi.SERVICE.userInfo(user)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>现在我们将每一个网络请求都单独的封装成了一个自定义的 hook，更加方便我们在项目中进行复用，在组件中，我们只需要使用这个自定义的钩子即可发起请求：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">UseReduxFetch2</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> (fetchResult, fetch) = useFetchUserInfo() <span class="comment">// 更加简单的使用 useRedux</span></span><br><span class="line">    Column &#123;</span><br><span class="line">        TButton(text = <span class="string">&quot;fetch2&quot;</span>) &#123;</span><br><span class="line">            fetch()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="状态管理三剑客"><a href="#状态管理三剑客" class="headerlink" title="状态管理三剑客"></a>状态管理三剑客</h2><p>到此为止我们已经介绍了三位用于在 Compose 中进行状态管理的钩子函数：</p>
+<ul>
+<li><code>useReducer</code>：用于实践MVI，只需要传递 reducer 函数与初始状态，返回给我们状态、dispatch函数</li>
+<li><code>useContext</code>：用于状态提升，解耦组件之间的状态传递，底层实现是：<code>ProvidableCompositionLocal</code> 与 <code>CompositionLocalProvider</code></li>
+<li><code>useSelector</code>&#x2F;<code>useDispatch</code>：基于 <code>useContext</code> 实现的的全局版本的 <code>useReducer</code></li>
+</ul>
+<p>ComposeHooks 这个库就是这样由无数个细小的封装组合起来的，这也是Compose的称之为组合的原因，我们可以不断的复用我们的函数，封装出更加复杂的组合。</p>
+<h3 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h3><p>这里我要补充一句：<code>useSelector</code>&#x2F;<code>useDispatch</code>主要还是用来进行全局 <em>MVI式状态管理</em>，本文展示的其实只是 <strong>全局状态管理</strong> 的一个小小的应用场景，如果你想在实际生产中使用，可能需要根据我的例子进行改造。</p>
+<p>在 ComposeHooks 中提供的 <code>useRequest</code> 才是真正用于服务端状态管理的工具，详情参考：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7342793007938371594">在Compose中使用useRequest轻松管理网络请求</a></p>
+<p>它的功能更加全面，例如：错误重试、依赖刷新、ready、自动|手动请求、轮询、防抖、节流等等</p>
+<h2 id="探索更多"><a href="#探索更多" class="headerlink" title="探索更多"></a>探索更多</h2><p>好了以上就是 hooks 1.0.10 版本带来的一点小小改动，现在你可以自信在在Compose中使用网络请求了！</p>
+<p>示例源码地址：<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks/blob/master/app/src/main/java/xyz/junerver/composehooks/example/UseReduxExample.kt">UseReduxExample</a></p>
+<p>项目开源地址：<a target="_blank" rel="noopener" href="https://github.com/junerver">junerver</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a></p>
+<p>MavenCentral：<a target="_blank" rel="noopener" href="https://central.sonatype.com/artifact/xyz.junerver.compose/hooks">hooks</a></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation(<span class="string">&quot;xyz.junerver.compose:hooks:1.0.12&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>欢迎使用、勘误、pr、star。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/02/%E5%9C%A8Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E4%BD%BF%E7%94%A8%E5%BC%82%E6%AD%A5dispatch%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/" rel="prev" title="在Compose中轻松使用异步dispatch管理全局状态">
+                  <i class="fa fa-angle-left"></i> 在Compose中轻松使用异步dispatch管理全局状态
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/11/%E5%9C%A8Jetpack-Compose%E4%B8%AD%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81/" rel="next" title="在Jetpack Compose中优雅的使用防抖、节流">
+                  在Jetpack Compose中优雅的使用防抖、节流 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="转载请标明出处与作者：https:&#x2F;&#x2F;blog.csdn.net&#x2F;u011133887&#x2F;article&#x2F;details&#x2F;83654724  项目中原本就有录制短视频的功能，使用的是 # qdrzwd&#x2F;VideoRecorder 这个项目，但是该项目不支持 targetSdkVersion 22以上的版本，而现在各大市场都要求 targetSdkVersion 必须要26以上了，所以急需找">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 仿微信录制短视频（不使用 FFmpeg）">
+<meta property="og:url" content="https://junerver.xyz/2018/11/02/Android-%E4%BB%BF%E5%BE%AE%E4%BF%A1%E5%BD%95%E5%88%B6%E7%9F%AD%E8%A7%86%E9%A2%91%EF%BC%88%E4%B8%8D%E4%BD%BF%E7%94%A8-FFmpeg%EF%BC%89/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="转载请标明出处与作者：https:&#x2F;&#x2F;blog.csdn.net&#x2F;u011133887&#x2F;article&#x2F;details&#x2F;83654724  项目中原本就有录制短视频的功能，使用的是 # qdrzwd&#x2F;VideoRecorder 这个项目，但是该项目不支持 targetSdkVersion 22以上的版本，而现在各大市场都要求 targetSdkVersion 必须要26以上了，所以急需找">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="og:image" content="https://junerver.xyz/2">
+<meta property="og:image" content="https://junerver.xyz/3">
+<meta property="og:image" content="https://junerver.xyz/4">
+<meta property="article:published_time" content="2018-11-02T06:15:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.418Z">
+<meta property="article:author" content="Junerver">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2018/11/02/Android-%E4%BB%BF%E5%BE%AE%E4%BF%A1%E5%BD%95%E5%88%B6%E7%9F%AD%E8%A7%86%E9%A2%91%EF%BC%88%E4%B8%8D%E4%BD%BF%E7%94%A8-FFmpeg%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/11/02/Android-%E4%BB%BF%E5%BE%AE%E4%BF%A1%E5%BD%95%E5%88%B6%E7%9F%AD%E8%A7%86%E9%A2%91%EF%BC%88%E4%B8%8D%E4%BD%BF%E7%94%A8-FFmpeg%EF%BC%89/","path":"2018/11/02/Android-仿微信录制短视频（不使用-FFmpeg）/","title":"Android 仿微信录制短视频（不使用 FFmpeg）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android 仿微信录制短视频（不使用 FFmpeg） | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97"><span class="nav-number">1.</span> <span class="nav-text">更新日志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E5%93%81%E9%A2%84%E8%A7%88%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">成品预览：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">功能实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%95%E5%83%8F%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">录像是如何实现的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E4%BD%93%E9%AA%8C"><span class="nav-number">3.2.</span> <span class="nav-text">优化体验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%9A%84%E5%BC%82%E5%B8%B8"><span class="nav-number">4.</span> <span class="nav-text">可能出现的异常</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MediaRecorder-stop-failed-1007"><span class="nav-number">4.1.</span> <span class="nav-text">MediaRecorder: stop failed: -1007</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stop-failed-%E7%9A%84%E5%8F%A6%E4%B8%80%E7%A7%8D%E6%83%85%E5%86%B5"><span class="nav-number">4.2.</span> <span class="nav-text">stop failed 的另一种情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E5%AE%9E%E7%8E%B0-%E7%9F%AD%E6%8C%89%E6%8B%8D%E7%85%A7%EF%BC%8C%E9%95%BF%E6%8C%89%E6%8B%8D%E6%91%84"><span class="nav-number">4.3.</span> <span class="nav-text">补充实现 - 短按拍照，长按拍摄</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/11/02/Android-%E4%BB%BF%E5%BE%AE%E4%BF%A1%E5%BD%95%E5%88%B6%E7%9F%AD%E8%A7%86%E9%A2%91%EF%BC%88%E4%B8%8D%E4%BD%BF%E7%94%A8-FFmpeg%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Android 仿微信录制短视频（不使用 FFmpeg） | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android 仿微信录制短视频（不使用 FFmpeg）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-11-02 14:15:00" itemprop="dateCreated datePublished" datetime="2018-11-02T14:15:00+08:00">2018-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>转载请标明出处与作者：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u011133887/article/details/83654724">https://blog.csdn.net/u011133887/article/details/83654724</a></p>
+<blockquote>
+<p>项目中原本就有录制短视频的功能，使用的是 # <a target="_blank" rel="noopener" href="https://github.com/qdrzwd">qdrzwd</a>&#x2F;<strong><a target="_blank" rel="noopener" href="https://github.com/qdrzwd/VideoRecorder">VideoRecorder</a></strong> 这个项目，但是该项目不支持 targetSdkVersion 22以上的版本，而现在各大市场都要求 targetSdkVersion 必须要26以上了，所以急需找到替代的方案。</p>
+</blockquote>
+<p>完整工程请移步 # <a target="_blank" rel="noopener" href="https://github.com/junerver">junerver</a>&#x2F;**<a target="_blank" rel="noopener" href="https://github.com/junerver/VideoRecorder">VideoRecorder</a>**，如果对您有帮助，请 star ，欢迎反馈问题，我会尽量维护更新。</p>
+<span id="more"></span>
+
+<h2 id="更新日志"><a href="#更新日志" class="headerlink" title="更新日志"></a>更新日志</h2><p>1.2.0：仿照微信，短按拍照长按拍摄 ——19.06.21<br>1.1.5：增加进度条，修改依赖为 androidx ——19.05.17<br>1.1.4：修复录制时切出后无法再次播放的问题 ——18.11.12<br>1.1.3：修复录制时间过短导致崩溃的问题 ——18.11.08<br>1.1.2：修复在华为设备不兼容的问题 ——18.11.03<br>1.1：修复录制视频无法在 ios 设备播放的问题 ——18.11.02</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>解决方法大致上有如下四种：</p>
+<ol>
+<li>使用 FFmpeg </li>
+<li>使用系统摄像头</li>
+<li>使用 MediaRecorder</li>
+<li>使用阿里云、腾讯云、七牛云等短视频服务</li>
+</ol>
+<p>其中<strong>方案一</strong>可以参考：<br><a target="_blank" rel="noopener" href="http://blog.csdn.net/mabeijianxi/article/details/63335722">利用FFmpeg玩转Android视频录制与压缩（一）</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/mabeijianxi/article/details/72983362">利用FFmpeg玩转Android视频录制与压缩（二）</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/mabeijianxi/article/details/73011313">利用FFmpeg玩转Android视频录制与压缩（三）</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/mabeijianxi/article/details/72904694">编译Android下可执行命令的FFmpeg</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/mabeijianxi/article/details/74544879">编译Android下可用的全平台FFmpeg(包含libx264与libfdk-aac)</a><br><a target="_blank" rel="noopener" href="http://blog.csdn.net/mabeijianxi/article/details/68525164">Android下玩JNI的新老三种姿势</a></p>
+<p>Github 上项目地址为：# <a target="_blank" rel="noopener" href="https://github.com/mabeijianxi">mabeijianxi</a>&#x2F;<strong><a target="_blank" rel="noopener" href="https://github.com/mabeijianxi/small-video-record">small-video-record</a></strong></p>
+<p>该项目存在一些问题，我在使用小米6测试其 Demo 时，既不能录像也不能选取本地视频进行压缩。另外引入 FFmpeg 对于本需求而言，时间成本、学习成本、APK 最终体积增量都是不划算的选择。</p>
+<p><strong>方案二</strong>大概是最简单与稳定可靠（机型适配方面）的了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">intent</span> <span class="operator">=</span> Intent(MediaStore.ACTION_VIDEO_CAPTURE)</span><br><span class="line"><span class="comment">//设置视频录制的最长时间</span></span><br><span class="line">intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, <span class="number">10</span>)</span><br><span class="line"><span class="comment">//设置视频录制的画质</span></span><br><span class="line">intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, <span class="number">1</span>)</span><br><span class="line">startActivityForResult(intent, VIDEO_WITH_CAMERA)</span><br></pre></td></tr></table></figure>
+<p>但是存在着一个致命的缺点，录制完的视频体积非常大，对画质配置只有 1、0 这两种选择。其中 1 最终成片体积太大，0 画质太渣，基本不可用。</p>
+<p><strong>方案四</strong>就不多提了，我们的项目并不是专门的短视频 APP，使用这些付费 SDK 完全是杀鸡用牛刀。</p>
+<p>最终决定通过<strong>方案三</strong>，使用 <strong>MediaRecorder</strong> 来完成了该功能，该方案具有以下优势：</p>
+<ol>
+<li>无需引入任何第三方库，不会增加 APK 体积</li>
+<li>系统自带功能，几乎不存在机型设配问题</li>
+<li>最终成片参数可控（分辨率、帧数、编码比特率）</li>
+</ol>
+<p>致谢：本文代码大量参考了<a target="_blank" rel="noopener" href="https://blog.csdn.net/woshizisezise"><a target="_blank" rel="noopener" href="https://blog.csdn.net/woshizisezise">胖子爱你520</a>
+</a> 所写 <a target="_blank" rel="noopener" href="https://blog.csdn.net/woshizisezise/article/details/51878566">Android使用MediaRecorder和Camera实现视频录制及播放功能整理</a> 一文，并对其代码进行了功能上的优化与 UI 上的美化。</p>
+<h3 id="成品预览："><a href="#成品预览：" class="headerlink" title="成品预览："></a>成品预览：</h3><p><img src="/1" alt="1.jpg"></p>
+<p><img src="/2" alt="2.jpg"></p>
+<p><img src="/3" alt="3.png"></p>
+<p><img src="/4" alt="4.jpg"></p>
+<p>测试手机为 小米6，最终 10s 短视频成片体积在3M左右，处于可接受范围。</p>
+<h2 id="功能实现"><a href="#功能实现" class="headerlink" title="功能实现"></a>功能实现</h2><blockquote>
+<p>警告⚠️：以下内容还有大量 Kotlin 代码，可能会引起不适。</p>
+</blockquote>
+<p>此处我们只谈及一些关键的代码片段，完整工程请移步 # <a target="_blank" rel="noopener" href="https://github.com/junerver">junerver</a>&#x2F;<strong><a target="_blank" rel="noopener" href="https://github.com/junerver/VideoRecorder">VideoRecorder</a></strong><br>，如果对您有帮助，请 star ，欢迎反馈问题，我会尽量维护更新。</p>
+<h3 id="录像是如何实现的？"><a href="#录像是如何实现的？" class="headerlink" title="录像是如何实现的？"></a>录像是如何实现的？</h3><p><strong>1.启动录制⏺</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">mRecorder = MediaRecorder().apply &#123;</span><br><span class="line">    reset()</span><br><span class="line">    setCamera(mCamera)</span><br><span class="line">    <span class="comment">// 设置音频源与视频源 这两项需要放在setOutputFormat之前</span></span><br><span class="line">    setAudioSource(MediaRecorder.AudioSource.CAMCORDER)</span><br><span class="line">    setVideoSource(MediaRecorder.VideoSource.CAMERA)</span><br><span class="line">    <span class="comment">//设置输出格式</span></span><br><span class="line">    setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)</span><br><span class="line">    <span class="comment">//这两项需要放在setOutputFormat之后 IOS必须使用ACC</span></span><br><span class="line">    setAudioEncoder(MediaRecorder.AudioEncoder.AAC)  <span class="comment">//音频编码格式</span></span><br><span class="line">    <span class="comment">//使用MPEG_4_SP格式在华为P20 pro上停止录制时会出现</span></span><br><span class="line">    <span class="comment">//MediaRecorder: stop failed: -1007</span></span><br><span class="line">    <span class="comment">//java.lang.RuntimeException: stop failed.</span></span><br><span class="line">    <span class="comment">// at android.media.MediaRecorder.stop(Native Method)</span></span><br><span class="line">    setVideoEncoder(MediaRecorder.VideoEncoder.H264)  <span class="comment">//视频编码格式</span></span><br><span class="line">    <span class="comment">//设置最终出片分辨率</span></span><br><span class="line">    setVideoSize(<span class="number">640</span>, <span class="number">480</span>)</span><br><span class="line">    setVideoFrameRate(<span class="number">30</span>)</span><br><span class="line">    setVideoEncodingBitRate(<span class="number">3</span> * <span class="number">1024</span> * <span class="number">1024</span>)</span><br><span class="line">    setOrientationHint(<span class="number">90</span>)</span><br><span class="line">    <span class="comment">//设置记录会话的最大持续时间（毫秒）</span></span><br><span class="line">    setMaxDuration(<span class="number">30</span> * <span class="number">1000</span>)</span><br><span class="line">&#125;</span><br><span class="line">path = Environment.getExternalStorageDirectory().path + File.separator + <span class="string">&quot;VideoRecorder&quot;</span></span><br><span class="line"><span class="keyword">if</span> (path != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> dir = File(path)</span><br><span class="line">    <span class="keyword">if</span> (!dir.exists()) &#123;</span><br><span class="line">        dir.mkdir()</span><br><span class="line">    &#125;</span><br><span class="line">    dirPath = dir.absolutePath</span><br><span class="line">    path = dir.absolutePath + <span class="string">&quot;/&quot;</span> + getDate() + <span class="string">&quot;.mp4&quot;</span></span><br><span class="line">    Log.d(TAG, <span class="string">&quot;文件路径： <span class="variable">$path</span>&quot;</span>)</span><br><span class="line">    mRecorder.apply &#123;</span><br><span class="line">        setOutputFile(path)</span><br><span class="line">        prepare()</span><br><span class="line">        start()</span><br><span class="line">    &#125;</span><br><span class="line">    startTime = System.currentTimeMillis()  <span class="comment">//记录开始拍摄时间</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>2.结束录制⏺</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mRecorder.apply &#123;</span><br><span class="line">    stop()  <span class="comment">//结束录制</span></span><br><span class="line">    reset()  <span class="comment">//重置</span></span><br><span class="line">    release() <span class="comment">//释放资源</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上就是录制视频的最核心的代码了，可见，首先我们需要为 MediaRecorder 分配一个摄像头，然后配置相关属性，在最后结束时调用 <code>stop()</code> 方法即可。</p>
+<p><strong>重要</strong>：在分配摄像头资源（<code>MediaRecorder.setCamera(mCamera)</code>）之前，必须先解锁摄像头（<code>mCamera.unlock()</code>），否则会提示 <strong><code>MediaRecorder: start failed: -19</code></strong></p>
+<p><strong>3. 拍摄完成成片预览⏯</strong><br>此处没什么可说的，直接调用系统提供的 MediaPlayer 即可</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mMediaPlayer.reset()</span><br><span class="line"><span class="keyword">var</span> uri = Uri.parse(path)</span><br><span class="line">mMediaPlayer = MediaPlayer.create(<span class="symbol">VideoRecordActivity@</span> <span class="keyword">this</span>, uri)</span><br><span class="line">mMediaPlayer.apply &#123;</span><br><span class="line">    setAudioStreamType(AudioManager.STREAM_MUSIC)</span><br><span class="line">    setDisplay(mSurfaceHolder)</span><br><span class="line">    setOnCompletionListener &#123;</span><br><span class="line">        <span class="comment">//播放解释后再次显示播放按钮</span></span><br><span class="line">        mBtnPlay.visibility = View.VISIBLE</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    mMediaPlayer.prepare()</span><br><span class="line">&#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">    e.printStackTrace()</span><br><span class="line">&#125;</span><br><span class="line">mMediaPlayer.start()</span><br></pre></td></tr></table></figure>
+<h3 id="优化体验"><a href="#优化体验" class="headerlink" title="优化体验"></a>优化体验</h3><p><strong>1. 录制前的预览</strong><br>如果你看过上文我们所提到的那篇文章，会发现按照他的代码实现的话，在开始录制视频之前是没有画面的（关键代码 <code> mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());</code>），只有用户点击了录制按钮，开始录制之后才会有摄像头的预览画面，这无疑是不合理的。</p>
+<p>而 MediaRecorder 在录制视频的过程中该操作并不是必要操作，那么我们完全可以使用摄像头的预览画面来填充到我们的 SurfacerView 中来，这样整个体验就非常流畅了。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> holder = mSurfaceview.holder</span><br><span class="line">holder.addCallback(<span class="keyword">object</span> : SurfaceHolder.Callback &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">surfaceChanged</span><span class="params">(holder: <span class="type">SurfaceHolder</span>?, format: <span class="type">Int</span>, width: <span class="type">Int</span>, height: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">        mSurfaceHolder = holder!!</span><br><span class="line">        mCamera.apply &#123;</span><br><span class="line">            startPreview()</span><br><span class="line">            cancelAutoFocus()</span><br><span class="line">            <span class="comment">// 关键代码 该操作必须在开启预览之后进行（最后调用），</span></span><br><span class="line">            <span class="comment">// 否则会黑屏，并提示该操作的下一步出错</span></span><br><span class="line">            <span class="comment">// 只有执行该步骤后才可以使用MediaRecorder进行录制</span></span><br><span class="line">            <span class="comment">// 否则会报 MediaRecorder(13280): start failed: -19</span></span><br><span class="line">            unlock()</span><br><span class="line">        &#125;</span><br><span class="line">        cameraReleaseEnable = <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">surfaceDestroyed</span><span class="params">(holder: <span class="type">SurfaceHolder</span>?)</span></span> &#123;</span><br><span class="line">        handler.removeCallbacks(runnable)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">surfaceCreated</span><span class="params">(holder: <span class="type">SurfaceHolder</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            mSurfaceHolder = holder!!</span><br><span class="line">            <span class="comment">//使用后置摄像头</span></span><br><span class="line">            mCamera = Camera.<span class="keyword">open</span>(Camera.CameraInfo.CAMERA_FACING_BACK)</span><br><span class="line">            mCamera.apply &#123;</span><br><span class="line">                setDisplayOrientation(<span class="number">90</span>)<span class="comment">//旋转90度</span></span><br><span class="line">                setPreviewDisplay(holder)</span><br><span class="line">                <span class="keyword">val</span> params = mCamera.parameters</span><br><span class="line">                <span class="comment">//注意此处需要根据摄像头获取最优像素，//如果不设置会按照系统默认配置最低160x120分辨率</span></span><br><span class="line">                <span class="keyword">val</span> size = getPreviewSize()</span><br><span class="line">                params.apply &#123;</span><br><span class="line">                    setPictureSize(size.first, size.second)</span><br><span class="line">                    jpegQuality = <span class="number">100</span></span><br><span class="line">                    pictureFormat = PixelFormat.JPEG</span><br><span class="line">                    focusMode = Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE<span class="comment">//1连续对焦</span></span><br><span class="line">                &#125;</span><br><span class="line">                parameters = params</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e: RuntimeException) &#123;</span><br><span class="line">            <span class="comment">//Camera.open() 在摄像头服务无法连接时可能会抛出 RuntimeException</span></span><br><span class="line">            finish()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>2. 录制时的进度条</strong><br>拍摄过程中进度条显示是一个非常优秀友好的设计，要实现这一点也非常简单，我们只需要在拍摄开始时加入一个 Handler 来做计时，在结束拍摄时 remove 掉即可！<br>代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//用于记录视频录制时长</span></span><br><span class="line">   <span class="keyword">var</span> handler = Handler()</span><br><span class="line">   <span class="keyword">var</span> runnable = <span class="keyword">object</span> : Runnable &#123;</span><br><span class="line">       <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">           timer++</span><br><span class="line">           <span class="keyword">if</span> (timer &lt; <span class="number">100</span>) &#123;</span><br><span class="line">               <span class="comment">// 之所以这里是100 是为了方便使用进度条</span></span><br><span class="line">               mProgress.progress = timer</span><br><span class="line">               <span class="comment">//总时长的毫秒数 / 100 即每次间隔延时的毫秒数  == 录制总时长 * 10</span></span><br><span class="line">               handler.postDelayed(<span class="keyword">this</span>, maxSec * <span class="number">10L</span>)</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               <span class="comment">//停止录制 保存录制的流、显示供操作的ui</span></span><br><span class="line">               Log.d(<span class="string">&quot;到最大拍摄时间&quot;</span>,<span class="string">&quot;&quot;</span>)</span><br><span class="line">               stopRecord()</span><br><span class="line">               System.currentTimeMillis()</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>在开始录制时调用 <code>handler.postDelayed(runnable, maxSec * 10L)</code><br>在结束录制时调用 <code>handler.removeCallbacks(runnable)</code></p>
+<h2 id="可能出现的异常"><a href="#可能出现的异常" class="headerlink" title="可能出现的异常"></a>可能出现的异常</h2><h3 id="MediaRecorder-stop-failed-1007"><a href="#MediaRecorder-stop-failed-1007" class="headerlink" title="MediaRecorder: stop failed: -1007"></a>MediaRecorder: stop failed: -1007</h3><blockquote>
+<p>java.lang.RuntimeException: stop failed.<br>  at android.media.MediaRecorder.stop(Native Method)</p>
+</blockquote>
+<p>该异常会在部分机型出现，当录制完毕后，执行 <code>stop()</code> 函数时出现异常。<br>解决思路：</p>
+<ol>
+<li>检查 MediaRecorder 的视频输出尺寸是否是系统所支持的尺寸</li>
+<li>修改 Camera 的预览尺寸与 MediaRecorder 的视频输出尺寸一致</li>
+<li>修改 MPEG_4_SP 为 H264<br><code>mRecorder?.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP)</code> -&gt; <code>mRecorder?.setVideoEncoder(MediaRecorder.VideoEncoder.H264)</code></li>
+</ol>
+<h3 id="stop-failed-的另一种情况"><a href="#stop-failed-的另一种情况" class="headerlink" title="stop failed 的另一种情况"></a>stop failed 的另一种情况</h3><p>读者反馈当录制视频时间过短时或出现崩溃的情况，就此我们可以参考 <code>stop()</code> 方法的备注：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Stops recording. Call this after start(). Once recording is stopped,</span><br><span class="line">     * you will have to configure it again as if it has just been constructed.</span><br><span class="line">     * Note that a RuntimeException is intentionally thrown to the</span><br><span class="line">     * application, if no valid audio/video data has been received when stop()</span><br><span class="line">     * is called. This happens if stop() is called immediately after</span><br><span class="line">     * start(). The failure lets the application take action accordingly to</span><br><span class="line">     * clean up the output file (delete the output file, for instance), since</span><br><span class="line">     * the output file is not properly constructed when this happens.</span><br><span class="line">     *</span><br><span class="line">     * @throws IllegalStateException if it is called before start()</span><br><span class="line">     */</span><br><span class="line">    public native void stop() throws IllegalStateException;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果在调用<code>stop()</code>时未收到有效的音频&#x2F;视频数据，则会抛出<code>RuntimeException</code>。如果在<code>start()</code>之后立即调用<code>stop()</code>，则会发生这种情况。</p>
+</blockquote>
+<p>原因就是在我们结束录制时，整个过程总时长太短，还没有接收到有效地数据。对于这种情况，我们有两种解决方法：</p>
+<ol>
+<li>人为延时，在 <code>stop()</code> 方法调用前确定总时长，当总时长小于 1s 时，<code>Thread.sleep(xxx)</code> </li>
+<li><code>try&#123;&#125;catch&#123;&#125;</code> 捕获改异常，并提示用户录制时间太短，然后允许用户重新录制；</li>
+</ol>
+<p>修复后的代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//方法1：分别记录保存起始时间与结束时间，如果时间小于1.1s 则让线程sleep</span></span><br><span class="line">  <span class="keyword">if</span> (stopTime-startTime&lt;<span class="number">1100</span>) &#123;</span><br><span class="line">      Thread.sleep(<span class="number">1100</span>+startTime-stopTime)</span><br><span class="line">  &#125;</span><br><span class="line">  mRecorder.stop()</span><br><span class="line">  mRecorder.reset()</span><br><span class="line">  mRecorder.release()</span><br><span class="line">  recorderReleaseEnable = <span class="literal">false</span></span><br><span class="line">  mCamera.lock()</span><br><span class="line">  mCamera.stopPreview()</span><br><span class="line">  mCamera.release()</span><br></pre></td></tr></table></figure>
+
+<h3 id="补充实现-短按拍照，长按拍摄"><a href="#补充实现-短按拍照，长按拍摄" class="headerlink" title="补充实现 - 短按拍照，长按拍摄"></a>补充实现 - 短按拍照，长按拍摄</h3><p>实现仿微信的短按拍照长按拍摄其实非常简单，思路来自上一节中的 <strong>stop failed</strong> 。既然我们知道录制时间过短会抛出 <strong>RuntimeException</strong> ，那么我们只需要 <code>try&#123;&#125;catch&#123;&#125;</code> 捕获改异常，在捕获到异常之后使用 Camera 提供的拍摄接口，惊醒拍照即可！</p>
+<p>代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//方法2 ： 捕捉异常改为拍照</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    mRecorder.stop()</span><br><span class="line">    mRecorder.reset()</span><br><span class="line">    mRecorder.release()</span><br><span class="line">    recorderReleaseEnable = <span class="literal">false</span></span><br><span class="line">    mCamera.lock()</span><br><span class="line">    mCamera.stopPreview()</span><br><span class="line">    mCamera.release()</span><br><span class="line">    cameraReleaseEnable = <span class="literal">false</span></span><br><span class="line">    mBtnPlay.visibility = View.VISIBLE</span><br><span class="line">    MediaUtils.getImageForVideo(path) &#123;</span><br><span class="line">        <span class="comment">//获取到第一帧图片后再显示操作按钮</span></span><br><span class="line">        Log.d(TAG, <span class="string">&quot;获取到了第一帧&quot;</span>)</span><br><span class="line">        imgPath = it.absolutePath</span><br><span class="line">        mLlRecordOp.visibility = View.VISIBLE</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (e: java.lang.RuntimeException) &#123;</span><br><span class="line">    <span class="comment">//当catch到RE时，说明是录制时间过短，此时将由录制改变为拍摄</span></span><br><span class="line">    mType = TYPE_IMAGE</span><br><span class="line">    Log.e(<span class="string">&quot;拍摄时间过短&quot;</span>, e.message)</span><br><span class="line">    mRecorder.reset()</span><br><span class="line">    mRecorder.release()</span><br><span class="line">    recorderReleaseEnable = <span class="literal">false</span></span><br><span class="line">    mCamera.takePicture(<span class="literal">null</span>, <span class="literal">null</span>, Camera.PictureCallback &#123; <span class="keyword">data</span>, </span><br><span class="line">        <span class="keyword">data</span>?.let &#123;</span><br><span class="line">            saveImage(it) &#123; imagepath -&gt;</span><br><span class="line">                Log.d(TAG, <span class="string">&quot;转为拍照，获取到图片数据 <span class="variable">$imagepath</span>&quot;</span>)</span><br><span class="line">                imgPath = imagepath</span><br><span class="line">                mCamera.lock()</span><br><span class="line">                mCamera.stopPreview()</span><br><span class="line">                mCamera.release()</span><br><span class="line">                cameraReleaseEnable = <span class="literal">false</span></span><br><span class="line">                runOnUiThread &#123;</span><br><span class="line">                    mBtnPlay.visibility = View.INVISIBLE</span><br><span class="line">                    mLlRecordOp.visibility = View.VISIBLE</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>案例下载地址：<a target="_blank" rel="noopener" href="https://download.csdn.net/download/u011133887/10760411">Android 仿微信录制短视频</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/" rel="prev" title="Kotlin 委托模式 - 一个管理人员的一天">
+                  <i class="fa fa-angle-left"></i> Kotlin 委托模式 - 一个管理人员的一天
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/11/05/Android-Studio-%E9%A1%B9%E7%9B%AE-Gradle-%E5%8D%87%E7%BA%A7%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/" rel="next" title="Android Studio 项目 Gradle 升级经验总结">
+                  Android Studio 项目 Gradle 升级经验总结 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

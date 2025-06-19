@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="携手创作，共同成长！这是我参与「掘金日新计划 · 8 月更文挑战」的第5天，点击查看活动详情  在之前的文章：从零开始学习React-5：状态与状态管理，我们简单的介绍目前最流行的状态管理库 redux。今天我们介绍由 redux 团队推出的，可以更高效、更方便使用 redux 的另一个工具：Redux-Toolkit（简称：RTK）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React 状态管理：从现在开始拥抱redux-toolkit">
+<meta property="og:url" content="https://junerver.xyz/2022/08/02/React-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%8E%E7%8E%B0%E5%9C%A8%E5%BC%80%E5%A7%8B%E6%8B%A5%E6%8A%B1redux-toolkit/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="携手创作，共同成长！这是我参与「掘金日新计划 · 8 月更文挑战」的第5天，点击查看活动详情  在之前的文章：从零开始学习React-5：状态与状态管理，我们简单的介绍目前最流行的状态管理库 redux。今天我们介绍由 redux 团队推出的，可以更高效、更方便使用 redux 的另一个工具：Redux-Toolkit（简称：RTK）">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-08-02T04:06:57.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.481Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="redux">
+<meta property="article:tag" content="redux-toolkit">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2022/08/02/React-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%8E%E7%8E%B0%E5%9C%A8%E5%BC%80%E5%A7%8B%E6%8B%A5%E6%8A%B1redux-toolkit/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2022/08/02/React-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%8E%E7%8E%B0%E5%9C%A8%E5%BC%80%E5%A7%8B%E6%8B%A5%E6%8A%B1redux-toolkit/","path":"2022/08/02/React-状态管理：从现在开始拥抱redux-toolkit/","title":"React 状态管理：从现在开始拥抱redux-toolkit"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>React 状态管理：从现在开始拥抱redux-toolkit | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF-redux-toolkit"><span class="nav-number">1.</span> <span class="nav-text">为什么是 redux-toolkit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-RTK"><span class="nav-number">2.</span> <span class="nav-text">如何使用 RTK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96-api-%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.</span> <span class="nav-text">其他 api 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-createAction"><span class="nav-number">3.1.</span> <span class="nav-text">1. createAction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-createReducer"><span class="nav-number">3.2.</span> <span class="nav-text">2.createReducer()</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/08/02/React-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%8E%E7%8E%B0%E5%9C%A8%E5%BC%80%E5%A7%8B%E6%8B%A5%E6%8A%B1redux-toolkit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="React 状态管理：从现在开始拥抱redux-toolkit | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React 状态管理：从现在开始拥抱redux-toolkit
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-02 12:06:57" itemprop="dateCreated datePublished" datetime="2022-08-02T12:06:57+08:00">2022-08-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">Web前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>携手创作，共同成长！这是我参与「掘金日新计划 · 8 月更文挑战」的第5天，<a target="_blank" rel="noopener" href="https://juejin.cn/post/7123120819437322247">点击查看活动详情</a></p>
+<blockquote>
+<p>在之前的文章：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7126362622022942727">从零开始学习React-5：状态与状态管理</a>，我们简单的介绍目前最流行的状态管理库 redux。今天我们介绍由 redux 团队推出的，可以更高效、更方便使用 redux 的另一个工具：<a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/">Redux-Toolkit</a>（简称：RTK）</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="为什么是-redux-toolkit"><a href="#为什么是-redux-toolkit" class="headerlink" title="为什么是 redux-toolkit"></a>为什么是 redux-toolkit</h2><p>redux 被设计的非常灵活，这也带来了一些问题，例如如果我们直接使用 redux 会有如下几点不便之处：</p>
+<ol>
+<li><p>模板代码太多</p>
+<p>在上一篇文章示例中可能感觉还不明显，其实正常项目中，每一个 Action 一般都会有这样几个模板代码：</p>
+<ul>
+<li>声明一个静态的 type 字符串，例如 <code>const ADD_TODO = &#39;addTodo&#39;;</code></li>
+<li>声明一个 action creator 函数，例如 <code>export const addTodo = (data) =&gt; (&#123; type: ADD_TODO, data &#125;); </code></li>
+<li>reducer 函数内需要根据 action 的 type 写 <code>switch - case</code></li>
+</ul>
+<p>action 对象的 type 一般都是唯一的一个字符串，因为 dispatch 一个 action 时，所有的 reducer 函数都会收到。</p>
+<p>这带来了一个隐藏的问题，如果我们在多个 reducer 函数中 case 了 一个相同的 type 字符串，这两个 reducer 都会执行动作，改变状态。</p>
+<p>这也就是为什么 Redux 推荐我们使用 action creator 函数，这可以有效的避免写错导致bug。</p>
+</li>
+<li><p>仅安装 redux 可能无法胜任。我们一般还需要安装 比如 redux-thunk（异步）、immer（状态不可变） 等库来配合 redux 工作。</p>
+<p>这就导致了 redux 的配置比较复杂，很难做到开箱即用，即使有的配置已经成为了某种意义上的 “ 最佳实践 ”。</p>
+</li>
+</ol>
+<p>RTK 通过几个函数很好的帮我们解决了这些细节问题，几乎做到了开箱即用。</p>
+<h2 id="如何使用-RTK"><a href="#如何使用-RTK" class="headerlink" title="如何使用 RTK"></a>如何使用 RTK</h2><p>这里我们还是使用之前文章的 TodoList 来作为例子，我们将它修改成使用 RTK 实现。</p>
+<ol>
+<li><p>安装 RTK ： <code>yarn add @reduxjs/toolkit react-redux</code></p>
+<p>查看其依赖我们可以看到 RTK 已经依赖了 redux 与 redux-thunk了</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;immer&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^9.0.7&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;redux&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^4.1.2&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;redux-thunk&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^2.4.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;reselect&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^4.1.5&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 <code>todo.slice.js</code>  Slice 切片</p>
+</li>
+</ol>
+   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createSlice &#125; <span class="keyword">from</span> <span class="string">&quot;@reduxjs/toolkit&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> initialState = [];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 固定格式，创建 slice 对象</span></span><br><span class="line"><span class="keyword">const</span> todoSlice = <span class="title function_">createSlice</span>(&#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;todo&#x27;</span>,</span><br><span class="line">    initialState,</span><br><span class="line">    <span class="comment">// 相当于原来reducer中的case</span></span><br><span class="line">    <span class="attr">reducers</span>: &#123;</span><br><span class="line">        <span class="comment">// 后面文中我们将这类函数称之为 case</span></span><br><span class="line">        <span class="attr">addTodo</span>: <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">            state.<span class="title function_">push</span>(action.<span class="property">payload</span>);</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">delTodo</span>: <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">// 这里要注意不能使用之前的filter方式，因为immer的原因，我们必须直接操作state</span></span><br><span class="line">            <span class="keyword">const</span> index = state.<span class="title function_">findIndex</span>(<span class="function"><span class="params">item</span> =&gt;</span> item.<span class="property">id</span> === action.<span class="property">payload</span>);</span><br><span class="line">            state.<span class="title function_">splice</span>(index, <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 官方推荐使用 ES6 解构和导出语法</span></span><br><span class="line"><span class="comment">// 提取action creator 对象与reducer函数</span></span><br><span class="line"><span class="keyword">const</span> &#123; reducer, actions &#125; = todoSlice;</span><br><span class="line"><span class="comment">// 提取并导出根据reducers命名的 action creator 函数</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> &#123; addTodo, delTodo &#125; = actions;</span><br><span class="line"><span class="comment">// 导出 reducer 函数</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> reducer;</span><br></pre></td></tr></table></figure>
+
+<p>   这里我们按照官方推荐使用 ES6 解构和导出语法，来获取 action creator 与 reducer。</p>
+<p>   从代码可以看出，通过 <code>createSlice</code> 函数，我们减少了绝大多数的模板代码，我们无需再写 type、action creator，这一切 RTK 都帮我们在背后默默实现了。</p>
+<p>   而且我们无需再关注状态不可变，我们只需像操作普通对象一样，在 reducers 中的 case 函数中随意操作对象，这一切都被 immer 帮我们搞定了。</p>
+<p>   你可能会好奇，最终通过 action creator 函数返回的是一个这样的 action 对象：</p>
+   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;type: &#x27;todo/addTodo&#x27;, payload: ...&#125;</span><br></pre></td></tr></table></figure>
+
+<p>   我们在 reducers 中写的 case 中拿到的 action 就是这样的固定格式，这一定需要注意，因为在我们过去使用 redux 时，并没有规范 action 对象的类型。</p>
+<p>   ps：可以看到 RTK 自动的帮我们将 type 命名为了 <code>name + case函数名</code> 这样的格式，这对于我们调试也是非常方便的，起名困难症表示 RTK 赛高！</p>
+<p>   <strong>注意：</strong>其实代码修改到这里，我们的程序就可以正常运行了，这也是 RTK 的一大优势，我们可以不必全部重新改造我们的程序，它没有增加我们的心智负担，并不需要我们重新去掌握一个库，而是通过这些工具性质的函数，帮助我们更好的使用 Redux。</p>
+<ol start="3">
+<li>使用 <code>configureStore</code> 函数创建 store 对象</li>
+</ol>
+   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; configureStore &#125; <span class="keyword">from</span> <span class="string">&quot;@reduxjs/toolkit&quot;</span></span><br><span class="line"><span class="keyword">import</span> todoReducer <span class="keyword">from</span> <span class="string">&quot;./todo.slice&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">configureStore</span>(&#123;</span><br><span class="line">    <span class="attr">reducer</span>: &#123;</span><br><span class="line">        <span class="attr">todos</span>: todoReducer</span><br><span class="line">        <span class="comment">// ... 其他的 reducer</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>   <code>configureStore</code> 函数接收一个配置redux的对象作为参数，具有如下选项：</p>
+<ul>
+<li><p><code>reducer</code> 必选参数，可以是一个 reducer 函数也可以是一个由 slice reducer 构成的对象</p>
+<p>如果是 reducer 函数，就直接将他作为根 reducer，如果是一个对象，就自动帮我们调用 <code>combineReducers</code> 函数来合并多个 reducer 创建根 reducer 函数</p>
+</li>
+<li><p><code>middleware</code> 中间件</p>
+</li>
+<li><p><code>devTools</code> 是否启用 Redux DevTools</p>
+</li>
+</ul>
+<p>   更多配置，请查看文档：<strong><a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/api/configureStore">https://redux-toolkit.js.org/api/configureStore</a></strong></p>
+<p>剩余的使用是与原来一模一样的，我们无需改动其他代码！</p>
+<h2 id="其他-api-介绍"><a href="#其他-api-介绍" class="headerlink" title="其他 api 介绍"></a>其他 api 介绍</h2><p>除了我们上面介绍的这种比较完整的改造，其实 RTK 还提供了很多粒度更小的 api，来方便我们改造原有的模板代码，这里我们简单介绍几个：</p>
+<h3 id="1-createAction"><a href="#1-createAction" class="headerlink" title="1. createAction"></a>1. <code>createAction</code></h3><p>这个函数可以帮我们减少创建 action 时的模板代码，还有我们的例子来说明：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">ADD_TODO</span> = <span class="string">&#x27;ADD_TODO&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DEL_TODO</span> = <span class="string">&#x27;DEL_TODO&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">addTodo</span> = (<span class="params">payload</span>) =&gt; (&#123; <span class="attr">type</span>: <span class="variable constant_">ADD_TODO</span>, payload &#125;);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">delTodo</span> = (<span class="params">payload</span>) =&gt; (&#123; <span class="attr">type</span>: <span class="variable constant_">DEL_TODO</span>, payload &#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> action = <span class="title function_">addTodo</span>(&#123;...&#125;);</span><br><span class="line">                        </span><br><span class="line"><span class="comment">// after</span></span><br><span class="line"><span class="keyword">const</span> addTodo = <span class="title function_">createAction</span>(<span class="string">&#x27;ADD_TODO&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> delTodo = <span class="title function_">createAction</span>(<span class="string">&#x27;DEL_TODO&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> action = <span class="title function_">addTodo</span>(&#123;...&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>我们完全不需要再写 action creator 函数了，直接使用 <code>createAction</code> 就可以帮我们创建，它的源码其实也很简单：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">createAction</span>(<span class="params"><span class="keyword">type</span>: <span class="built_in">string</span>, prepareAction?: <span class="built_in">Function</span></span>): <span class="built_in">any</span> &#123;</span><br><span class="line">   <span class="comment">// action creator 函数</span></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">actionCreator</span>(<span class="params">...args: <span class="built_in">any</span>[]</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (prepareAction) &#123;</span><br><span class="line">      <span class="keyword">let</span> prepared = <span class="title function_">prepareAction</span>(...args)</span><br><span class="line">      <span class="keyword">if</span> (!prepared) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;prepareAction did not return an object&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="keyword">type</span>,</span><br><span class="line">        <span class="attr">payload</span>: prepared.<span class="property">payload</span>,</span><br><span class="line">        ...(<span class="string">&#x27;meta&#x27;</span> <span class="keyword">in</span> prepared &amp;&amp; &#123; <span class="attr">meta</span>: prepared.<span class="property">meta</span> &#125;),</span><br><span class="line">        ...(<span class="string">&#x27;error&#x27;</span> <span class="keyword">in</span> prepared &amp;&amp; &#123; <span class="attr">error</span>: prepared.<span class="property">error</span> &#125;),</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//action creator 函数返回的固定样式的 action 对象</span></span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="keyword">type</span>, <span class="attr">payload</span>: args[<span class="number">0</span>] &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 自定义 action creator 函数的 toString </span></span><br><span class="line">  actionCreator.<span class="property">toString</span> = <span class="function">() =&gt;</span> <span class="string">`<span class="subst">$&#123;<span class="keyword">type</span>&#125;</span>`</span></span><br><span class="line"></span><br><span class="line">  actionCreator.<span class="property">type</span> = <span class="keyword">type</span></span><br><span class="line"></span><br><span class="line">  actionCreator.<span class="property">match</span> = (<span class="attr">action</span>: <span class="title class_">Action</span>&lt;<span class="built_in">unknown</span>&gt;): action is <span class="title class_">PayloadAction</span> =&gt;</span><br><span class="line">    action.<span class="property">type</span> === <span class="keyword">type</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> actionCreator</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-createReducer"><a href="#2-createReducer" class="headerlink" title="2.createReducer()"></a>2.<code>createReducer()</code></h3><p>这个函数可以帮我们简化 reducer 函数的创建，并在其内部使用了 immer ，让我们可以直接操作 state，而不用再考虑不可变的问题，极大的简化了更新状态的逻辑。我们一般用 <code>createAction</code> 配合使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="keyword">const</span> initState = [];</span><br><span class="line"><span class="comment">//模板代码 action type 常量</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">ADD_TODO</span> = <span class="string">&#x27;ADD_TODO&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">DEL_TODO</span> = <span class="string">&#x27;DEL_TODO&#x27;</span>;</span><br><span class="line"><span class="comment">//模板代码用于创建 action 的 action creator 函数</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">addTodo</span> = (<span class="params">payload</span>) =&gt; (&#123; <span class="attr">type</span>: <span class="variable constant_">ADD_TODO</span>, payload &#125;);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">delTodo</span> = (<span class="params">payload</span>) =&gt; (&#123; <span class="attr">type</span>: <span class="variable constant_">DEL_TODO</span>, payload &#125;);</span><br><span class="line"><span class="comment">// reducer 函数</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">todoReducer</span>(<span class="params">preState = initState, action</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; type, payload &#125; = action;</span><br><span class="line">    <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="attr">ADD_TODO</span>:</span><br><span class="line">            <span class="keyword">return</span> [...preState, payload];</span><br><span class="line">        <span class="keyword">case</span> <span class="attr">DEL_TODO</span>:</span><br><span class="line">            <span class="keyword">return</span> preState.<span class="title function_">filter</span>(<span class="function"><span class="params">item</span> =&gt;</span> item.<span class="property">id</span> !== payload);</span><br><span class="line">        <span class="attr">default</span>:</span><br><span class="line">            <span class="keyword">return</span> preState;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//after</span></span><br><span class="line"><span class="keyword">import</span> &#123; createReducer, createAction &#125; <span class="keyword">from</span> <span class="string">&quot;@reduxjs/toolkit&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> initialState = [];</span><br><span class="line"><span class="comment">//使用 createAction 函数创建 action creator</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> addTodo = <span class="title function_">createAction</span>(<span class="string">&#x27;ADD_TODO&#x27;</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> delTodo = <span class="title function_">createAction</span>(<span class="string">&#x27;DEL_TODO&#x27;</span>)</span><br><span class="line"><span class="comment">//使用createReducer生成reducer函数</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">createReducer</span>(initialState, &#123;</span><br><span class="line">    [addTodo]: <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">        state.<span class="title function_">push</span>(action.<span class="property">payload</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    [delTodo]: <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> index = state.<span class="title function_">findIndex</span>(<span class="function"><span class="params">item</span> =&gt;</span> item.<span class="property">id</span> === action.<span class="property">payload</span>);</span><br><span class="line">        state.<span class="title function_">splice</span>(index, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>现在我们的代码变得更加简洁，几乎没有了模板代码，非常的优雅！</p>
+<p>除了上面我演示的这种方式以外，RTK 还支持使用 <code>Builder Callback</code> 这种方式，大家要是感兴趣可以自行查看文档：<strong><a target="_blank" rel="noopener" href="https://redux-toolkit.js.org/api/createReducer#usage-with-the-builder-callback-notation">https://redux-toolkit.js.org/api/createReducer#usage-with-the-builder-callback-notation</a></strong></p>
+<p>好了，关于 RTK 的话题我们就介绍到这里了，更多有趣的内容请关注我的专栏！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/redux/" rel="tag"># redux</a>
+              <a href="/tags/redux-toolkit/" rel="tag"># redux-toolkit</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/01/%E5%A6%82%E4%BD%95%E5%9C%A8-Android-%E5%BA%94%E7%94%A8%E4%B8%AD%E9%9B%86%E6%88%90%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95/" rel="prev" title="如何在 Android 应用中集成微信登录">
+                  <i class="fa fa-angle-left"></i> 如何在 Android 应用中集成微信登录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/05/React-%E4%BC%98%E5%8C%96%EF%BC%9A%E5%9C%A8-ahooks-useRequest-%E4%B8%AD%E5%88%A9%E7%94%A8-swr-%E4%BC%98%E5%8C%96%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/" rel="next" title="React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求">
+                  React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

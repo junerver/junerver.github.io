@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="新建一个 compose 项目开始前，请下载最新版本的 Android Studio Arctic Fox，然后使用 Empty Compose Activity 模板创建应用。 我们先看看在 app&#x2F;build.gradle 中是如何配置使用 compose 的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Compose学习笔记1-compose、state、flow、remember">
+<meta property="og:url" content="https://junerver.xyz/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="新建一个 compose 项目开始前，请下载最新版本的 Android Studio Arctic Fox，然后使用 Empty Compose Activity 模板创建应用。 我们先看看在 app&#x2F;build.gradle 中是如何配置使用 compose 的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/db977de65f38407c9fa01a49572bccaa~tplv-k3u1fbpfcp-watermark.image">
+<meta property="article:published_time" content="2022-02-12T00:35:41.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.429Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Compose">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/db977de65f38407c9fa01a49572bccaa~tplv-k3u1fbpfcp-watermark.image">
+
+
+<link rel="canonical" href="https://junerver.xyz/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/","path":"2022/02/12/Compose学习笔记1-compose、state、flow、remember/","title":"Compose学习笔记1-compose、state、flow、remember"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Compose学习笔记1-compose、state、flow、remember | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AA-compose-%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">新建一个 compose 项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%82%E5%AF%9F%E7%AC%AC%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%90%8C%E4%B9%8B%E5%A4%84"><span class="nav-number">2.</span> <span class="nav-text">观察第一个不同之处</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8-compose-%E4%B8%AD%E4%BD%BF%E7%94%A8-viewmodel"><span class="nav-number">2.1.</span> <span class="nav-text">在 compose 中使用 viewmodel</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%92%E6%92%AD%E4%B8%80%E4%B8%AAFlow%E7%9A%84%E7%8E%A9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">插播一个Flow的玩法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E6%98%AF%E5%86%B7%E7%9A%84"><span class="nav-number">3.1.</span> <span class="nav-text">流是冷的</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%9C%A8-Compose-%E4%B8%AD%E8%AF%B4-Flow"><span class="nav-number">3.1.1.</span> <span class="nav-text">为什么要在 Compose 中说 Flow</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%86%E8%BF%99%E4%BA%9B%E9%83%BD%E4%B8%8D%E6%98%AF%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%86%99%E6%B3%95"><span class="nav-number">3.1.2.</span> <span class="nav-text">但这些都不是正确的写法!</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8-MutableState-%E4%B8%8E-MutableStateFlow%E4%B8%AD%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%EF%BC%9F"><span class="nav-number">3.1.3.</span> <span class="nav-text">在 MutableState 与 MutableStateFlow中如何选择？</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Compose学习笔记1-compose、state、flow、remember | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Compose学习笔记1-compose、state、flow、remember
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-02-12 08:35:41" itemprop="dateCreated datePublished" datetime="2022-02-12T08:35:41+08:00">2022-02-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="新建一个-compose-项目"><a href="#新建一个-compose-项目" class="headerlink" title="新建一个 compose 项目"></a>新建一个 compose 项目</h2><p>开始前，请下载最新版本的 Android Studio Arctic Fox，然后使用 Empty Compose Activity 模板创建应用。</p>
+<p>我们先看看在 app&#x2F;build.gradle 中是如何配置使用 compose 的。</p>
+<span id="more"></span>
+
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">android&#123;</span><br><span class="line">    buildFeatures &#123;</span><br><span class="line">        <span class="comment">// viewbinding 之类的功能也需要在此开启</span></span><br><span class="line">        compose <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    composeOptions &#123;</span><br><span class="line">        kotlinCompilerExtensionVersion compose_version</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation <span class="string">&#x27;androidx.core:core-ktx:1.7.0&#x27;</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.compose.ui:ui:$compose_version&quot;</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.compose.material:material:$compose_version&quot;</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.compose.ui:ui-tooling-preview:$compose_version&quot;</span></span><br><span class="line">    implementation <span class="string">&#x27;androidx.lifecycle:lifecycle-runtime-ktx:2.3.1&#x27;</span></span><br><span class="line">    implementation <span class="string">&#x27;androidx.activity:activity-compose:1.3.1&#x27;</span></span><br><span class="line">    testImplementation <span class="string">&#x27;junit:junit:4.13.2&#x27;</span></span><br><span class="line">    androidTestImplementation <span class="string">&#x27;androidx.test.ext:junit:1.1.3&#x27;</span></span><br><span class="line">    androidTestImplementation <span class="string">&#x27;androidx.test.espresso:espresso-core:3.4.0&#x27;</span></span><br><span class="line">    androidTestImplementation <span class="string">&quot;androidx.compose.ui:ui-test-junit4:$compose_version&quot;</span></span><br><span class="line">    debugImplementation <span class="string">&quot;androidx.compose.ui:ui-tooling:$compose_version&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="观察第一个不同之处"><a href="#观察第一个不同之处" class="headerlink" title="观察第一个不同之处"></a>观察第一个不同之处</h2><p>默认项目创建的这个 Activity 继承自 <code>ComponentActivity</code> 这个类，而不是我们熟悉的 <code>AppcompatActivity</code> ，这两个类的层级关系如下：</p>
+<p><img src="/db977de65f38407c9fa01a49572bccaa~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p>普通的用法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_webview);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>compose的用法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">    WindowCompat.setDecorFitsSystemWindows(window, <span class="literal">false</span>)</span><br><span class="line">    setContent &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>activity 里的 <code>setContent&#123;&#125;</code> 函数来自<code>androidx.activity:activity-compose</code></p>
+<p>在这个函数中还调用了另一个 <code>setContent&#123;&#125; </code>函数来自<code>androidx.compose.ui:ui</code></p>
+<h3 id="在-compose-中使用-viewmodel"><a href="#在-compose-中使用-viewmodel" class="headerlink" title="在 compose 中使用 viewmodel"></a>在 compose 中使用 viewmodel</h3><p>viewmodel很好用，这毋庸置疑，在 compose 中 我们使用 viewmodel 更一步的简化了，只需要在需要时调用  <code>viewModel&lt;&gt;()</code> 函数即可</p>
+<p>这一扩展来自于：<code>androidx.lifecycle:lifecycle-viewmodel-compose</code></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">    WindowCompat.setDecorFitsSystemWindows(window, <span class="literal">false</span>)</span><br><span class="line">    setContent &#123;</span><br><span class="line">        <span class="keyword">val</span> appViewModel = viewModel&lt;AppViewModel&gt;()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="插播一个Flow的玩法"><a href="#插播一个Flow的玩法" class="headerlink" title="插播一个Flow的玩法"></a>插播一个Flow的玩法</h2><p>flow 是 kotlin 推出的用于在协程中处理多个异步数据返回的工具（异步数据流），地位等同于 Rxjava 但是比 RX 容易很多也简洁很多。</p>
+<p>看一段示例代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.flow.*</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//sampleStart               </span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">simple</span><span class="params">()</span></span>: Flow&lt;<span class="built_in">Int</span>&gt; = flow &#123; <span class="comment">// 流构建器</span></span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.3</span>) &#123;</span><br><span class="line">        delay(<span class="number">100</span>) <span class="comment">// 假装我们在这里做了一些有用的事情</span></span><br><span class="line">        emit(i) <span class="comment">// 发送下一个值</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line">    <span class="comment">// 启动并发的协程以验证主线程并未阻塞</span></span><br><span class="line">    launch &#123;</span><br><span class="line">        <span class="keyword">for</span> (k <span class="keyword">in</span> <span class="number">1.</span><span class="number">.3</span>) &#123;</span><br><span class="line">            println(<span class="string">&quot;I&#x27;m not blocked <span class="variable">$k</span>&quot;</span>)</span><br><span class="line">            delay(<span class="number">100</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 收集这个流</span></span><br><span class="line">    simple().collect &#123; value -&gt; println(value) &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//sampleEnd</span></span><br></pre></td></tr></table></figure>
+
+<p>flow函数可以构建一个 Flow，注意 <code>flow</code> 函数是一个 <em><strong>suspend</strong></em> 挂起函数；</p>
+<ul>
+<li>名为 flow 的 Flow 类型构建器函数。</li>
+<li><code>flow &#123; ... &#125;</code> 构建块中的代码可以挂起。</li>
+<li>函数 simple 不再标有 <code>suspend</code> 修饰符。</li>
+<li>流使用 <code>emit</code> 函数 发射 值。</li>
+<li>流使用 <code>collect</code> 函数 收集 值。</li>
+</ul>
+<h3 id="流是冷的"><a href="#流是冷的" class="headerlink" title="流是冷的"></a>流是冷的</h3><p>冷流只是一个概念，等同于 rx 中，创建的 <code>Observable</code>，他在被<code>subscribe</code>之前是不会执行的<br>Flow 也一样，调用构建函数 <code>flow&#123;&#125;</code> 并不会执行异步流，lambda中的发射函数 <code>emit</code> 也不会执行<br>直到 <code>flow</code> 函数被 <code>collect()</code> 收集，此时流才开始工作，这也就是所谓冷流的概念。</p>
+<p>看一段我以前项目的示例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">syncToDb</span><span class="params">()</span></span> &#123;</span><br><span class="line">    lifecycleScope.launch &#123;</span><br><span class="line">        <span class="comment">//sync to db</span></span><br><span class="line">        flow &#123;</span><br><span class="line">            <span class="keyword">val</span> map = mapOf(<span class="string">&quot;userObjId&quot;</span> to SpUtils.decodeString(Constants.SP_USER_ID))</span><br><span class="line">            <span class="keyword">val</span> resp = BmobMethods.INSTANCE.getAllNoteByUserId(map.toJson())</span><br><span class="line">            emit(resp)</span><br><span class="line">        &#125;.<span class="keyword">catch</span> &#123; e -&gt;</span><br><span class="line">            XLog.e(e)</span><br><span class="line">        &#125;.flatMapConcat &#123;</span><br><span class="line">            <span class="keyword">val</span> allNote = it.toBean&lt;GetAllNoteResp&gt;()</span><br><span class="line">            allNote.results.asFlow()</span><br><span class="line">        &#125;.onEach &#123; note -&gt;</span><br><span class="line">            <span class="comment">//云端的每一条笔记</span></span><br><span class="line">            <span class="keyword">val</span> objId = note.objectId</span><br><span class="line">            <span class="comment">//根据bmob的objid查表</span></span><br><span class="line">            <span class="keyword">val</span> dbBean = NoteUtils.queryNoteById(objId)</span><br><span class="line">            <span class="keyword">if</span> (dbBean == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="comment">//本地没有次数据 新建本地数据并保存数据库</span></span><br><span class="line">                <span class="keyword">val</span> entity = note.toEntity()</span><br><span class="line">                entity.save()</span><br><span class="line">                XLog.d(<span class="string">&quot;本地没有该数据 新建\n<span class="variable">$entity</span>&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//存在本地对象 对比是否跟新 or 删除</span></span><br><span class="line">            dbBean?.let &#123;</span><br><span class="line">                <span class="keyword">if</span> (it.isLocalDel) &#123;</span><br><span class="line">                    <span class="comment">//本地删除</span></span><br><span class="line">                    <span class="keyword">val</span> resp = BmobMethods.INSTANCE.delNoteById(it.objId)</span><br><span class="line">                    <span class="keyword">if</span> (resp.contains(<span class="string">&quot;ok&quot;</span>)) &#123;</span><br><span class="line">                        <span class="comment">//远端删除成功 本地删除</span></span><br><span class="line">                        it.delete()</span><br><span class="line">                        XLog.d(<span class="string">&quot;远端删除成功 本地删除\n<span class="variable">$resp</span>&quot;</span>)</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">return</span><span class="symbol">@let</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//未本地删除对比数据相互更新</span></span><br><span class="line">                <span class="keyword">when</span> &#123;</span><br><span class="line">                    note.updatedTime &gt; it.updatedTime -&gt; &#123;</span><br><span class="line">                        <span class="comment">//云端内容更新更新本地数据</span></span><br><span class="line">                        it.update(note)</span><br><span class="line">                        XLog.d(<span class="string">&quot;使用云端数据更新本地数据库\n<span class="variable">$it</span>\n<span class="variable">$note</span>&quot;</span>)</span><br><span class="line">                    &#125;</span><br><span class="line">                    note.updatedTime &lt; it.updatedTime -&gt; &#123;</span><br><span class="line">                        <span class="comment">//云端数据小于本地 更新云端</span></span><br><span class="line">                        note.update(it)</span><br><span class="line">                        <span class="keyword">val</span> resp = BmobMethods.INSTANCE.putNoteById(</span><br><span class="line">                            objId,</span><br><span class="line">                            note.toJson(excludeFields = Constants.DEFAULT_EXCLUDE_FIELDS)</span><br><span class="line">                                .createJsonRequestBody()</span><br><span class="line">                        )</span><br><span class="line">                        <span class="keyword">val</span> putResp = resp.toBean&lt;PutResp&gt;()</span><br><span class="line">                        XLog.d(<span class="string">&quot;使用本地数据更新云端数据 \n<span class="variable">$it</span>\n<span class="variable">$note</span>&quot;</span>)</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> -&gt; &#123;</span><br><span class="line">                        <span class="comment">//数据相同 do nothing</span></span><br><span class="line">                        XLog.d(<span class="string">&quot;本地数据与云端数据相同\n<span class="variable">$it</span>\n<span class="variable">$note</span>&quot;</span>)</span><br><span class="line">                        <span class="keyword">return</span><span class="symbol">@let</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                it.isSync = <span class="literal">true</span></span><br><span class="line">                it.save()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.flowOn(Dispatchers.IO).onCompletion &#123;</span><br><span class="line">            <span class="comment">//完成时调用与末端流操作符处于同一个协程上下文范围</span></span><br><span class="line">            XLog.d(<span class="string">&quot;Bmob☁️同步执行完毕，开始同步本地数据到云端&quot;</span>)</span><br><span class="line">            syncToBmob()</span><br><span class="line">        &#125;.collect &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//同步本地其他数据到云端</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">syncToBmob</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">//未同步的即本地有而云端无</span></span><br><span class="line">    NoteUtils.listNotSync().asFlow()</span><br><span class="line">        .onEach &#123;</span><br><span class="line">            XLog.d(it)</span><br><span class="line">            <span class="keyword">if</span> (it.objId.isEmpty()) &#123;</span><br><span class="line">                <span class="comment">//本地有云端无 本地无objId  直接上传</span></span><br><span class="line">                <span class="keyword">val</span> note = it.toBmob()</span><br><span class="line">                <span class="keyword">val</span> resp = BmobMethods.INSTANCE.postNote(</span><br><span class="line">                    note.toJson(excludeFields = Constants.DEFAULT_EXCLUDE_FIELDS)</span><br><span class="line">                        .createJsonRequestBody()</span><br><span class="line">                )</span><br><span class="line">                <span class="keyword">val</span> postResp = resp.toBean&lt;PostResp&gt;()</span><br><span class="line">                <span class="comment">//保存objectId</span></span><br><span class="line">                it.objId = postResp.objectId</span><br><span class="line">                XLog.d(<span class="string">&quot;本地有云端无 新建数据&quot;</span>)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//云端同步后 本地不可能出现本地有记录，且存在云端objid，但是没有和云端同步</span></span><br><span class="line">                <span class="comment">// 这种情况只可能是云端手动删除了记录，但是本地没有同步，</span></span><br><span class="line">                <span class="comment">// 即一个账号登录了两个客户端，但是在一个客户端中对该记录进行了删除，在另一个客户端中还存在本地记录</span></span><br><span class="line">                <span class="comment">//此情况可以加入特殊标记 isCloudDel</span></span><br><span class="line">                it.isCloudDel = <span class="literal">true</span></span><br><span class="line">                XLog.d(<span class="string">&quot;不太可能出现的一种情况\n<span class="variable">$it</span>&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            it.isSync = <span class="literal">true</span></span><br><span class="line">            it.save()</span><br><span class="line">        &#125;.flowOn(Dispatchers.IO).onCompletion &#123;</span><br><span class="line">            <span class="comment">//完成时调用与末端流操作符处于同一个协程上下文范围</span></span><br><span class="line">            listAllFromDb()</span><br><span class="line">        &#125;.collect &#123;</span><br><span class="line">            XLog.d(it)</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是我以前写的一个示例demo，其中用到了Flow，感兴趣的可以去看一下源码：<a target="_blank" rel="noopener" href="https://github.com/junerver/CloudNote">junerver&#x2F;CloudNote</a><br>注意上面使用到的关键函数：</p>
+<p><strong><code>flow</code></strong> 之前我们说过了，用于构造Flow流，通过 <code>emit</code> 发射数据</p>
+<p><strong><code>catch</code></strong> 捕获异常没啥好说的</p>
+<p><strong><code>flatMapConcat</code></strong> 等同于 RxJava中的 <code>flatMap</code>，展平，他的最后一行是返回值，因为我的返回值是一个List需要通过 <code>asFlow</code> 转换成 flow 流，完成展平</p>
+<p><strong><code>onEach</code></strong> 对上游发射过来的每一条数据进行处理，该函数的返回值是被我门处理后的数据，不需要我们特别处理</p>
+<p><strong><code>flowOn</code></strong> 约等于 <strong><code>subscribeOn(Schedulers.io())</code></strong> 表示流执行的协程</p>
+<p><strong><code>collect</code></strong> 之前说过 约等于  <code>subscribe()</code> 函数，此事流开始执行，注意 <code>collect</code> 执行在哪个协程就在哪个协程，不像RxJava需要使用  <code>observeOn(AndroidSchedulers.mainThread())</code> 来切换到主线程这样的操作</p>
+<p>最简单的流操作就大概如此了，除此以外还有比如 <strong>SharedFlow</strong>、<strong>StateFlow</strong> 等进阶内容，以后用到再说</p>
+<p>可以参考的文章：<br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6937138168474894343#heading-2">协程进阶技巧 - StateFlow和SharedFlow
+</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6989536876096913439#heading-3">Kotlin Flow】 一眼看全——Flow操作符大全</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/7007602776502960165#heading-18">不做跟风党，LiveData，StateFlow，SharedFlow 使用场景对比</a></p>
+<h4 id="为什么要在-Compose-中说-Flow"><a href="#为什么要在-Compose-中说-Flow" class="headerlink" title="为什么要在 Compose 中说 Flow"></a>为什么要在 Compose 中说 Flow</h4><p><strong>Flow</strong> 很好用，比如 <strong>StateFlow</strong> 甚至可以代替  <strong>LiveData</strong>，在 <strong>Compose</strong> 中这一点被放大了</p>
+<p>在包 <code>androidx.compose.ui:ui-tooling</code> 中依赖了 <code>androidx.compose.runtime:runtime</code><br>它为 <strong>StateFlow</strong> 提供了一个扩展函数 <code>collectAsState() </code></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Suppress(<span class="string">&quot;StateFlowValueCalledInComposition&quot;</span>)</span></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> StateFlow<span class="type">&lt;T&gt;</span>.<span class="title">collectAsState</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    context: <span class="type">CoroutineContext</span> = EmptyCoroutineContext</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>: State&lt;T&gt; = collectAsState(value, context)</span><br></pre></td></tr></table></figure>
+
+<p>这里看起来函数返回了 一个State类型的封装对象，其实不然</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Stable</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">State</span>&lt;<span class="type">out T</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">val</span> value: T</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//注意这是by关键字实现</span></span><br><span class="line"><span class="meta">@Suppress(<span class="string">&quot;NOTHING_TO_INLINE&quot;</span>)</span></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> State<span class="type">&lt;T&gt;</span>.<span class="title">getValue</span><span class="params">(thisObj: <span class="type">Any</span>?, property: <span class="type">KProperty</span>&lt;*&gt;)</span></span>: T = value</span><br></pre></td></tr></table></figure>
+
+<p>这是一个非常屌的包装<br>返回的这个 <strong>State</strong> 我们使用的时候无需任何解包装，直接就可以使用，而且他似乎还是 Stateful 的。</p>
+<p>当然使用的时候不能直接使用这个对象，需要通过 by 来实现获取到value的效果，这样就不需要调用 <code>state.value</code> 这样的写法了。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> count = <span class="number">0</span></span><br><span class="line"><span class="keyword">val</span> testStateFlow = MutableStateFlow(count)</span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Greeting</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">//这里要转型为 MutableState，这样state就是可读写的了</span></span><br><span class="line">    <span class="keyword">var</span> state <span class="keyword">by</span> testStateFlow.collectAsState() <span class="keyword">as</span> MutableState</span><br><span class="line">    Column &#123;</span><br><span class="line">        Text(text = <span class="string">&quot;Hello <span class="variable">$name</span>!<span class="subst">$&#123;state&#125;</span>&quot;</span>)</span><br><span class="line">        Button(onClick = &#123; </span><br><span class="line">            <span class="comment">//模拟流数据变化</span></span><br><span class="line">            testStateFlow.value = ++count</span><br><span class="line">            <span class="comment">//因为是可变的state，这里我们也可以直接写</span></span><br><span class="line">            state += <span class="number">1</span></span><br><span class="line">        &#125;,</span><br><span class="line">            modifier = Modifier</span><br><span class="line">                .height(<span class="number">50.</span>dp)</span><br><span class="line">                .width(<span class="number">100.</span>dp)</span><br><span class="line">        )&#123;</span><br><span class="line">            Text(text = <span class="string">&quot;点一下&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是 <code>collectAsState()</code> 函数的返回值是 <code>State</code>，通过 by 关键字只能获得到只读属性，我们需要进行一次转型 <code> as MutableState</code>，之所以能转型为 <code>MutableState</code>，我们看源码的 <code>produceState</code> 函数源码可以发现实际返回的是一个可变State；</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">produceState</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    initialValue: <span class="type">T</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">    key1: <span class="type">Any</span>?,</span></span></span><br><span class="line"><span class="params"><span class="function">    key2: <span class="type">Any</span>?,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="meta">@BuilderInference</span> producer: <span class="type">suspend</span> <span class="type">ProduceStateScope</span>&lt;<span class="type">T</span>&gt;.() -&gt; <span class="type">Unit</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>: State&lt;T&gt; &#123;</span><br><span class="line">    <span class="comment">// 这里可以看到实际生成的state是可变state</span></span><br><span class="line">    <span class="keyword">val</span> result = remember &#123; mutableStateOf(initialValue) &#125;</span><br><span class="line">    LaunchedEffect(key1, key2) &#123;</span><br><span class="line">        ProduceStateScopeImpl(result, coroutineContext).producer()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里多谢 <a target="_blank" rel="noopener" href="https://juejin.cn/user/910868514870494">墨丘比丘</a> 指出<code>collectAsState()</code>获取的值使用 <code>by</code> 后可以通过转型变成可读写状态。</p>
+<p>但是我还要指出的一点就是，flow流我们应该视作数据来源，或者状态store，他不应该被直接修改，这里我们只是展示一种读写方式。</p>
+<p>对于状态与状态管理可以参考我写的另一篇文章：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7067325498216415269"># Compose学习笔记2 - LaunchedEffect、状态与 状态管理</a>，或者从前端工程对状态管理中中触类旁通：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7126362622022942727"># 从零开始学习React-5：状态与状态管理</a></p>
+</blockquote>
+<p>这里其实我们可以还可以有别的写法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> count = <span class="number">0</span></span><br><span class="line"><span class="keyword">val</span> testState = mutableStateOf(count)</span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Greeting</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    Column &#123;</span><br><span class="line">        <span class="comment">//直接使用State</span></span><br><span class="line">        Text(text = <span class="string">&quot;Hello <span class="variable">$name</span>!<span class="subst">$&#123;testState.value&#125;</span>&quot;</span>)</span><br><span class="line">        Button(onClick = &#123; testState.value = ++count&#125;,</span><br><span class="line">            modifier = Modifier</span><br><span class="line">                .height(<span class="number">50.</span>dp)</span><br><span class="line">                .width(<span class="number">100.</span>dp)</span><br><span class="line">        )&#123;</span><br><span class="line">            Text(text = <span class="string">&quot;点一下&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>就是不使用 Flow 的写法，直接使用 compose 提供的 State。</p>
+<h4 id="但这些都不是正确的写法"><a href="#但这些都不是正确的写法" class="headerlink" title="但这些都不是正确的写法!"></a><strong>但这些都不是正确的写法!</strong></h4><p>为什么说他是错误的写法，因为 compose  是函数式的UI构建方式，每一个<strong>composable</strong> 函数自身应该是不依赖外部变量的，这种写法其实严重的违背了这一原则。<br>这时候就要介绍我们的 <code>remember</code> 函数了！</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Remember the value produced by [calculation]. [calculation] will only be evaluated during the composition.</span></span><br><span class="line"><span class="comment">* Recomposition will always return the value produced by composition.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">remember</span><span class="params">(calculation: @<span class="type">DisallowComposableCalls</span> () -&gt; <span class="type">T</span>)</span></span>: T =</span><br><span class="line">    currentComposer.cache(<span class="literal">false</span>, calculation)</span><br></pre></td></tr></table></figure>
+
+<p>机翻：记住由calculation产生的value。calculation只会在组成过程中进行评估。compose 重构时将始终返回由 composition 产生的值。<br>大致意思就是：该函数可以将块中的值保存起来，当compose视图重构时，可以读取到这个保存的值。</p>
+<p>这种用法类似于在 Flutter 中使用<code>StatefulWidget</code> 类来包装控件（或者使用GetX），而在 Kotlin Compose 中，将 FP 风格贯彻的很好，没有那么多类，而是一个个的函数。需要实现这种 <code>Stateful</code> 时也更为简单。</p>
+<p>这种写法乍一看来很奇怪，把变量保存在一个函数里，但其实有很大的优势，比如可以 UI 与逻辑混合使用，这一点比起 Flutter 具有巨大的优势。</p>
+<p>例如下面这样的写法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Greeting</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> counter = remember &#123;</span><br><span class="line">        mutableStateOf(<span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    Column &#123;</span><br><span class="line">        <span class="keyword">if</span> (counter.value % <span class="number">2</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            Text(text = <span class="string">&quot;Hello <span class="variable">$name</span>!<span class="subst">$&#123;counter.value&#125;</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        Button(</span><br><span class="line">            onClick = &#123;</span><br><span class="line">                counter.value += <span class="number">1</span></span><br><span class="line">            &#125;,</span><br><span class="line">            modifier = Modifier</span><br><span class="line">                .height(<span class="number">50.</span>dp)</span><br><span class="line">                .width(<span class="number">100.</span>dp)</span><br><span class="line">        ) &#123;</span><br><span class="line">            Text(text = <span class="string">&quot;点一下&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你可以试一下上面的例子，就能看出在 compose 中 UI 配合逻辑是多么简单。</p>
+<p>小tips：如果你需要频繁的用到这个state ，翻来覆去的写 state.value 确实让人很烦，这时通过 <em><strong>by</strong></em> 关键字来获取确实很轻松。</p>
+<h4 id="在-MutableState-与-MutableStateFlow中如何选择？"><a href="#在-MutableState-与-MutableStateFlow中如何选择？" class="headerlink" title="在 MutableState 与 MutableStateFlow中如何选择？"></a>在 MutableState 与 MutableStateFlow中如何选择？</h4><p>上面我们这两个用于保存状态的类型我们都使用了一编，仅他俩作为 State 使用时看起来区别不大，如何选择其实完全看使用场景：<br>个人认为，在一些简单的场景，我们只是想要这个值用于 UI 的响应式变更刷新，那么直接使用 State 就可以了；如果数据来源是一个流，并且需要做一系列处理（比如 <code>map</code>、<code>flatMap</code> 等），最终结果以 State 形式反应在 UI 上，那就用  Flow 流更方便。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Compose/" rel="tag"># Compose</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/28/Android-Gradle-%E5%8D%87%E7%BA%A7-7-1-0-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%B8%8E%E5%A4%87%E5%BF%98/" rel="prev" title="Android Gradle 升级 7.1.0 的一些注意事项与备忘">
+                  <i class="fa fa-angle-left"></i> Android Gradle 升级 7.1.0 的一些注意事项与备忘
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" rel="next" title="Compose学习笔记2 - LaunchedEffect、状态与 状态管理">
+                  Compose学习笔记2 - LaunchedEffect、状态与 状态管理 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

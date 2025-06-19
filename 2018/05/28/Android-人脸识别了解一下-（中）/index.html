@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="转载请注明作者及出处：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;b41f64389c21  [25]——Android 人脸识别了解一下 （上）在上文中我大致的介绍了官方 Demo 中人脸注册的流程，本文我们接着来看看，在完成了人脸注册之后我们该如何识别出用户的人脸特征，从而通过人脸识别获取用户信息。 人脸识别的全部流程集成在官方 Demo 的 DetecterActivity 文件中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 人脸识别了解一下 （中）">
+<meta property="og:url" content="https://junerver.xyz/2018/05/28/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%AD%EF%BC%89/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="转载请注明作者及出处：https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;b41f64389c21  [25]——Android 人脸识别了解一下 （上）在上文中我大致的介绍了官方 Demo 中人脸注册的流程，本文我们接着来看看，在完成了人脸注册之后我们该如何识别出用户的人脸特征，从而通过人脸识别获取用户信息。 人脸识别的全部流程集成在官方 Demo 的 DetecterActivity 文件中">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-05-28T06:55:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.417Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="ArcFace">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2018/05/28/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%AD%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/05/28/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%AD%EF%BC%89/","path":"2018/05/28/Android-人脸识别了解一下-（中）/","title":"Android 人脸识别了解一下 （中）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android 人脸识别了解一下 （中） | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%98%E6%98%AF%E6%9D%A5%E4%BA%86%E8%A7%A3%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">还是来了解几个概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%86%E5%88%AB%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">识别流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">第一步：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">第二步：</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/05/28/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%AD%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Android 人脸识别了解一下 （中） | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android 人脸识别了解一下 （中）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-05-28 14:55:00" itemprop="dateCreated datePublished" datetime="2018-05-28T14:55:00+08:00">2018-05-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>转载请注明作者及出处：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b41f64389c21">https://www.jianshu.com/p/b41f64389c21</a></p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ca3a12bc4911">[25]——Android 人脸识别了解一下 （上）</a><br>在上文中我大致的介绍了官方 Demo 中人脸注册的流程，本文我们接着来看看，在完成了人脸注册之后我们该如何识别出用户的人脸特征，从而通过人脸识别获取用户信息。</p>
+<p>人脸识别的全部流程集成在官方 Demo 的 DetecterActivity 文件中。</p>
+<span id="more"></span>
+
+<h2 id="还是来了解几个概念"><a href="#还是来了解几个概念" class="headerlink" title="还是来了解几个概念"></a>还是来了解几个概念</h2><ol>
+<li>人脸追踪 FT</li>
+<li>年龄检测 Age</li>
+<li>性别检测 Gender</li>
+</ol>
+<p>其中人脸追踪 FT 与人脸检测 FD 功能基本一致（甚至代码基本都是相同的），Age 引擎用于识别年龄，Gender 引擎用于识别性别。</p>
+<h2 id="识别流程"><a href="#识别流程" class="headerlink" title="识别流程"></a>识别流程</h2><p>整体上比人脸注册还要简单，官方提供了很好的封装供我们使用，我们来看看流程。</p>
+<h3 id="第一步："><a href="#第一步：" class="headerlink" title="第一步："></a>第一步：</h3><p>创建两个叠加在一起的 SurfaceView，一个用于显示摄像头的预览信息，一个用于框出摄像头预览中人脸的位置；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//覆盖在相机预览之上的一层surfaceview</span></span><br><span class="line">mGLSurfaceView = (CameraGLSurfaceView) findViewById(R.id.glsurfaceView);</span><br><span class="line">mGLSurfaceView.setOnTouchListener(<span class="built_in">this</span>);</span><br><span class="line"><span class="comment">//摄像头的surfaceview</span></span><br><span class="line">mSurfaceView = (CameraSurfaceView) findViewById(R.id.surfaceView);</span><br><span class="line">mSurfaceView.setOnCameraListener(<span class="built_in">this</span>);</span><br><span class="line">mSurfaceView.setupGLSurafceView(mGLSurfaceView, <span class="literal">true</span>, mCameraMirror, mCameraRotate);</span><br><span class="line">mSurfaceView.debug_print_fps(<span class="literal">true</span>, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<p>这里面出现了两个监听器，分别是<code>View.OnTouchListener</code> 、<code>CameraSurfaceView.OnCameraListener</code>，第一个监听器用于设置触摸对焦，第二个监听器就是我们实现人脸识别的最基础一步：设置、获取摄像头的数据；</p>
+<p>该接口共有6个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">OnCameraListener</span> &#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * setup camera. 设置相机参数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the camera</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> Camera <span class="title function_">setupCamera</span><span class="params">()</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * reset on surfaceChanged.  在Surfacechanged之后重置</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> format image format.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> width width</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> height height.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setupChanged</span><span class="params">(<span class="type">int</span> format, <span class="type">int</span> width, <span class="type">int</span> height)</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * start preview immediately, after surfaceCreated 在surfaceCreated之后是否立即开始预览</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> true or false.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">startPreviewImmediately</span><span class="params">()</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * on ui thread. 在预览时刚方法会被调用，该方法的返回值是后两个方法的传入值</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> data image data</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> width  width</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> height height</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> format format</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> timestamp time stamp</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> image params.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> Object <span class="title function_">onPreview</span><span class="params">(<span class="type">byte</span>[] data, <span class="type">int</span> width, <span class="type">int</span> height, <span class="type">int</span> format, <span class="type">long</span> timestamp)</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onBeforeRender</span><span class="params">(CameraFrameData data)</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onAfterRender</span><span class="params">(CameraFrameData data)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>初始化相机</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Camera <span class="title function_">setupCamera</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">    <span class="comment">//初始化相机📷</span></span><br><span class="line">	mCamera = Camera.open(mCameraID);</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		Camera.<span class="type">Parameters</span> <span class="variable">parameters</span> <span class="operator">=</span> mCamera.getParameters();</span><br><span class="line">		parameters.setPreviewSize(mWidth, mHeight);</span><br><span class="line">		parameters.setPreviewFormat(mFormat);</span><br><span class="line">		<span class="keyword">for</span>( Camera.Size size : parameters.getSupportedPreviewSizes()) &#123;</span><br><span class="line">			Log.d(TAG, <span class="string">&quot;SIZE:&quot;</span> + size.width + <span class="string">&quot;x&quot;</span> + size.height);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span>( Integer format : parameters.getSupportedPreviewFormats()) &#123;</span><br><span class="line">			Log.d(TAG, <span class="string">&quot;FORMAT:&quot;</span> + format);</span><br><span class="line">		&#125;</span><br><span class="line">		List&lt;<span class="type">int</span>[]&gt; fps = parameters.getSupportedPreviewFpsRange();</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span>[] count : fps) &#123;</span><br><span class="line">			Log.d(TAG, <span class="string">&quot;T:&quot;</span>);</span><br><span class="line">			<span class="keyword">for</span> (<span class="type">int</span> data : count) &#123;</span><br><span class="line">				Log.d(TAG, <span class="string">&quot;V=&quot;</span> + data);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//parameters.setPreviewFpsRange(15000, 30000);</span></span><br><span class="line">		<span class="comment">//parameters.setExposureCompensation(parameters.getMaxExposureCompensation());</span></span><br><span class="line">		<span class="comment">//parameters.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_AUTO);</span></span><br><span class="line">		<span class="comment">//parameters.setAntibanding(Camera.Parameters.ANTIBANDING_AUTO);</span></span><br><span class="line">		<span class="comment">//parmeters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);</span></span><br><span class="line">		<span class="comment">//parameters.setSceneMode(Camera.Parameters.SCENE_MODE_AUTO);</span></span><br><span class="line">		<span class="comment">//parameters.setColorEffect(Camera.Parameters.EFFECT_NONE);</span></span><br><span class="line">		mCamera.setParameters(parameters);</span><br><span class="line">	&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (mCamera != <span class="literal">null</span>) &#123;</span><br><span class="line">		mWidth = mCamera.getParameters().getPreviewSize().width;</span><br><span class="line">		mHeight = mCamera.getParameters().getPreviewSize().height;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> mCamera;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>摄像头开始预览时：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">onPreview</span><span class="params">(<span class="type">byte</span>[] data, <span class="type">int</span> width, <span class="type">int</span> height, <span class="type">int</span> format, <span class="type">long</span> timestamp)</span> &#123;</span><br><span class="line">    <span class="comment">//获取摄像头的帧数据，该数据为NV21格式 byte数组</span></span><br><span class="line">    <span class="comment">//调用FT人脸追踪引擎的人脸特征查明方法，结果保存到List&lt;AFT_FSDKFace&gt; result</span></span><br><span class="line">	<span class="type">AFT_FSDKError</span> <span class="variable">err</span> <span class="operator">=</span> engine.AFT_FSDK_FaceFeatureDetect(data, width, height, AFT_FSDKEngine.CP_PAF_NV21, result);</span><br><span class="line">	Log.d(TAG, <span class="string">&quot;AFT_FSDK_FaceFeatureDetect =&quot;</span> + err.getCode());</span><br><span class="line">	Log.d(TAG, <span class="string">&quot;Face=&quot;</span> + result.size());</span><br><span class="line">	<span class="keyword">for</span> (AFT_FSDKFace face : result) &#123;</span><br><span class="line">		Log.d(TAG, <span class="string">&quot;Face:&quot;</span> + face.toString());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (mImageNV21 == <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> (!result.isEmpty()) &#123;</span><br><span class="line">		    <span class="comment">//追踪到人脸数据，取出当前追踪的人脸，取出当前帧的NV21数据（用于人脸识别）</span></span><br><span class="line">			mAFT_FSDKFace = result.get(<span class="number">0</span>).clone();</span><br><span class="line">			mImageNV21 = data.clone();</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (!isPostted) &#123;</span><br><span class="line">                                <span class="comment">//隐藏人脸信息的提示</span></span><br><span class="line">				mHandler.removeCallbacks(hide);</span><br><span class="line">				mHandler.postDelayed(hide, <span class="number">2000</span>);</span><br><span class="line">				isPostted = <span class="literal">true</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//copy rects  取出人脸追踪的Rect</span></span><br><span class="line">	Rect[] rects = <span class="keyword">new</span> <span class="title class_">Rect</span>[result.size()];</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; result.size(); i++) &#123;</span><br><span class="line">		rects[i] = <span class="keyword">new</span> <span class="title class_">Rect</span>(result.get(i).getRect());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//clear result.清空原来的人脸追踪结果List</span></span><br><span class="line">	result.clear();</span><br><span class="line">	<span class="comment">//return the rects for render.</span></span><br><span class="line">	<span class="keyword">return</span> rects;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>渲染之后调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onAfterRender</span><span class="params">(CameraFrameData data)</span> &#123;</span><br><span class="line">	    <span class="comment">//在该surfaceview上画方块，这里的data就是上一个方法中的返回值 return rects;</span></span><br><span class="line">		mGLSurfaceView.getGLES2Render().draw_rect((Rect[])data.getParams(), Color.GREEN, <span class="number">2</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="第二步："><a href="#第二步：" class="headerlink" title="第二步："></a>第二步：</h3><p>使用 FR 人脸识别引擎识别人脸信息，如果你已经浏览了上一步的代码，你会发现这一行关键代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!result.isEmpty()) &#123;</span><br><span class="line">		    <span class="comment">//追踪到人脸数据，取出当前追踪的人脸，取出当前帧的NV21数据（用于人脸识别）</span></span><br><span class="line">			mAFT_FSDKFace = result.get(<span class="number">0</span>).clone();</span><br><span class="line">			mImageNV21 = data.clone();</span><br><span class="line">		&#125; </span><br></pre></td></tr></table></figure>
+<p>当 FT 人脸追踪引擎识别出人脸信息时，我们将当前帧的人脸信息集合放在 <code>mAFT_FSDKFace</code> 当前帧的 NV21 格式 byte 数组放在 <code>mImageNV21</code> 中，有了长两个关键数据，联系我们的上一篇文章你大概知道我们可以用他们来做什么了吧？<br>上次我们已经介绍过<br> <code>AFR_FSDK_ExtractFRFeature</code> 特征提取接口，我们就不再赘述了。</p>
+<p>流程是这样的 <strong>提取图片中的人脸</strong> → <strong>与我们已经注册过得特征集合进行特征匹配</strong> → <strong>匹配程度最高的作为最终识别结果</strong></p>
+<p>这一过程是放在一个子线程中运行的，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//人脸识别线程</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">FRAbsLoop</span> <span class="keyword">extends</span> <span class="title class_">AbsLoop</span> &#123;</span><br><span class="line">	<span class="type">AFR_FSDKVersion</span> <span class="variable">version</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AFR_FSDKVersion</span>();</span><br><span class="line">	<span class="type">AFR_FSDKEngine</span> <span class="variable">engine</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AFR_FSDKEngine</span>(); <span class="comment">//人脸识别引擎</span></span><br><span class="line">	<span class="type">AFR_FSDKFace</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AFR_FSDKFace</span>(); <span class="comment">//人脸特征</span></span><br><span class="line">    <span class="comment">//全部已经保存的人脸特征集合</span></span><br><span class="line">	List&lt;FaceDB.FaceRegist&gt; mResgist = ((Application)DetecterActivity.<span class="built_in">this</span>.getApplicationContext()).mFaceDB.mRegister;</span><br><span class="line">	List&lt;ASAE_FSDKFace&gt; face1 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();<span class="comment">//年龄识别结果</span></span><br><span class="line">	List&lt;ASGE_FSDKFace&gt; face2 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();<span class="comment">//性别识别结果</span></span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setup</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="type">AFR_FSDKError</span> <span class="variable">error</span> <span class="operator">=</span> engine.AFR_FSDK_InitialEngine(FaceDB.appid, FaceDB.fr_key);   <span class="comment">//初始化人脸识别引擎</span></span><br><span class="line">		Log.d(TAG, <span class="string">&quot;AFR_FSDK_InitialEngine = &quot;</span> + error.getCode());</span><br><span class="line">		error = engine.AFR_FSDK_GetVersion(version);</span><br><span class="line">		Log.d(TAG, <span class="string">&quot;FR=&quot;</span> + version.toString() + <span class="string">&quot;,&quot;</span> + error.getCode()); <span class="comment">//(210, 178 - 478, 446), degree = 1　780, 2208 - 1942, 3370</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">loop</span><span class="params">()</span> &#123;</span><br><span class="line">	    <span class="comment">//当人脸追踪FT引擎获取到人脸后，该数据不为null</span></span><br><span class="line">		<span class="keyword">if</span> (mImageNV21 != <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">final</span> <span class="type">int</span> <span class="variable">rotate</span> <span class="operator">=</span> mCameraRotate;</span><br><span class="line">			<span class="type">long</span> <span class="variable">time</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">			<span class="comment">//FR引擎人脸特征提取</span></span><br><span class="line">			<span class="type">AFR_FSDKError</span> <span class="variable">error</span> <span class="operator">=</span> engine.AFR_FSDK_ExtractFRFeature(mImageNV21, mWidth, mHeight, AFR_FSDKEngine.CP_PAF_NV21, mAFT_FSDKFace.getRect(), mAFT_FSDKFace.getDegree(), result);</span><br><span class="line">			Log.d(TAG, <span class="string">&quot;AFR_FSDK_ExtractFRFeature cost :&quot;</span> + (System.currentTimeMillis() - time) + <span class="string">&quot;ms&quot;</span>);</span><br><span class="line">			Log.d(TAG, <span class="string">&quot;Face=&quot;</span> + result.getFeatureData()[<span class="number">0</span>] + <span class="string">&quot;,&quot;</span> + result.getFeatureData()[<span class="number">1</span>] + <span class="string">&quot;,&quot;</span> + result.getFeatureData()[<span class="number">2</span>] + <span class="string">&quot;,&quot;</span> + error.getCode());</span><br><span class="line">			<span class="comment">//特征匹配结果实例</span></span><br><span class="line">			<span class="type">AFR_FSDKMatching</span> <span class="variable">score</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AFR_FSDKMatching</span>();</span><br><span class="line">			<span class="type">float</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0.0f</span>;</span><br><span class="line">			<span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">			<span class="keyword">for</span> (FaceDB.FaceRegist fr : mResgist) &#123;</span><br><span class="line">				<span class="keyword">for</span> (AFR_FSDKFace face : fr.mFaceList) &#123;</span><br><span class="line">				    <span class="comment">//FT人脸追踪提取出的特征、for循环取出的系统中保存的特征、特征匹配结果</span></span><br><span class="line">					error = engine.AFR_FSDK_FacePairMatching(result, face, score);</span><br><span class="line">					Log.d(TAG,  <span class="string">&quot;Score:&quot;</span> + score.getScore() + <span class="string">&quot;, AFR_FSDK_FacePairMatching=&quot;</span> + error.getCode());</span><br><span class="line">					<span class="keyword">if</span> (max &lt; score.getScore()) &#123;</span><br><span class="line">						max = score.getScore();</span><br><span class="line">						name = fr.mName;</span><br><span class="line">					&#125; <span class="comment">//从整个集合中取出最大匹配结果与姓名</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//age &amp; gender</span></span><br><span class="line">			face1.clear();</span><br><span class="line">			face2.clear();</span><br><span class="line">			face1.add(<span class="keyword">new</span> <span class="title class_">ASAE_FSDKFace</span>(mAFT_FSDKFace.getRect(), mAFT_FSDKFace.getDegree()));</span><br><span class="line">			face2.add(<span class="keyword">new</span> <span class="title class_">ASGE_FSDKFace</span>(mAFT_FSDKFace.getRect(), mAFT_FSDKFace.getDegree()));</span><br><span class="line">			<span class="type">ASAE_FSDKError</span> <span class="variable">error1</span> <span class="operator">=</span> mAgeEngine.ASAE_FSDK_AgeEstimation_Image(mImageNV21, mWidth, mHeight, AFT_FSDKEngine.CP_PAF_NV21, face1, ages);</span><br><span class="line">			<span class="type">ASGE_FSDKError</span> <span class="variable">error2</span> <span class="operator">=</span> mGenderEngine.ASGE_FSDK_GenderEstimation_Image(mImageNV21, mWidth, mHeight, AFT_FSDKEngine.CP_PAF_NV21, face2, genders);</span><br><span class="line">			Log.d(TAG, <span class="string">&quot;ASAE_FSDK_AgeEstimation_Image:&quot;</span> + error1.getCode() + <span class="string">&quot;,ASGE_FSDK_GenderEstimation_Image:&quot;</span> + error2.getCode());</span><br><span class="line">			Log.d(TAG, <span class="string">&quot;age:&quot;</span> + ages.get(<span class="number">0</span>).getAge() + <span class="string">&quot;,gender:&quot;</span> + genders.get(<span class="number">0</span>).getGender());</span><br><span class="line">			<span class="keyword">final</span> <span class="type">String</span> <span class="variable">age</span> <span class="operator">=</span> ages.get(<span class="number">0</span>).getAge() == <span class="number">0</span> ? <span class="string">&quot;年龄未知&quot;</span> : ages.get(<span class="number">0</span>).getAge() + <span class="string">&quot;岁&quot;</span>;</span><br><span class="line">			<span class="keyword">final</span> <span class="type">String</span> <span class="variable">gender</span> <span class="operator">=</span> genders.get(<span class="number">0</span>).getGender() == -<span class="number">1</span> ? <span class="string">&quot;性别未知&quot;</span> : (genders.get(<span class="number">0</span>).getGender() == <span class="number">0</span> ? <span class="string">&quot;男&quot;</span> : <span class="string">&quot;女&quot;</span>);</span><br><span class="line">			</span><br><span class="line">			<span class="comment">//crop  截取该人脸信息</span></span><br><span class="line">			<span class="type">byte</span>[] data = mImageNV21;</span><br><span class="line">			<span class="type">YuvImage</span> <span class="variable">yuv</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">YuvImage</span>(data, ImageFormat.NV21, mWidth, mHeight, <span class="literal">null</span>);</span><br><span class="line">			<span class="type">ExtByteArrayOutputStream</span> <span class="variable">ops</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExtByteArrayOutputStream</span>();</span><br><span class="line">			<span class="comment">//传入要截取的Rect范围</span></span><br><span class="line">			yuv.compressToJpeg(mAFT_FSDKFace.getRect(), <span class="number">80</span>, ops);</span><br><span class="line">			<span class="keyword">final</span> <span class="type">Bitmap</span> <span class="variable">bmp</span> <span class="operator">=</span> BitmapFactory.decodeByteArray(ops.getByteArray(), <span class="number">0</span>, ops.getByteArray().length);</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				ops.close();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (max &gt; <span class="number">0.6f</span>) &#123;</span><br><span class="line">				<span class="comment">//fr success.置信度大于0.6</span></span><br><span class="line">				<span class="keyword">final</span> <span class="type">float</span> <span class="variable">max_score</span> <span class="operator">=</span> max;</span><br><span class="line">				Log.d(TAG, <span class="string">&quot;fit Score:&quot;</span> + max + <span class="string">&quot;, NAME:&quot;</span> + name);</span><br><span class="line">				<span class="keyword">final</span> <span class="type">String</span> <span class="variable">mNameShow</span> <span class="operator">=</span> name;</span><br><span class="line">				mHandler.removeCallbacks(hide);</span><br><span class="line">				mHandler.post(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">					<span class="meta">@Override</span></span><br><span class="line">					<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">						mTextView.setAlpha(<span class="number">1.0f</span>);</span><br><span class="line">						mTextView.setText(mNameShow);</span><br><span class="line">						mTextView.setTextColor(Color.RED);</span><br><span class="line">						mTextView1.setVisibility(View.VISIBLE);</span><br><span class="line">						mTextView1.setText(<span class="string">&quot;置信度：&quot;</span> + (<span class="type">float</span>)((<span class="type">int</span>)(max_score * <span class="number">1000</span>)) / <span class="number">1000.0</span>);</span><br><span class="line">						mTextView1.setTextColor(Color.RED);</span><br><span class="line">						mImageView.setRotation(rotate);</span><br><span class="line">						<span class="keyword">if</span> (mCameraMirror) &#123;</span><br><span class="line">							mImageView.setScaleY(-<span class="number">1</span>);</span><br><span class="line">						&#125;</span><br><span class="line">						mImageView.setImageAlpha(<span class="number">255</span>);</span><br><span class="line">						mImageView.setImageBitmap(bmp);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">final</span> <span class="type">String</span> <span class="variable">mNameShow</span> <span class="operator">=</span> <span class="string">&quot;未识别&quot;</span>;</span><br><span class="line">				DetecterActivity.<span class="built_in">this</span>.runOnUiThread(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">					<span class="meta">@Override</span></span><br><span class="line">					<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">						mTextView.setAlpha(<span class="number">1.0f</span>);</span><br><span class="line">						mTextView1.setVisibility(View.VISIBLE);</span><br><span class="line">						mTextView1.setText( gender + <span class="string">&quot;,&quot;</span> + age);</span><br><span class="line">						mTextView1.setTextColor(Color.RED);</span><br><span class="line">						mTextView.setText(mNameShow);</span><br><span class="line">						mTextView.setTextColor(Color.RED);</span><br><span class="line">						mImageView.setImageAlpha(<span class="number">255</span>);</span><br><span class="line">						mImageView.setRotation(rotate);</span><br><span class="line">						<span class="keyword">if</span> (mCameraMirror) &#123;</span><br><span class="line">							mImageView.setScaleY(-<span class="number">1</span>);</span><br><span class="line">						&#125;</span><br><span class="line">						mImageView.setImageBitmap(bmp);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line">			&#125;</span><br><span class="line">			mImageNV21 = <span class="literal">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">over</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="type">AFR_FSDKError</span> <span class="variable">error</span> <span class="operator">=</span> engine.AFR_FSDK_UninitialEngine();</span><br><span class="line">		Log.d(TAG, <span class="string">&quot;AFR_FSDK_UninitialEngine : &quot;</span> + error.getCode());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码还是很简单的，关键部分我都已经加了注释，相比大家看了也都能理解。</p>
+<p>这里在废话几句：FD与FT引擎功能大致相同，完成的都是从一个 NV21 格式的图片 byte 数组中检测识别出人脸的位置 Rect 与角度信息。在获得这个信息后，我们调用FR人脸识别引擎识别出特征值信息，然后使用<code>AFR_FSDK_FacePairMatching</code>特征值匹配方法，一一的与我们程序中原来存储的人脸特征进行匹配，取出其中匹配值最高的那组特征值，获取该特征值的注册名。</p>
+<p>到这里整个人脸识别的流程我们就都已经清晰的掌握了，如果没有看明白，就下载我加过注释的源码，再仔细看看代码是如何实现的。</p>
+<p>本文有可能是这次文章的最后一篇了，但我标题上写的是<strong>中</strong>，下一片文章可能会介绍下我在实际使用虹软人脸识别 SDK 中遇到的问题以及解决方法（目前还没投入到项目中使用）。如果没有遇到问题的话，本文就此全文终。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ArcFace/" rel="tag"># ArcFace</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/05/24/Android-%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B-%EF%BC%88%E4%B8%8A%EF%BC%89/" rel="prev" title="Android 人脸识别了解一下 （上）">
+                  <i class="fa fa-angle-left"></i> Android 人脸识别了解一下 （上）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/06/08/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90%E5%B9%B6%E4%BD%BF%E7%94%A8Kotlin-%E4%B8%8E%E7%A9%BA%E5%AE%89%E5%85%A8-%E5%88%9D%E8%AF%86/" rel="next" title="在项目中集成并使用Kotlin 与空安全- 初识">
+                  在项目中集成并使用Kotlin 与空安全- 初识 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

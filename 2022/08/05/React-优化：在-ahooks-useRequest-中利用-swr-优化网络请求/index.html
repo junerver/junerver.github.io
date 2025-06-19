@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="携手创作，共同成长！这是我参与「掘金日新计划 · 8 月更文挑战」的第8天，点击查看活动详情   这是我关于 ahooks - useRequest 系列文章的第三篇，前两篇请查看：  使用 ahooks 中的 useRequest 轻松管理React中的网络请求 使用 ahooks - useRequest 轻松实现乐观更新 React 优化：在 ahooks - useRequest 中利用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求">
+<meta property="og:url" content="https://junerver.xyz/2022/08/05/React-%E4%BC%98%E5%8C%96%EF%BC%9A%E5%9C%A8-ahooks-useRequest-%E4%B8%AD%E5%88%A9%E7%94%A8-swr-%E4%BC%98%E5%8C%96%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="携手创作，共同成长！这是我参与「掘金日新计划 · 8 月更文挑战」的第8天，点击查看活动详情   这是我关于 ahooks - useRequest 系列文章的第三篇，前两篇请查看：  使用 ahooks 中的 useRequest 轻松管理React中的网络请求 使用 ahooks - useRequest 轻松实现乐观更新 React 优化：在 ahooks - useRequest 中利用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="og:image" content="https://junerver.xyz/2">
+<meta property="og:image" content="https://junerver.xyz/3">
+<meta property="og:image" content="https://junerver.xyz/4">
+<meta property="article:published_time" content="2022-08-05T04:08:10.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.475Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="ahooks">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2022/08/05/React-%E4%BC%98%E5%8C%96%EF%BC%9A%E5%9C%A8-ahooks-useRequest-%E4%B8%AD%E5%88%A9%E7%94%A8-swr-%E4%BC%98%E5%8C%96%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2022/08/05/React-%E4%BC%98%E5%8C%96%EF%BC%9A%E5%9C%A8-ahooks-useRequest-%E4%B8%AD%E5%88%A9%E7%94%A8-swr-%E4%BC%98%E5%8C%96%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/","path":"2022/08/05/React-优化：在-ahooks-useRequest-中利用-swr-优化网络请求/","title":"React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-swr"><span class="nav-number">1.</span> <span class="nav-text">什么是 swr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-swr"><span class="nav-number">2.</span> <span class="nav-text">使用 swr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%BC%93%E5%AD%98%E6%97%B6%E9%97%B4%E4%B8%8E%E6%96%B0%E9%B2%9C%E6%97%B6%E9%97%B4"><span class="nav-number">3.</span> <span class="nav-text">配置缓存时间与新鲜时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB"><span class="nav-number">4.</span> <span class="nav-text">数据共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E7%BC%93%E5%AD%98"><span class="nav-number">5.</span> <span class="nav-text">删除缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/08/05/React-%E4%BC%98%E5%8C%96%EF%BC%9A%E5%9C%A8-ahooks-useRequest-%E4%B8%AD%E5%88%A9%E7%94%A8-swr-%E4%BC%98%E5%8C%96%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-08-05 12:08:10" itemprop="dateCreated datePublished" datetime="2022-08-05T12:08:10+08:00">2022-08-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">Web前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>携手创作，共同成长！这是我参与「掘金日新计划 · 8 月更文挑战」的第8天，<a target="_blank" rel="noopener" href="https://juejin.cn/post/7123120819437322247">点击查看活动详情</a></p>
+<blockquote>
+<p> 这是我关于 ahooks - useRequest 系列文章的第三篇，前两篇请查看：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7125680968559493157">使用 ahooks 中的 useRequest 轻松管理React中的网络请求</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7125949508185227277">使用 ahooks - useRequest 轻松实现乐观更新</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7128179210039853070">React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求</a></li>
+</ul>
+</blockquote>
+<p>通过前两篇文章我们已经基本了解了关于<strong>服务端状态管理</strong>的概念，也通过 useRequest 体验了一系列有趣的功能，认识到了其强大之处。</p>
+<p>本文我们将继续介绍 useRequest 的进阶用法，主要是：swr 。</p>
+<span id="more"></span>
+
+<h3 id="什么是-swr"><a href="#什么是-swr" class="headerlink" title="什么是 swr"></a>什么是 swr</h3><p>什么是 swr？我们这里引用一段 SWR 官方的介绍：</p>
+<blockquote>
+<p>The name “SWR” is derived from <code>stale-while-revalidate</code>, a HTTP cache invalidation strategy popularized by <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc5861">HTTP RFC 5861</a>. SWR is a strategy to first return the data from cache (stale), then send the fetch request (revalidate), and finally come with the up-to-date data.</p>
+<p>“SWR”这个名称来源于 stale-while-revalidate，这是一种由 HTTP RFC 5861 推广的 HTTP 缓存失效策略。SWR 是一种首先从<strong>缓存中返回数据</strong>（stale），然后发送 fetch 请求（revalidate）的策略，最终使用新的数据。</p>
+</blockquote>
+<p>简而言之，当我们的某个请求存在缓存时，我们优先使用缓存数据展示在页面上，<strong>同时在背后发出请求</strong>，请求成功后再使用最新获取的数据来更新UI。</p>
+<p>这种方式可以提升用户体验，使得 UI 界面在用户眼中总是有内容有数据的。在大部分场景中，当频繁的页面打开、回退时，用户并不在意其中的数据实时性。</p>
+<p>很多数据甚至本就不具备实时性，这样的数据如果可以缓存，无疑可以减少 loading 时长。</p>
+<h3 id="使用-swr"><a href="#使用-swr" class="headerlink" title="使用 swr"></a>使用 swr</h3><p>在 useRequest 中也是具备了 swr 的能力的，使用起来也是十分简单，最简单的方式就是配置一个 <code>options.cacheKey</code>，是的，你只需要配置这个 cacheKey 就可以让你的请求具备 swr 的能力</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 请求知乎专栏的接口</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">getZhuhuColum</span> = <span class="keyword">async</span> (<span class="params">id</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> url = <span class="string">`/api/columns/<span class="subst">$&#123;id&#125;</span>`</span>;</span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(url);</span><br><span class="line">    <span class="keyword">let</span> result = <span class="keyword">await</span> res.<span class="title function_">json</span>();</span><br><span class="line">    result = &#123;</span><br><span class="line">        <span class="attr">title</span>: result.<span class="property">title</span>,</span><br><span class="line">        <span class="comment">// 通过时间戳我们可以看出数据是否为缓存</span></span><br><span class="line">        <span class="attr">time</span>: <span class="title class_">Date</span>.<span class="title function_">parse</span>(<span class="keyword">new</span> <span class="title class_">Date</span>())</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">Zhihu</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; data, loading &#125; = <span class="title function_">useRequest</span>(getZhuhuColum, &#123;</span><br><span class="line">        <span class="attr">defaultParams</span>: [<span class="string">&#x27;feweekly&#x27;</span>],</span><br><span class="line">        <span class="comment">// 配置cacheKey</span></span><br><span class="line">        <span class="attr">cacheKey</span>: <span class="string">&#x27;columns/feweekly&#x27;</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">span</span>&gt;</span>isLoading: &#123;String(loading)&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">br</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">            &#123;data &amp;&amp; <span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;JSON.stringify(data)&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在我们的接口已经自动的具备了缓存，每次发起请求时，会优先从缓存中获取数据用于显示，当接口返回后，才会使用新的数据更新 UI 与缓存。</p>
+<p>Gif效果对比：</p>
+<p>未使用 swr，每次都要等待重新请求后才能填充数据：</p>
+<p><img src="/1" alt="未使用cacheKey.gif"></p>
+<p>使用 swr，先使用缓存数据填充，等到新数据请求完成后再更新：</p>
+<p><img src="/2" alt="使用cacheKey.gif"></p>
+<p>可以清楚的看出，未使用时，每次请求都是先 loading 然后显示内容。</p>
+<p>而使用 swr 后，第一次也是先loading 然后显示内容，再之后的每次都是先使用缓存，再更新UI。</p>
+<h3 id="配置缓存时间与新鲜时间"><a href="#配置缓存时间与新鲜时间" class="headerlink" title="配置缓存时间与新鲜时间"></a>配置缓存时间与新鲜时间</h3><p><code>options.cacheTime</code> 可以配置缓存时间，超时后会移除缓存，单位为毫秒，默认值是 300000 （5分钟）。该参数设置主要针对的是，两次请求之间缓存有效期，例如我们设置 <code>options.cacheTime</code> 为 1000，但是我们两次触发请求的间隔为 2 秒，那么表现出来的效果等同于没有配置缓存。</p>
+<p><code>options.staleTime</code> 可以配置数据<strong>保鲜时间</strong>，单位为毫秒，默认值 0 。在保鲜期内的我们认为数据是可靠的，即使请求被重新触发，也<strong>不会在背后发起真实的请求</strong>，直到过了<strong>数据保鲜期</strong>才会真正的发送请求。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; data, loading &#125; = <span class="title function_">useRequest</span>(getZhuhuColum, &#123;</span><br><span class="line">   <span class="attr">defaultParams</span>: [<span class="string">&#x27;feweekly&#x27;</span>],</span><br><span class="line">   <span class="attr">cacheKey</span>: <span class="string">&#x27;columns/feweekly&#x27;</span>,</span><br><span class="line">   <span class="attr">staleTime</span>: <span class="number">5000</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里我录制了一个Gif ，可以很好的展示这一点：</p>
+<p><img src="/3" alt="设置数据保鲜期.gif"></p>
+<p>我们可以看到在第一条数据发送后，尽管我们多次重新挂载组件触发请求，但是都没有真正发起请求，使用的都是缓存中的数据，直达过了<strong>数据保鲜期</strong>后，才发出了第二条请求。</p>
+<h3 id="数据共享"><a href="#数据共享" class="headerlink" title="数据共享"></a>数据共享</h3><p>我们使用 swr 时还有一点需要注意，那就是数据共享，同一个 cacheKey 的数据时全局共享的，这使得：</p>
+<ul>
+<li><p>请求 Promis 共享，多个具有相同 cacheKey 的请求，同时只会有一个发起请求，后发起的将会共用该Promise<br><img src="/4" alt="image.png"><br>从这张图片也能看出，两个组件同时发起了相同的请求，实际只发出了一次真正的请求。</p>
+</li>
+<li><p>当这些请求中的某一个<strong>重新发起</strong>更新了数据后，其他的也会一起变更，就如同我们使用 redux 进行全局状态管理的效果一样。</p>
+<p>注意这里无论是 mutate 、run、还是 refresh ，只要任意某个请求触发了数据状态的变化，那么全局内数据状态都会变化。</p>
+</li>
+</ul>
+<p>基于上面两点，我们一定要注意 cacheKey 的设置，一般的我们以 <code>接口名称+参数</code> 的拼接字符串作为 key，如果你用过 react-query，就会发现这和 RQ 中的 QueryKey 是一个概念（但是这里类型只能是字符串，RQ支持的类型更多)。</p>
+<h3 id="删除缓存"><a href="#删除缓存" class="headerlink" title="删除缓存"></a>删除缓存</h3><p>既然由缓存，那自然也就有缓存的移除，ahooks 提供了一个函数，专门用于移除指定 cacheKey 的缓存数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useRequest, clearCache &#125; <span class="keyword">from</span> <span class="string">&#x27;ahooks&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要移除时,传入指定的cacheKey即可，非常方便</span></span><br><span class="line"><span class="title function_">clearCache</span>(<span class="string">&#x27;cacheKey&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>什么情况我们需要使用这个函数？</p>
+<p>举个例子，我们访问了某个列表页面，请求了一次列表（使用了cacheKey缓存），然后我们在其中的一项的详情页面，删除了这一项。</p>
+<p>这时如果此时还处于我们设置的数据保鲜期<code>options.staleTime</code>内，再回到列表页面时，是不会触发请求的，会直接使用就的缓存（此时已经减少了一项），这样显然是很差的体验。</p>
+<p>这时我们就可以在删除事件中调用删除缓存函数，这样再回到列表页面时，由于没有缓存数据，会再次发起请求，使用新的数据！</p>
+<p><code>clearCache</code> 函数还可以同时删除多个，只需要传入 cacheKey 的数组即可</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过三篇文章的介绍，想必大家对<strong>服务端状态管理</strong>这个概念已经有了更为深刻的认识了吧，如果你觉得本文有帮助到你，欢迎点赞、收藏，更多有关 React 文章，请关注我的专栏。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/ahooks/" rel="tag"># ahooks</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/08/02/React-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%8E%E7%8E%B0%E5%9C%A8%E5%BC%80%E5%A7%8B%E6%8B%A5%E6%8A%B1redux-toolkit/" rel="prev" title="React 状态管理：从现在开始拥抱redux-toolkit">
+                  <i class="fa fa-angle-left"></i> React 状态管理：从现在开始拥抱redux-toolkit
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/" rel="next" title="使用 ahooks 中的 useRequest 轻松管理React中的网络请求">
+                  使用 ahooks 中的 useRequest 轻松管理React中的网络请求 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

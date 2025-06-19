@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="kotlin 扩展了很多的 to… 方法  映射函数： map&#123;(T) -&gt; R&#125;根据传入的转换函数将原有的集合转换成一个新的 List 集合">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin-Koans 学习笔记-集合操作">
+<meta property="og:url" content="https://junerver.xyz/2018/12/03/Kotlin-Koans-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="kotlin 扩展了很多的 to… 方法  映射函数： map&#123;(T) -&gt; R&#125;根据传入的转换函数将原有的集合转换成一个新的 List 集合">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="article:published_time" content="2018-12-03T12:30:00.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.450Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/1">
+
+
+<link rel="canonical" href="https://junerver.xyz/2018/12/03/Kotlin-Koans-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/12/03/Kotlin-Koans-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C/","path":"2018/12/03/Kotlin-Koans-学习笔记-集合操作/","title":"Kotlin-Koans 学习笔记-集合操作"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kotlin-Koans 学习笔记-集合操作 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4%E5%87%BD%E6%95%B0%EF%BC%9A-filter-T-Boolean-%E6%A0%B9%E6%8D%AE%E4%BC%A0%E5%85%A5%E7%9A%84%E5%88%A4%E6%96%AD%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84-List-%E9%9B%86%E5%90%88"><span class="nav-number">1.</span> <span class="nav-text">过滤函数： filter{(T) -&gt; Boolean} 根据传入的判断函数返回一个新的 List 集合123456fun Shop.getCustomersFrom(city: City): List&lt;Customer&gt; {    &#x2F;&#x2F; Return a list of the customers who live in the given city    return this.customers.filter {        it.city &#x3D;&#x3D; city    }}</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E9%A6%96%E9%A1%B9%E5%87%BD%E6%95%B0%EF%BC%9AfirstOrNull-T-Boolean-%E8%BF%94%E5%9B%9E%E5%AD%90%E9%9B%86%E4%B8%AD%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%BB%A1%E8%B6%B3%E6%9D%A1%E4%BB%B6%E7%9A%84%E9%A1%B9%EF%BC%88-T-%E6%88%96%E8%80%85-null%EF%BC%89%E7%AD%89%E5%90%8C%E4%BA%8E"><span class="nav-number">2.</span> <span class="nav-text">判断首项函数：firstOrNull{(T)-&gt;Boolean}  返回子集中第一个满足条件的项（ T 或者 null）等同于12var r &#x3D; list.filter{}return if (r.size&gt;0) r.get(0) else null</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E6%88%91%E4%BB%AC%E7%9A%84%E4%BC%A0%E5%85%A5%E5%8F%82%E6%95%B0%E6%98%AF%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7%EF%BC%8C%E4%BD%86%E6%98%AF%E6%88%91%E4%BB%AC%E6%9C%80%E7%BB%88%E6%83%B3%E8%A6%81%E7%9A%84%E7%BB%93%E6%9E%9C%E6%98%AF%E7%94%A8%E6%88%B7%E5%85%A8%E9%83%A8%E8%AE%A2%E5%8D%95%EF%BC%88List%EF%BC%89%E4%B8%AD%E7%9A%84%E5%85%A8%E9%83%A8%E5%95%86%E5%93%81%E7%9A%84%E9%9B%86%E5%90%88%EF%BC%8C%E8%BF%99%E6%97%B6%E6%88%91%E4%BB%AC%E5%B0%B1%E9%9C%80%E8%A6%81flatMap-%E9%93%BA%E5%B9%B3%E3%80%82"><span class="nav-number">3.</span> <span class="nav-text">如果我们的传入参数是一个用户，但是我们最终想要的结果是用户全部订单（List）中的全部商品的集合，这时我们就需要flatMap 铺平。123456789101112131415161718192021val Customer.orderedProducts: Set&lt;Product&gt; get() {    &#x2F;&#x2F; Return all products this customer has ordered    &#x2F;&#x2F;返回用户全部订单中所有的商品种类    return orders.flatMap {        it.products    }.toSet()}val Shop.allOrderedProducts: Set&lt;Product&gt; get() {    &#x2F;&#x2F; Return all products that were ordered by at least one customer    &#x2F;&#x2F;返回商店中全部的至少被一位用户下单过的商品   customers.flatMap {        it.orders    }.flatMap {        it.products    }.toSet()    return customers.flatMap {        it.orderedProducts    }.toSet()}</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%96%E6%9C%80%E5%A4%A7%E5%80%BC%E5%87%BD%E6%95%B0%EF%BC%9Amax-%E3%80%81maxBy-%E6%A0%B9%E6%8D%AE%E4%BC%A0%E5%85%A5%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8%E6%89%BE%E5%87%BA%E9%9B%86%E5%90%88%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E6%88%90%E5%91%98"><span class="nav-number">4.</span> <span class="nav-text">取最大值函数：max()、maxBy{} 根据传入的选择器找出集合中最大的成员12345678fun Customer.getMostExpensiveOrderedProduct(): Product? {    &#x2F;&#x2F; Return the most expensive product which has been ordered    return orders.flatMap {        it.products    &#x2F;&#x2F;订单铺平成商品    }.maxBy {        it.price &#x2F;&#x2F;取出商品中价格最大的    }}</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E5%87%BD%E6%95%B0%EF%BC%9AsortedBy-%E6%A0%B9%E6%8D%AE%E4%BC%A0%E5%85%A5%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8%E5%8D%87%E5%BA%8F%E6%8E%92%E5%88%97"><span class="nav-number">5.</span> <span class="nav-text">排序函数：sortedBy{} 根据传入的选择器升序排列123456fun Shop.getCustomersSortedByNumberOfOrders(): List&lt;Customer&gt; {    &#x2F;&#x2F; Return a list of customers, sorted by the ascending number of orders they made    return this.customers.sortedBy {        it.orders.size &#x2F;&#x2F;按照客户的订单数升序排列    }}</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B1%82%E5%92%8C%E5%87%BD%E6%95%B0%EF%BC%9Asum-%E8%BF%94%E5%9B%9EInt%E3%80%81-sumBy-%E8%BF%94%E5%9B%9E-Int%E3%80%81-sumByDouble-%E8%BF%94%E5%9B%9E-Double"><span class="nav-number">6.</span> <span class="nav-text">求和函数：sum()返回Int、 sumBy{}返回 Int、 sumByDouble{} 返回 Double 123456789101112131415161718fun Customer.getTotalOrderPrice(): Double {    &#x2F;&#x2F; Return the sum of prices of all products that a customer has ordered.    &#x2F;&#x2F; Note: a customer may order the same product for several times.    orders.flatMap {        it.products    }.sumByDouble {        it.price    }    orders.flatMap { it.products }.fold(0.0,{acc, product -&gt;            acc+product.price    })    var result &#x3D; 0.0    orders.flatMap { it.products }.forEach {        result+&#x3D;it.price    }    return  result}</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E5%87%BD%E6%95%B0-groupBy-%E6%8C%89%E7%85%A7%E4%BC%A0%E5%85%A5%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8%E5%B0%86%E9%9B%86%E5%90%88%E5%AF%B9%E8%B1%A1%E5%88%86%E7%BB%84%E8%BF%94%E5%9B%9EMap"><span class="nav-number">7.</span> <span class="nav-text">分组函数 groupBy{} 按照传入的选择器将集合对象分组返回Map&lt;K, List&lt;T&gt;&gt;1234567891011121314fun Shop.groupCustomersByCity(): Map&lt;City, List&lt;Customer&gt;&gt; {    &#x2F;&#x2F; fun Shop.groupCustomersByCity(): Map&lt;City, List&lt;Customer&gt;&gt; {    &#x2F;&#x2F; Return a map of the customers living in each city    &#x2F;&#x2F;不使用groupBy函数的写法    val map &#x3D; mutableMapOf&lt;City,List&lt;Customer&gt;&gt;()    val citys &#x3D; this.customers.map {        it.city    }.toSet().map {         map.put(it, this.getCustomersFrom(it))    }&#x2F;&#x2F;    return map &#x2F;&#x2F;效果等同    return this.customers.groupBy { it.city }}</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/12/03/Kotlin-Koans-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kotlin-Koans 学习笔记-集合操作 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kotlin-Koans 学习笔记-集合操作
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-03 20:30:00" itemprop="dateCreated datePublished" datetime="2018-12-03T20:30:00+08:00">2018-12-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>kotlin 扩展了很多的 to… 方法</p>
+<hr>
+<p>映射函数： <code>map&#123;(T) -&gt; R&#125;</code><br>根据传入的转换函数将原有的集合转换成一个新的 List 集合</p>
+<span id="more"></span>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Shop.<span class="title">getCitiesCustomersAreFrom</span><span class="params">()</span></span>: Set&lt;City&gt; &#123;</span><br><span class="line">    <span class="comment">// Return the set of cities the customers are from</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.customers.map &#123;</span><br><span class="line">        it.city</span><br><span class="line">    &#125;.toSet()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="过滤函数：-filter-T-Boolean-根据传入的判断函数返回一个新的-List-集合"><a href="#过滤函数：-filter-T-Boolean-根据传入的判断函数返回一个新的-List-集合" class="headerlink" title="过滤函数： filter{(T) -&gt; Boolean} 根据传入的判断函数返回一个新的 List 集合"></a>过滤函数： <code>filter&#123;(T) -&gt; Boolean&#125; </code><br>根据传入的判断函数返回一个新的 List 集合<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Shop.<span class="title">getCustomersFrom</span><span class="params">(city: <span class="type">City</span>)</span></span>: List&lt;Customer&gt; &#123;</span><br><span class="line">    <span class="comment">// Return a list of the customers who live in the given city</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.customers.filter &#123;</span><br><span class="line">        it.city == city</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><p>全局判断函数：<code>all &#123;(T)-&gt;Boolean&#125; </code>返回 boolean 全部满足才返回 <code>true</code><br>等同于<code>list.size == list.filter&#123;(T)-&gt;Boolean&#125;.size</code></p>
+<p>包含判断函数：<code>any &#123;(T)-&gt;Boolean&#125;</code>  返回 <code>boolean</code> 只要满足lambda即返回 <code>true</code><br>等同于：<code>list.fliter&#123;(T)-&gt;Boolean&#125;.size&gt;0</code></p>
+<p>判断计数函数 <code>count&#123;(T)-&gt;Boolean&#125; </code> 返回满足条件的子集数量<br>等同于<code>list.fliter&#123;(T)-&gt;Boolean&#125;.size</code></p>
+<h2 id="判断首项函数：firstOrNull-T-Boolean-返回子集中第一个满足条件的项（-T-或者-null）等同于"><a href="#判断首项函数：firstOrNull-T-Boolean-返回子集中第一个满足条件的项（-T-或者-null）等同于" class="headerlink" title="判断首项函数：firstOrNull{(T)-&gt;Boolean}  返回子集中第一个满足条件的项（ T 或者 null）等同于"></a>判断首项函数：<code>firstOrNull&#123;(T)-&gt;Boolean&#125;</code>  返回子集中第一个满足条件的项（ T 或者 null）<br>等同于<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> r = list.filter&#123;&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">if</span> (r.size&gt;<span class="number">0</span>) r.<span class="keyword">get</span>(<span class="number">0</span>) <span class="keyword">else</span> <span class="literal">null</span></span><br></pre></td></tr></table></figure></h2><p>铺平函数：<code>flatMap</code></p>
+<h2 id="如果我们的传入参数是一个用户，但是我们最终想要的结果是用户全部订单（List）中的全部商品的集合，这时我们就需要flatMap-铺平。"><a href="#如果我们的传入参数是一个用户，但是我们最终想要的结果是用户全部订单（List）中的全部商品的集合，这时我们就需要flatMap-铺平。" class="headerlink" title="如果我们的传入参数是一个用户，但是我们最终想要的结果是用户全部订单（List）中的全部商品的集合，这时我们就需要flatMap 铺平。"></a>如果我们的传入参数是一个用户，但是我们最终想要的结果是用户全部订单（List）中的全部商品的集合，这时我们就需要<code>flatMap</code> 铺平。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> Customer.orderedProducts: Set&lt;Product&gt; <span class="keyword">get</span>() &#123;</span><br><span class="line">    <span class="comment">// Return all products this customer has ordered</span></span><br><span class="line">    <span class="comment">//返回用户全部订单中所有的商品种类</span></span><br><span class="line">    <span class="keyword">return</span> orders.flatMap &#123;</span><br><span class="line">        it.products</span><br><span class="line">    &#125;.toSet()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> Shop.allOrderedProducts: Set&lt;Product&gt; <span class="keyword">get</span>() &#123;</span><br><span class="line">    <span class="comment">// Return all products that were ordered by at least one customer</span></span><br><span class="line">    <span class="comment">//返回商店中全部的至少被一位用户下单过的商品</span></span><br><span class="line">   customers.flatMap &#123;</span><br><span class="line">        it.orders</span><br><span class="line">    &#125;.flatMap &#123;</span><br><span class="line">        it.products</span><br><span class="line">    &#125;.toSet()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> customers.flatMap &#123;</span><br><span class="line">        it.orderedProducts</span><br><span class="line">    &#125;.toSet()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h2 id="取最大值函数：max-、maxBy-根据传入的选择器找出集合中最大的成员"><a href="#取最大值函数：max-、maxBy-根据传入的选择器找出集合中最大的成员" class="headerlink" title="取最大值函数：max()、maxBy{} 根据传入的选择器找出集合中最大的成员"></a>取最大值函数：<code>max()</code>、<code>maxBy&#123;&#125;</code> 根据传入的选择器找出集合中最大的成员<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Customer.<span class="title">getMostExpensiveOrderedProduct</span><span class="params">()</span></span>: Product? &#123;</span><br><span class="line">    <span class="comment">// Return the most expensive product which has been ordered</span></span><br><span class="line">    <span class="keyword">return</span> orders.flatMap &#123;</span><br><span class="line">        it.products    <span class="comment">//订单铺平成商品</span></span><br><span class="line">    &#125;.maxBy &#123;</span><br><span class="line">        it.price <span class="comment">//取出商品中价格最大的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h2 id="排序函数：sortedBy-根据传入的选择器升序排列"><a href="#排序函数：sortedBy-根据传入的选择器升序排列" class="headerlink" title="排序函数：sortedBy{} 根据传入的选择器升序排列"></a>排序函数：<code>sortedBy&#123;&#125;</code> 根据传入的选择器升序排列<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Shop.<span class="title">getCustomersSortedByNumberOfOrders</span><span class="params">()</span></span>: List&lt;Customer&gt; &#123;</span><br><span class="line">    <span class="comment">// Return a list of customers, sorted by the ascending number of orders they made</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.customers.sortedBy &#123;</span><br><span class="line">        it.orders.size <span class="comment">//按照客户的订单数升序排列</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h2 id="求和函数：sum-返回Int、-sumBy-返回-Int、-sumByDouble-返回-Double"><a href="#求和函数：sum-返回Int、-sumBy-返回-Int、-sumByDouble-返回-Double" class="headerlink" title="求和函数：sum()返回Int、 sumBy{}返回 Int、 sumByDouble{} 返回 Double "></a>求和函数：<code>sum()</code>返回Int、 <code>sumBy&#123;&#125;</code>返回 Int、 <code>sumByDouble&#123;&#125;</code> 返回 Double<br> <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Customer.<span class="title">getTotalOrderPrice</span><span class="params">()</span></span>: <span class="built_in">Double</span> &#123;</span><br><span class="line">    <span class="comment">// Return the sum of prices of all products that a customer has ordered.</span></span><br><span class="line">    <span class="comment">// Note: a customer may order the same product for several times.</span></span><br><span class="line">    orders.flatMap &#123;</span><br><span class="line">        it.products</span><br><span class="line">    &#125;.sumByDouble &#123;</span><br><span class="line">        it.price</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    orders.flatMap &#123; it.products &#125;.fold(<span class="number">0.0</span>,&#123;acc, product -&gt;</span><br><span class="line">            acc+product.price</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">var</span> result = <span class="number">0.0</span></span><br><span class="line">    orders.flatMap &#123; it.products &#125;.forEach &#123;</span><br><span class="line">        result+=it.price</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>  result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h2 id="分组函数-groupBy-按照传入的选择器将集合对象分组返回Map"><a href="#分组函数-groupBy-按照传入的选择器将集合对象分组返回Map" class="headerlink" title="分组函数 groupBy{} 按照传入的选择器将集合对象分组返回Map&lt;K, List&lt;T&gt;&gt;"></a>分组函数 <code>groupBy&#123;&#125;</code> 按照传入的选择器将集合对象分组返回<code>Map&lt;K, List&lt;T&gt;&gt;</code><br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Shop.<span class="title">groupCustomersByCity</span><span class="params">()</span></span>: Map&lt;City, List&lt;Customer&gt;&gt; &#123;</span><br><span class="line">    <span class="comment">// fun Shop.groupCustomersByCity(): Map&lt;City, List&lt;Customer&gt;&gt; &#123;</span></span><br><span class="line">    <span class="comment">// Return a map of the customers living in each city</span></span><br><span class="line">    <span class="comment">//不使用groupBy函数的写法</span></span><br><span class="line">    <span class="keyword">val</span> map = mutableMapOf&lt;City,List&lt;Customer&gt;&gt;()</span><br><span class="line">    <span class="keyword">val</span> citys = <span class="keyword">this</span>.customers.map &#123;</span><br><span class="line">        it.city</span><br><span class="line">    &#125;.toSet().map &#123;</span><br><span class="line">         map.put(it, <span class="keyword">this</span>.getCustomersFrom(it))</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//    return map //效果等同</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.customers.groupBy &#123; it.city &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><p>折叠函数：<code>Iterable&lt;T&gt;.fold&#123;initial:R, operation: (R,T) -&gt; R&#125;</code><br><img src="/1" alt="折叠函数"></p>
+<p>将一个  <code>T</code> 的<strong>集合</strong>装换成一个 <code>R</code> ，所以这个方法被称为折叠。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Shop.<span class="title">getSetOfProductsOrderedByEachCustomer</span><span class="params">()</span></span>: Set&lt;Product&gt; &#123;</span><br><span class="line">    <span class="comment">// Return the set of products that were ordered by each of the customers</span></span><br><span class="line">    <span class="comment">//找到商店中每一个用户都下单的商品</span></span><br><span class="line">    allOrderedProducts.filter &#123; p -&gt;</span><br><span class="line">        customers.all &#123;</span><br><span class="line">            it.orders.flatMap &#123;</span><br><span class="line">                it.products</span><br><span class="line">            &#125;.any &#123;</span><br><span class="line">                it == p</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;.toSet()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> customers.fold(allOrderedProducts, &#123; orderedByAll, customer -&gt;</span><br><span class="line">        <span class="comment">//第一次调用该函数时传入值为fold函数的第一个参数 全部被下单的产品集合</span></span><br><span class="line">        orderedByAll.intersect( <span class="comment">//交集运算</span></span><br><span class="line">                customer.orders.flatMap &#123;</span><br><span class="line">                    it.products</span><br><span class="line">                &#125;.toSet() <span class="comment">//传入的用户的全部产品的集合</span></span><br><span class="line">        )</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/11/12/Kotlin-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%9C%A8%E7%9A%84%E5%A5%87%E5%A6%99%E7%8E%A9%E6%B3%95/" rel="prev" title="Kotlin 回调函数在的奇妙玩法">
+                  <i class="fa fa-angle-left"></i> Kotlin 回调函数在的奇妙玩法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/12/25/AndroidThings%E2%80%94%E2%80%94%E8%BF%9E%E6%8E%A5-SHT20-%E4%BC%A0%E6%84%9F%E5%99%A8%E8%AF%BB%E5%8F%96%E6%B8%A9%E6%B9%BF%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/" rel="next" title="AndroidThings——连接 SHT20 传感器读取温湿度【已失效】">
+                  AndroidThings——连接 SHT20 传感器读取温湿度【已失效】 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

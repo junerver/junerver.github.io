@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在 Compose 中使用协程Kotlin 中协程有多好用，想必不用我多说了。方便的构建、简洁的切换协程语法、await函数与join函数，尤其是在 lifecycle 扩展出现之后，在 Activity 与 Fragment 中可以通过类似 lifecycleScope.launch &#123;  &#125; 这样的语法更方便的使用协程。 之前我们介绍过，Compose 是 FP 风格的，U">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Compose学习笔记2 - LaunchedEffect、状态与 状态管理">
+<meta property="og:url" content="https://junerver.xyz/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="在 Compose 中使用协程Kotlin 中协程有多好用，想必不用我多说了。方便的构建、简洁的切换协程语法、await函数与join函数，尤其是在 lifecycle 扩展出现之后，在 Activity 与 Fragment 中可以通过类似 lifecycleScope.launch &#123;  &#125; 这样的语法更方便的使用协程。 之前我们介绍过，Compose 是 FP 风格的，U">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/9392c29afda84d3bb098c034d0734471~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2022-02-15T00:38:01.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.431Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Compose">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/9392c29afda84d3bb098c034d0734471~tplv-k3u1fbpfcp-zoom-1.image">
+
+
+<link rel="canonical" href="https://junerver.xyz/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/","path":"2022/02/15/Compose学习笔记2-LaunchedEffect、状态与-状态管理/","title":"Compose学习笔记2 - LaunchedEffect、状态与 状态管理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Compose学习笔记2 - LaunchedEffect、状态与 状态管理 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8-Compose-%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%8D%8F%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">在 Compose 中使用协程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LaunchedEffect"><span class="nav-number">1.1.</span> <span class="nav-text">LaunchedEffect</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%99%E6%A0%B7%E5%81%9A%E6%9C%89%E4%BB%80%E4%B9%88%E5%A5%BD%E5%A4%84%EF%BC%9F"><span class="nav-number">1.1.0.0.1.</span> <span class="nav-text">这样做有什么好处？</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.2.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E4%B8%8E%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">状态与状态管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81"><span class="nav-number">2.1.</span> <span class="nav-text">状态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#remember"><span class="nav-number">2.1.1.</span> <span class="nav-text">remember</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%8F%97%E6%94%AF%E6%8C%81%E7%9A%84%E7%8A%B6%E6%80%81%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.1.2.</span> <span class="nav-text">其他受支持的状态类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87"><span class="nav-number">2.2.</span> <span class="nav-text">状态提升</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%E4%B8%BB%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%BA%8B%E9%A1%B9"><span class="nav-number">2.2.1.</span> <span class="nav-text">状态提升主要注意的事项</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E7%8A%B6%E6%80%81"><span class="nav-number">2.3.</span> <span class="nav-text">恢复状态</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#rememberSaveable"><span class="nav-number">2.3.0.1.</span> <span class="nav-text">rememberSaveable</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parcelize"><span class="nav-number">2.3.0.2.</span> <span class="nav-text">Parcelize</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MapSaver"><span class="nav-number">2.3.0.3.</span> <span class="nav-text">MapSaver</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ListSaver"><span class="nav-number">2.3.0.4.</span> <span class="nav-text">ListSaver</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E7%8A%B6%E6%80%81"><span class="nav-number">2.4.</span> <span class="nav-text">管理状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E6%AF%94-Flutter"><span class="nav-number">2.5.</span> <span class="nav-text">类比 Flutter</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Compose学习笔记2 - LaunchedEffect、状态与 状态管理 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Compose学习笔记2 - LaunchedEffect、状态与 状态管理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-02-15 08:38:01" itemprop="dateCreated datePublished" datetime="2022-02-15T08:38:01+08:00">2022-02-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="在-Compose-中使用协程"><a href="#在-Compose-中使用协程" class="headerlink" title="在 Compose 中使用协程"></a>在 Compose 中使用协程</h1><p>Kotlin 中协程有多好用，想必不用我多说了。方便的构建、简洁的切换协程语法、<code>await</code>函数与<code>join</code>函数，尤其是在 lifecycle 扩展出现之后，在 Activity 与 Fragment 中可以通过类似 <code>lifecycleScope.launch &#123;  &#125;</code> 这样的语法更方便的使用协程。</p>
+<p>之前我们介绍过，Compose 是 FP 风格的，UI是通过一个个Composable函数组合在一起形成的，自然不能用<code>lifecycleScope.launch &#123;  &#125;</code>，那么在 Compose 中我们该如何使用协程呢？</p>
+<span id="more"></span>
+
+<h2 id="LaunchedEffect"><a href="#LaunchedEffect" class="headerlink" title="LaunchedEffect"></a>LaunchedEffect</h2><p>答案就是 <strong>LaunchedEffect</strong> ！，单纯使用的话我们可以把他看过是 Compose 里的 <code>launch&#123;&#125;</code> 函数。用法非常的简单：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Greeting</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    Text(text = <span class="string">&quot;Hello <span class="variable">$name</span>!&quot;</span>)</span><br><span class="line">    LaunchedEffect(<span class="literal">null</span>) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">&quot;这个block执行在协程<span class="subst">$&#123;Thread.currentThread().name&#125;</span>中&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上面所说，如果你只是要一个 <code>launch&#123;&#125;</code> 函数，这样写就可以，但是它还有更高级的用法！<br>我们先来看一下这个函数的源码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="meta">@NonRestartableComposable</span></span><br><span class="line"><span class="meta">@OptIn(InternalComposeApi::class)</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">LaunchedEffect</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    key1: <span class="type">Any</span>?,</span></span></span><br><span class="line"><span class="params"><span class="function">    block: <span class="type">suspend</span> <span class="type">CoroutineScope</span>.() -&gt; <span class="type">Unit</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> applyContext = currentComposer.applyCoroutineContext</span><br><span class="line">    remember(key1) &#123; LaunchedEffectImpl(applyContext, block) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title class_">LaunchedEffectImpl</span>(</span><br><span class="line">    parentCoroutineContext: CoroutineContext,</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> task: <span class="keyword">suspend</span> CoroutineScope.() -&gt; <span class="built_in">Unit</span></span><br><span class="line">) : RememberObserver &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> scope = CoroutineScope(parentCoroutineContext)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> job: Job? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onRemembered</span><span class="params">()</span></span> &#123;</span><br><span class="line">        job?.cancel(<span class="string">&quot;Old job was still running!&quot;</span>)</span><br><span class="line">        job = scope.launch(block = task)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onForgotten</span><span class="params">()</span></span> &#123;</span><br><span class="line">        job?.cancel()</span><br><span class="line">        job = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onAbandoned</span><span class="params">()</span></span> &#123;</span><br><span class="line">        job?.cancel()</span><br><span class="line">        job = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如需从可组合项内安全调用挂起函数，请使用 <code>LaunchedEffect</code> 可组合项。当<code>LaunchedEffect</code>  进入组合时，它会启动一个协程，并将代码块作为参数传递。如果 <code>LaunchedEffect</code>  退出组合，协程将取消。如果使用不同的键重组 <code>LaunchedEffect</code> ，系统将取消现有协程，并在新的协程中启动新的挂起函数。</p>
+</blockquote>
+<p>从源码可以看出我们传入的希望在协程中执行的 block，确实也是通过创建一个 <code>CoroutineScope</code> ，最终通过 <code>launch&#123;&#125;</code> 函数执行的。但是通过 <code>remember&#123;&#125;</code> 与 <code>LaunchedEffectImpl</code> 的配合，实现了当 key1 参数的值发生变化时，上一个 job 取消，然后重新执行 block。</p>
+<p>需要注意的是，这里使用的 remember 函数，和我们之前在笔记1介绍的 remember 函数并不是同一个，注意区分。</p>
+<h5 id="这样做有什么好处？"><a href="#这样做有什么好处？" class="headerlink" title="这样做有什么好处？"></a>这样做有什么好处？</h5><p>在 Composable 函数中使用协程，好处与必要性都不言而喻，我们可以更多的书写复杂逻辑。而配合 key1 变化，上一个携程取消，再次执行新的协程，我们可以实现更多的响应式逻辑。<br>例如下拉刷，我们给 key1 传递一个 MutableState，我们可以在 block 里判断，当<code>State == Refresh</code> 时执行网络请求。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Greeting</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> state <span class="keyword">by</span> remember &#123;</span><br><span class="line">        mutableStateOf(<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> resp <span class="keyword">by</span> remember &#123;</span><br><span class="line">        mutableStateOf(<span class="string">&quot;hello <span class="variable">$name</span>!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    LaunchedEffect(state) &#123;</span><br><span class="line">        delay(<span class="number">400</span>)</span><br><span class="line">        resp = <span class="string">&quot;state:<span class="subst">$&#123;state&#125;</span>\n这个block执行在协程<span class="subst">$&#123;Thread.currentThread().name&#125;</span>中&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    Column &#123;</span><br><span class="line">        Text(text = resp)</span><br><span class="line">        Button(</span><br><span class="line">            onClick = &#123; ++state &#125;,</span><br><span class="line">            modifier = Modifier</span><br><span class="line">                .height(<span class="number">50.</span>dp)</span><br><span class="line">                .width(<span class="number">100.</span>dp)</span><br><span class="line">        ) &#123;</span><br><span class="line">            Text(text = <span class="string">&quot;点一点&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h1 id="状态与状态管理"><a href="#状态与状态管理" class="headerlink" title="状态与状态管理"></a>状态与状态管理</h1><p>参考官方文档<a target="_blank" rel="noopener" href="https://developer.android.google.cn/jetpack/compose/state">状态和 Jetpack Compose</a></p>
+<h2 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h2><h3 id="remember"><a href="#remember" class="headerlink" title="remember"></a>remember</h3><p>上一节我们介绍过 <code>remember&#123;&#125;</code> 函数就是我们用于保存 Composable 的状态的，我们通常要用 State 来保存状态，从而达成响应式。</p>
+<p>在可组合项中声明 MutableState 对象的方法有三种：</p>
+<ul>
+<li><code>val mutableState = remember &#123; mutableStateOf(default) &#125;</code></li>
+<li><code>var value by remember &#123; mutableStateOf(default) &#125;</code></li>
+<li><code>val (value, setValue) = remember &#123; mutableStateOf(default) &#125;</code></li>
+</ul>
+<hr>
+<p>第三种写法看起来很奇特，如果没有接触过 Koltin，会有一点懵圈，看一下源码就能理解了。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Stable</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">MutableState</span>&lt;<span class="type">T</span>&gt; : <span class="type">State</span>&lt;<span class="type">T</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">var</span> value: T</span><br><span class="line">    <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">component1</span><span class="params">()</span></span>: T</span><br><span class="line">    <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">component2</span><span class="params">()</span></span>: (T) -&gt; <span class="built_in">Unit</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意 <code>component1</code> 与 <code>component2</code>，他就对应着声明时括号里的 <code>value</code> 与 <code>setValue</code>。这种高级特效被被称之为解构声明。</p>
+<p>这种用法在 for 循环中其实也有应用，比如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> ((index, value) <span class="keyword">in</span> array.withIndex()) &#123;</span><br><span class="line">    println(<span class="string">&quot;the element at <span class="variable">$index</span> is <span class="variable">$value</span>&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">IndexedValue</span>&lt;<span class="type">out T</span>&gt;(<span class="keyword">public</span> <span class="keyword">val</span> index: <span class="built_in">Int</span>, <span class="keyword">public</span> <span class="keyword">val</span> value: T)</span><br></pre></td></tr></table></figure>
+<p><code>withIndex()</code> 函数是 kotlin 为 Iterable 实现的一个扩展函数，他的最终返回其实是一个 <code>data class</code>，<code>data class</code> 默认实现了 component。</p>
+<p>更多文档请参考：<a target="_blank" rel="noopener" href="https://www.kotlincn.net/docs/reference/multi-declarations.html">解构声明</a></p>
+<hr>
+<p>虽然 <code>remember</code> 可帮助您在重组后保持状态，但不会帮助您在配置更改后保持状态。为此，您必须使用 <code>rememberSaveable</code>。<code>rememberSaveable</code> 会自动保存可保存在 Bundle 中的任何值。对于其他值，您可以将其传入自定义 Saver 对象。</p>
+<h3 id="其他受支持的状态类型"><a href="#其他受支持的状态类型" class="headerlink" title="其他受支持的状态类型"></a>其他受支持的状态类型</h3><blockquote>
+<p>Jetpack Compose 并不要求您使用 MutableState<T> 存储状态。Jetpack Compose 支持其他可观察类型。在 Jetpack Compose 中读取其他可观察类型之前，<em><strong>您必须将其转换为 State<T>，以便 Jetpack Compose 可以在状态发生变化时自动重组界面</strong></em>。<br>Compose 附带一些可以根据 Android 应用中使用的常见可观察类型创建 State<T> 的函数：</p>
+<ul>
+<li>LiveData</li>
+<li>Flow</li>
+<li>RxJava2</li>
+</ul>
+<p>如果您的应用使用自定义可观察类，您可以构建扩展函数，以使 Jetpack Compose 读取其他可观察类型。如需查看具体操作方法的示例，请参阅内置函数的实现。任何允许 Jetpack Compose 订阅每项更改的对象都可以转换为 State<T> 并由可组合项读取。</p>
+</blockquote>
+<p>在上一节我们也演示了 Flow 在 Compose 中的用法，对就是扩展函数 <code>collectAsState()</code>。</p>
+<h2 id="状态提升"><a href="#状态提升" class="headerlink" title="状态提升"></a>状态提升</h2><p>通过前面的学习我们已经知道了该如何使用状态，以及使用状态更新 Compose UI界面。在每个 Composable 函数中都可以通过 <code>remember&#123;&#125;</code> 来实现 Stateful，有的时候这很好用，但有的场景我们也许不应该这样使用。</p>
+<p>例如，当我们实现的 Composable 组件会在多个界面复用，如果它自身持有状态，对于调用者而言，显示是相对复杂切不易使用的，我们往往需要去查看代码才能理解，这种情况下，我们可以通过「状态提升」，来实现 Composable 函数的「无状态」。</p>
+<p>Compose 中的状态提升是一种将状态移至 Composable 函数的调用方，以使 Composable 无状态的模式。Jetpack Compose 中的常规状态提升模式是将状态变量替换为两个参数：</p>
+<ul>
+<li><code>value: T</code>：要显示的当前值</li>
+<li><code>onValueChange: (T) -&gt; Unit</code>：请求更改值的事件，其中 T 是建议的新值</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">HelloScreen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    HelloContent()</span><br><span class="line">    <span class="keyword">var</span> name <span class="keyword">by</span> rememberSaveable &#123; mutableStateOf(<span class="string">&quot;&quot;</span>) &#125;</span><br><span class="line">    <span class="comment">//两种不同的状态提升</span></span><br><span class="line">    HelloContent(value = name, onValueChange = &#123; name = it &#125;)</span><br><span class="line">    HelloContent(rememberSaveable &#123; mutableStateOf(<span class="string">&quot;&quot;</span>) &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">HelloContent</span><span class="params">()</span></span> &#123;</span><br><span class="line">    Column(modifier = Modifier.padding(<span class="number">16.</span>dp)) &#123;</span><br><span class="line">        <span class="keyword">var</span> name <span class="keyword">by</span> remember &#123; mutableStateOf(<span class="string">&quot;&quot;</span>) &#125;</span><br><span class="line">        <span class="keyword">if</span> (name.isNotEmpty()) &#123;</span><br><span class="line">            Text(</span><br><span class="line">                text = <span class="string">&quot;Hello, <span class="variable">$name</span>!&quot;</span>,</span><br><span class="line">                modifier = Modifier.padding(bottom = <span class="number">8.</span>dp),</span><br><span class="line">                style = MaterialTheme.typography.h5</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">        OutlinedTextField(</span><br><span class="line">            value = name,</span><br><span class="line">            onValueChange = &#123; name = it &#125;,</span><br><span class="line">            label = &#123; Text(<span class="string">&quot;Name&quot;</span>) &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">HelloContent</span><span class="params">(value: <span class="type">String</span>, onValueChange: (<span class="type">String</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    Column(modifier = Modifier.padding(<span class="number">16.</span>dp)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (value.isNotEmpty()) &#123;</span><br><span class="line">            Text(</span><br><span class="line">                text = <span class="string">&quot;Hello, <span class="variable">$value</span>!&quot;</span>,</span><br><span class="line">                modifier = Modifier.padding(bottom = <span class="number">8.</span>dp),</span><br><span class="line">                style = MaterialTheme.typography.h5</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">        OutlinedTextField(</span><br><span class="line">            value = value,</span><br><span class="line">            onValueChange = onValueChange,</span><br><span class="line">            label = &#123; Text(<span class="string">&quot;Name&quot;</span>) &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">HelloContent</span><span class="params">(state: <span class="type">MutableState</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name <span class="keyword">by</span> state</span><br><span class="line">    Column(modifier = Modifier.padding(<span class="number">16.</span>dp)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (name.isNotEmpty()) &#123;</span><br><span class="line">            Text(</span><br><span class="line">                text = <span class="string">&quot;Hello, <span class="variable">$name</span>!&quot;</span>,</span><br><span class="line">                modifier = Modifier.padding(bottom = <span class="number">8.</span>dp),</span><br><span class="line">                style = MaterialTheme.typography.h5</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">        OutlinedTextField(</span><br><span class="line">            value = name,</span><br><span class="line">            onValueChange = &#123; name = it &#125;,</span><br><span class="line">            label = &#123; Text(<span class="string">&quot;Name&quot;</span>) &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>观察上面的代码可以很容易理解这句话的意思，所以「状态提升」还是很形象的，Composable 的状态，从自己管理与处理，提升给了调用者。这其实是 Compose 的一个重要编程思想，可以看到 Compose 自生也很好的贯彻了这一思想。</p>
+<p>例如上面示例中的 <code>OutlinedTextField</code>，作为一个输入框，如果调用者不处理其状态，他甚至连最基本的输入回显都做不到！</p>
+<h3 id="状态提升主要注意的事项"><a href="#状态提升主要注意的事项" class="headerlink" title="状态提升主要注意的事项"></a>状态提升主要注意的事项</h3><blockquote>
+<p>以这种方式提升的状态具有一些重要的属性：</p>
+<ul>
+<li><strong>单一可信来源</strong>：我们会通过移动状态而不是复制状态，来确保只有一个可信来源。这有助于避免 bug。</li>
+<li><strong>封装</strong>：只有有状态可组合项能够修改其状态。这完全是内部的。</li>
+<li><strong>可共享</strong>：可与多个可组合项共享提升的状态。如果想在另一个可组合项中执行 name 操作，可以通过变量提升来做到这一点。</li>
+<li><strong>可拦截</strong>：无状态可组合项的调用方可以在更改状态之前决定忽略或修改事件。</li>
+<li><strong>解耦</strong>：无状态 ExpandingCard 的状态可以存储在任何位置。例如，现在可以将 name 移入 ViewModel。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>通过从 <code>HelloContent</code> 中提升出状态，更容易推断该可组合项、在不同的情况下重复使用它，以及进行测试。<code>HelloContent</code> 与状态的存储方式解耦。解耦意味着，如果您修改或替换 <code>HelloScreen</code>，不必更改 <code>HelloContent</code> 的实现方式。</p>
+</blockquote>
+<p><img src="/9392c29afda84d3bb098c034d0734471~tplv-k3u1fbpfcp-zoom-1.image" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>状态下降、事件上升的这种模式称为“单向数据流”。在这种情况下，状态会从 <code>HelloScreen</code> 下降为 <code>HelloContent</code>，事件会从 <code>HelloContent</code> 上升为 <code>HelloScreen</code>。通过遵循单向数据流，您可以将在界面中显示状态的可组合项与应用中存储和更改状态的部分解耦。</p>
+</blockquote>
+<p>上面这段话眼熟不？这不就是 MVI 架构的编程思想么！可见 Compose 其实就是 MVI 的。</p>
+<h2 id="恢复状态"><a href="#恢复状态" class="headerlink" title="恢复状态"></a>恢复状态</h2><p>参考文档：<a target="_blank" rel="noopener" href="https://developer.android.google.cn/jetpack/compose/state#restore-ui-state">在 Compose 中恢复状态</a></p>
+<p>这个没啥太多好说的，注意一下几个点就行：</p>
+<h4 id="rememberSaveable"><a href="#rememberSaveable" class="headerlink" title="rememberSaveable"></a>rememberSaveable</h4><p> 试试我们上面写的三个不同的 Composable，他们看起来效果完全相同，区别只是一个用的是 <code>remember&#123;&#125;</code> 函数，另一个用的是 <code>rememberSaveable</code> 函数，但当你试着选装屏幕或变更设置后，你会发现用<code>remember&#123;&#125;</code> 函数实现的状态消失了，所以当我们想要在屏幕旋转后还能保持状态，我们需要使用用 <code>rememberSaveable</code> 。他与 <code>savedInstanceState</code> 很相似，数据都是保存在 <code>Bundle</code> 之中的，因此可保存的数据类型也与 Bundle 的要求一致。</p>
+<h4 id="Parcelize"><a href="#Parcelize" class="headerlink" title="Parcelize"></a>Parcelize</h4><p>参考文档：<a target="_blank" rel="noopener" href="https://developer.android.com/kotlin/parcelize">Parcelize</a></p>
+<p>如何使用 <em><strong>Parcelize</strong></em> ：</p>
+<ol>
+<li>添加插件<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;   </span><br><span class="line">    id <span class="string">&#x27;kotlin-parcelize&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>为类添加注解 <code>@Parcelize</code><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.parcelize.Parcelize</span><br><span class="line"><span class="meta">@Parcelize</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">User</span>(<span class="keyword">val</span> firstName: String, <span class="keyword">val</span> lastName: String, <span class="keyword">val</span> age: <span class="built_in">Int</span>): Parcelable</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<p>如何在 <em><strong>rememberSaveable</strong></em> 中使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Parcelize</span></span><br><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">City</span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> country: String) : Parcelable</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">CityScreen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> selectedCity = rememberSaveable &#123;</span><br><span class="line">        mutableStateOf(City(<span class="string">&quot;Madrid&quot;</span>, <span class="string">&quot;Spain&quot;</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方法是最简单、最易用的，绝大多数情况我们都应该优先使用该方法。</p>
+<h4 id="MapSaver"><a href="#MapSaver" class="headerlink" title="MapSaver"></a>MapSaver</h4><p>如果某种原因导致 @Parcelize 不合适，您可以使用 mapSaver 定义自己的规则，规定如何将对象转换为系统可保存到 Bundle 的一组值。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">City</span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> country: String)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> CitySaver = run &#123;</span><br><span class="line">    <span class="keyword">val</span> nameKey = <span class="string">&quot;Name&quot;</span></span><br><span class="line">    <span class="keyword">val</span> countryKey = <span class="string">&quot;Country&quot;</span></span><br><span class="line">    mapSaver(</span><br><span class="line">        save = &#123; mapOf(nameKey to it.name, countryKey to it.country) &#125;,</span><br><span class="line">        restore = &#123; City(it[nameKey] <span class="keyword">as</span> String, it[countryKey] <span class="keyword">as</span> String) &#125;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">CityScreen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> selectedCity = rememberSaveable(stateSaver = CitySaver) &#123;</span><br><span class="line">        mutableStateOf(City(<span class="string">&quot;Madrid&quot;</span>, <span class="string">&quot;Spain&quot;</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="ListSaver"><a href="#ListSaver" class="headerlink" title="ListSaver"></a>ListSaver</h4><p>为了避免需要为映射定义键，您也可以使用 listSaver 并将其索引用作键：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">City</span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> country: String)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> CitySaver = listSaver&lt;City, Any&gt;(</span><br><span class="line">    save = &#123; listOf(it.name, it.country) &#125;,</span><br><span class="line">    restore = &#123; City(it[<span class="number">0</span>] <span class="keyword">as</span> String, it[<span class="number">1</span>] <span class="keyword">as</span> String) &#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">CityScreen</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> selectedCity = rememberSaveable(stateSaver = CitySaver) &#123;</span><br><span class="line">        mutableStateOf(City(<span class="string">&quot;Madrid&quot;</span>, <span class="string">&quot;Spain&quot;</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>Tips</strong></em>：记不记得上一篇文章中介绍的 <code>viewModel()</code> 函数，如果状态被保存到 VM 中也能实现 <code>rememberSaveable</code> 相似的效果，原因很简单，无需多说。</p>
+<h2 id="管理状态"><a href="#管理状态" class="headerlink" title="管理状态"></a>管理状态</h2><p>Compose 中大致有这管理状态的方式：</p>
+<ol>
+<li>Composable 函数自行通过 <code>remember&#123;&#125;</code> 函数管理自己的状态</li>
+<li>通过「状态提升」将值与事件提升给更上一级的调用者管理</li>
+<li>创建状态容器类，使用 <code>remember&#123;&#125;</code> 函数包装</li>
+<li>使用 ViewModel 托管状态，在需要使用状态的地方通过 <code>viewMode()</code> 函数获取状态。</li>
+</ol>
+<p>怎么管理状态是一种选择，没有正确错误之分，只有应用场景是否合适，只要团队统一即可，一般来说我们还是使用 ViewModel 比较符合习惯。</p>
+<h2 id="类比-Flutter"><a href="#类比-Flutter" class="headerlink" title="类比 Flutter"></a>类比 Flutter</h2><p>如果用 Flutter 做比较，我们可以这样来理解 Compose：</p>
+<ul>
+<li>在不使用状态时，每一个 Composable 函数相当于 一个 StatelessWidget。</li>
+<li>当使在 Composable 函数中用 <code>remember&#123;&#125;</code>  获取状态后，相当于 一个 StatefulWidget。</li>
+<li>有状态的 Composable 函数，相当于 Flutter 中的 State 的 <code>Widget build(BuildContext context)</code> 函数。</li>
+<li>Compose 的状态发生变化时，Composable 函数会自动重组，相当于 Flutter State 的 rebuild。</li>
+<li>Composable 函数，没有类似 <code>initState()</code> 这样的仅执行一次函数，因此需要注意一些逻辑代码的执行时机，防止出现死循环。想实现仅执行一次这样的效果，可以通过前面介绍的 <code>LaunchedEffect</code> 函数，为其参数 key1 赋值一个无状态值来达成，例如：<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">Greeting</span><span class="params">(name: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> counter <span class="keyword">by</span> remember &#123; mutableStateOf(<span class="number">0</span>) &#125;</span><br><span class="line">    <span class="keyword">var</span> visible <span class="keyword">by</span> remember &#123; mutableStateOf(<span class="literal">true</span>) &#125;</span><br><span class="line">    LaunchedEffect(key1 = <span class="built_in">Unit</span>, block = &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">&quot;我只会在Composable第一次执行时才会执行，后续状态变化不会再次调用&quot;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    Column &#123;</span><br><span class="line">        <span class="keyword">if</span> (visible) &#123;</span><br><span class="line">            Text(text = <span class="string">&quot;Hello <span class="variable">$name</span>!<span class="subst">$&#123;counter&#125;</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        Button(</span><br><span class="line">            onClick = &#123;</span><br><span class="line">                counter += <span class="number">1</span></span><br><span class="line">                visible = !visible</span><br><span class="line">            &#125;,</span><br><span class="line">            modifier = Modifier</span><br><span class="line">                .height(<span class="number">50.</span>dp)</span><br><span class="line">                .width(<span class="number">100.</span>dp)</span><br><span class="line">        ) &#123;</span><br><span class="line">            Text(text = <span class="string">&quot;点一下&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Compose/" rel="tag"># Compose</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/" rel="prev" title="Compose学习笔记1-compose、state、flow、remember">
+                  <i class="fa fa-angle-left"></i> Compose学习笔记1-compose、state、flow、remember
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/02/18/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/" rel="next" title="如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数）">
+                  如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="React-router-dom 6 总结通过Routes标签创建路由表123456&lt;Routes&gt;  &#123;&#x2F;* index 表示当前路由的默认路由 *&#x2F;&#125;  &lt;Route index element&#x3D;&#123;&lt;Navigate to&#x3D;&quot;&#x2F;projects&quot; replace &#x2F;&gt;&#125; &#x2F;&gt;  &lt;Route">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React-router-dom 6关键点总结 &amp; 路由鉴权的简单思路">
+<meta property="og:url" content="https://junerver.xyz/2022/06/27/React-router-dom-6%E5%85%B3%E9%94%AE%E7%82%B9%E6%80%BB%E7%BB%93-%E8%B7%AF%E7%94%B1%E9%89%B4%E6%9D%83%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%9D%E8%B7%AF/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="React-router-dom 6 总结通过Routes标签创建路由表123456&lt;Routes&gt;  &#123;&#x2F;* index 表示当前路由的默认路由 *&#x2F;&#125;  &lt;Route index element&#x3D;&#123;&lt;Navigate to&#x3D;&quot;&#x2F;projects&quot; replace &#x2F;&gt;&#125; &#x2F;&gt;  &lt;Route">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-27T09:17:48.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.475Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2022/06/27/React-router-dom-6%E5%85%B3%E9%94%AE%E7%82%B9%E6%80%BB%E7%BB%93-%E8%B7%AF%E7%94%B1%E9%89%B4%E6%9D%83%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%9D%E8%B7%AF/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2022/06/27/React-router-dom-6%E5%85%B3%E9%94%AE%E7%82%B9%E6%80%BB%E7%BB%93-%E8%B7%AF%E7%94%B1%E9%89%B4%E6%9D%83%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%9D%E8%B7%AF/","path":"2022/06/27/React-router-dom-6关键点总结-路由鉴权的简单思路/","title":"React-router-dom 6关键点总结 & 路由鉴权的简单思路"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>React-router-dom 6关键点总结 & 路由鉴权的简单思路 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#React-router-dom-6-%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">React-router-dom 6 总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%BF%87Routes%E6%A0%87%E7%AD%BE%E5%88%9B%E5%BB%BA%E8%B7%AF%E7%94%B1%E8%A1%A8"><span class="nav-number">1.1.</span> <span class="nav-text">通过Routes标签创建路由表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E8%B7%AF%E7%94%B1%E6%96%B0%E5%86%99%E6%B3%95-Outlet"><span class="nav-number">1.2.</span> <span class="nav-text">嵌套路由新写法 Outlet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E4%BC%A0%E5%8F%82%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">路由传参的几种方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#V6%E7%9A%84%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">1.4.</span> <span class="nav-text">V6的注意点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%A0%E4%B8%AA%E9%92%A9%E5%AD%90%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">1.5.</span> <span class="nav-text">几个钩子的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8-TypeScript-%E4%B8%8B%E5%B0%81%E8%A3%85-useSearchParams"><span class="nav-number">1.5.1.</span> <span class="nav-text">在 TypeScript 下封装 useSearchParams</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/06/27/React-router-dom-6%E5%85%B3%E9%94%AE%E7%82%B9%E6%80%BB%E7%BB%93-%E8%B7%AF%E7%94%B1%E9%89%B4%E6%9D%83%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%9D%E8%B7%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="React-router-dom 6关键点总结 & 路由鉴权的简单思路 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React-router-dom 6关键点总结 & 路由鉴权的简单思路
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-06-27 17:17:48" itemprop="dateCreated datePublished" datetime="2022-06-27T17:17:48+08:00">2022-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">Web前端</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="React-router-dom-6-总结"><a href="#React-router-dom-6-总结" class="headerlink" title="React-router-dom 6 总结"></a>React-router-dom 6 总结</h1><h2 id="通过Routes标签创建路由表"><a href="#通过Routes标签创建路由表" class="headerlink" title="通过Routes标签创建路由表"></a>通过Routes标签创建路由表</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Routes</span>&gt;</span><br><span class="line">  &#123;<span class="comment">/* index 表示当前路由的默认路由 */</span>&#125;</span><br><span class="line">  &lt;<span class="title class_">Route</span> index element=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Navigate</span> <span class="attr">to</span>=<span class="string">&quot;/projects&quot;</span> <span class="attr">replace</span> /&gt;</span></span>&#125; /&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Route</span> <span class="attr">path</span>=<span class="string">&quot;/projects&quot;</span> <span class="attr">element</span>=<span class="string">&#123;</span>&lt;<span class="attr">ProjectListScreen</span> /&gt;</span>&#125; /&gt;</span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Route</span> <span class="attr">path</span>=<span class="string">&quot;/projects/:projectId/*&quot;</span> <span class="attr">element</span>=<span class="string">&#123;</span>&lt;<span class="attr">ProjectScreen</span> /&gt;</span>&#125; /&gt;</span></span><br><span class="line">&lt;/<span class="title class_">Routes</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>路由指定组件的参数从 <code>component</code> 换成了 <code>element</code>，过去的 <code>component</code> 传递的是组件名，现在需要传递的是 JSX 标签，这点需要注意。</p>
+<p>在 <code>&lt;Route&gt;</code> 标签中，可以通过申明  <code>index</code>  属性，来进行默认导航，上面的示例就是将根路由默认导航到 <code>/projects</code>，<code>&lt;Navigate&gt;</code> 标签申明 <code>replace</code> 属性，可以实现路由栈替换，避免路由表可以无限回退。</p>
+<span id="more"></span>
+
+<h2 id="嵌套路由新写法-Outlet"><a href="#嵌套路由新写法-Outlet" class="headerlink" title="嵌套路由新写法 Outlet"></a>嵌套路由新写法 Outlet</h2><p>在过去我们写嵌套路由的时候，一般会在子页面再次通过路由表标签来创建路由，实现嵌套路由，现在我们可以使用 <code>&lt;Outlet&gt;</code> 标签，在子页面作为占位标志，当导航到该页面的子路由时，将子路由对应的组件填充至占位。</p>
+<h2 id="路由传参的几种方式"><a href="#路由传参的几种方式" class="headerlink" title="路由传参的几种方式"></a>路由传参的几种方式</h2><ol>
+<li><p>Search传参，类似于url中的 <code>?xxx=yyy&amp;zzz=rrr</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Link</span> to=&#123;<span class="string">`/home/message/detail?id=<span class="subst">$&#123;message.id&#125;</span>&amp;title=<span class="subst">$&#123;message.title&#125;</span>`</span>&#125;&gt;&#123;message.<span class="property">title</span>&#125;&lt;/<span class="title class_">Link</span>&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Params 传参，需要在路由声明接受参数 类似于restful，<code>/:id/:name/:gender</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">Link</span> to=&#123;<span class="string">`/home/message/detail/<span class="subst">$&#123;message.id&#125;</span>/<span class="subst">$&#123;message.title&#125;</span>`</span>&#125;&gt;&#123;message.<span class="property">title</span>&#125;&lt;/<span class="title class_">Link</span>&gt;</span><br><span class="line">&#123;<span class="comment">/* 注意对应的路由申明 */</span>&#125;</span><br><span class="line">&lt;<span class="title class_">Route</span> path=<span class="string">&quot;/home/message/detail/:id/:title&quot;</span> element=&#123;<span class="language-xml"><span class="tag">&lt;<span class="name">Detail</span>/&gt;</span></span>&#125; /&gt;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>state传参</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//v6 中的使用方式 to 不再是一个路由字符串，而是一个对象</span></span><br><span class="line">&#123;<span class="comment">/* 方式3：通过state传递参数，在location.state中获取，link中的to传递为一个对象，必须包含pathname与state字段属性  */</span>&#125;</span><br><span class="line">&lt;<span class="title class_">Link</span> to=&#123;&#123; <span class="attr">pathname</span>: <span class="string">&#x27;/home/message/detail&#x27;</span>, <span class="attr">state</span>: message &#125;&#125;&gt;&#123;message.<span class="property">title</span>&#125;&lt;/<span class="title class_">Link</span>&gt;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h2 id="V6的注意点"><a href="#V6的注意点" class="headerlink" title="V6的注意点"></a>V6的注意点</h2><ol>
+<li><p>移除了<code>&lt;Switch&gt;</code>标签，使用<code>&lt;Routes&gt;</code>标签替代</p>
+</li>
+<li><p>引入了 <code>useRoutes([])</code> 钩子用于根据路由表创建根路由，其返回值是dom，用{}包裹，放置于<code>&lt;APP&gt;</code>节点下即可配置全部一级路由</p>
+</li>
+<li><p>路由表的创建模式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import About from &quot;../pages/About&quot;;</span></span><br><span class="line"><span class="comment">// import Home from &quot;../pages/Home&quot;;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">News</span> <span class="keyword">from</span> <span class="string">&quot;../pages/Home/News&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Message</span> <span class="keyword">from</span> <span class="string">&quot;../pages/Home/Message&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Navigate</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react-router-dom&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Detail</span> <span class="keyword">from</span> <span class="string">&quot;../pages/Home/Message/Detail&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; lazy &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">About</span> = <span class="title function_">lazy</span>(<span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&quot;../pages/About&quot;</span>));</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Home</span> = <span class="title function_">lazy</span>(<span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&quot;../pages/Home&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> routes = [</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&quot;/&quot;</span>, <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Navigate</span> <span class="attr">to</span>=<span class="string">&#123;</span>&quot;/<span class="attr">a</span>/<span class="attr">about</span>&quot;&#125; /&gt;</span></span> &#125;,</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&quot;/a/about&quot;</span>, <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">About</span> /&gt;</span></span> &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&quot;/home&quot;</span>,</span><br><span class="line">    <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Home</span> /&gt;</span></span>,</span><br><span class="line">    <span class="attr">children</span>: [</span><br><span class="line">      <span class="comment">//如果称`/`为根路由，那么`/home`就是一级子路由，`/home/news`就是二级子路由，我们希望打开home时帮我们导航到news</span></span><br><span class="line">      <span class="comment">//既可以在children中写一个空字符串的二级子路由，并将它通过Navigate的to属性指定为`/home/news`，就可以实现</span></span><br><span class="line">      <span class="comment">// &#123; path: &quot;&quot;, element: &lt;Navigate to=&#123;&quot;news&quot;&#125; /&gt; &#125;,</span></span><br><span class="line">      <span class="comment">//我们还可以直接使用index:true，配合&lt;Navigate&gt;标签实现默认导航</span></span><br><span class="line">      &#123; <span class="attr">index</span>: <span class="literal">true</span>, <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Navigate</span> <span class="attr">to</span>=<span class="string">&#123;</span>&quot;<span class="attr">news</span>&quot;&#125; /&gt;</span></span> &#125;,</span><br><span class="line">      &#123; <span class="attr">path</span>: <span class="string">&quot;news&quot;</span>, <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">News</span> /&gt;</span></span> &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&quot;message&quot;</span>,</span><br><span class="line">        <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Message</span> /&gt;</span></span>,</span><br><span class="line">        <span class="attr">children</span>: [</span><br><span class="line">          <span class="comment">//使用search传参，或者state传参</span></span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">path</span>: <span class="string">&quot;detail&quot;</span>,</span><br><span class="line">            <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Detail</span> /&gt;</span></span>,</span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="comment">//使用params传参</span></span><br><span class="line">          <span class="comment">//   &#123;</span></span><br><span class="line">          <span class="comment">//     path: &quot;detail/:id/:title&quot;,</span></span><br><span class="line">          <span class="comment">//     element: &lt;Detail /&gt;,</span></span><br><span class="line">          <span class="comment">//   &#125;,</span></span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>子组件不需要再使用钩子创建路由，路由框架通过识别子组件的 <code>&lt;Outlet/&gt;</code>以及路由表的children关系，可以知道往什么地方渲染子组件，这一点非常方便</p>
+</li>
+<li><p><code>&lt;NavLink&gt;</code>标签取消了 <code>activeClassName</code> ，className可以赋值一个函数，系统会为该函数传递一个<code>&#123;isActive:true&#125;</code>的对象作为参数；</p>
+</li>
+<li><p>在@5中的几个钩子大多数废弃，例如：<code>useHistory</code>、<code>useRouteMatch()</code>已经废弃或移除，<code>useLocation</code>保留，新增加了<code>useParams</code>，非常好用，state传参与params传参都有简化</p>
+</li>
+<li><p>我们无法再获取<code>useHistory</code>钩子再获取history对象，但是可以使用<code>useNavigate</code>钩子获取<code>navigate</code>对象，在使用navigate对象导航时也与history不同：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> nav = <span class="title function_">useNavigate</span>()</span><br><span class="line"><span class="comment">//此处可以不写全路径，只写子路由也可以成功导航</span></span><br><span class="line"><span class="title function_">nav</span>(<span class="string">`/home/message/detail`</span>, &#123; <span class="attr">replace</span>: <span class="literal">true</span>, <span class="attr">state</span>: message &#125;)</span><br><span class="line"><span class="comment">//傻瓜式前进后退</span></span><br><span class="line"><span class="title function_">nav</span>(-<span class="number">1</span>)</span><br><span class="line"><span class="title function_">nav</span>(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>nav函数的参数二接受的是一个固定类型的对象，不要随便传（TS在工程化的必要性？）</p>
+</li>
+<li><p>我们依旧可以使用React提供的lazy函数，只不过现在需要在路由表中声明</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import About from &quot;../pages/About&quot;;</span></span><br><span class="line"><span class="comment">// import Home from &quot;../pages/Home&quot;;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">News</span> <span class="keyword">from</span> <span class="string">&quot;../pages/Home/News&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Message</span> <span class="keyword">from</span> <span class="string">&quot;../pages/Home/Message&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Navigate</span> &#125; <span class="keyword">from</span> <span class="string">&quot;react-router-dom&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Detail</span> <span class="keyword">from</span> <span class="string">&quot;../pages/Home/Message/Detail&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; lazy &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">About</span> = <span class="title function_">lazy</span>(<span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&quot;../pages/About&quot;</span>));</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Home</span> = <span class="title function_">lazy</span>(<span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&quot;../pages/Home&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> routes = [</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&quot;/&quot;</span>, <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Navigate</span> <span class="attr">to</span>=<span class="string">&#123;</span>&quot;/<span class="attr">a</span>/<span class="attr">about</span>&quot;&#125; /&gt;</span></span> &#125;,</span><br><span class="line">  &#123; <span class="attr">path</span>: <span class="string">&quot;/a/about&quot;</span>, <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">About</span> /&gt;</span></span> &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&quot;/home&quot;</span>,</span><br><span class="line">    <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Home</span> /&gt;</span></span>,</span><br><span class="line">    <span class="attr">children</span>: [</span><br><span class="line">      <span class="comment">//如果称`/`为根路由，那么`/home`就是一级子路由，`/home/news`就是二级子路由，我们希望打开home时帮我们导航到news</span></span><br><span class="line">      <span class="comment">//既可以在children中写一个空字符串的二级子路由，并将它通过Navigate的to属性指定为`/home/news`，就可以实现</span></span><br><span class="line">      <span class="comment">// &#123; path: &quot;&quot;, element: &lt;Navigate to=&#123;&quot;news&quot;&#125; /&gt; &#125;,</span></span><br><span class="line">      <span class="comment">//我们还可以直接使用index:true，配合&lt;Navigate&gt;标签实现默认导航</span></span><br><span class="line">      &#123; <span class="attr">index</span>: <span class="literal">true</span>, <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Navigate</span> <span class="attr">to</span>=<span class="string">&#123;</span>&quot;<span class="attr">news</span>&quot;&#125; /&gt;</span></span> &#125;,</span><br><span class="line">      &#123; <span class="attr">path</span>: <span class="string">&quot;news&quot;</span>, <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">News</span> /&gt;</span></span> &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&quot;message&quot;</span>,</span><br><span class="line">        <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Message</span> /&gt;</span></span>,</span><br><span class="line">        <span class="attr">children</span>: [</span><br><span class="line">          <span class="comment">//使用search传参，或者state传参</span></span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">path</span>: <span class="string">&quot;detail&quot;</span>,</span><br><span class="line">            <span class="attr">element</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">Detail</span> /&gt;</span></span>,</span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="comment">//使用params传参</span></span><br><span class="line">          <span class="comment">//   &#123;</span></span><br><span class="line">          <span class="comment">//     path: &quot;detail/:id/:title&quot;,</span></span><br><span class="line">          <span class="comment">//     element: &lt;Detail /&gt;,</span></span><br><span class="line">          <span class="comment">//   &#125;,</span></span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>Tips：不要忘记在根路由组件中使用<code>&lt;Suspense fallback=&#123;&lt;h2&gt;Loading&lt;/h2&gt;&#125;&gt;&#123;elements&#125;&lt;/Suspense&gt;</code>包裹住根路由表。</p>
+</li>
+<li><p><code>&lt;NavLink&gt;</code> 新增加 <code>end</code> 关键字，当在上一级路由的link标签中使用end关键字，当他的下级路由被点击，他将失去激活状态。</p>
+</li>
+<li><p>路由鉴权，使用高阶组件包一下需要鉴权的页面，如果不能鉴权通过，则跳转，能鉴权通过则使用渲染：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Fragment</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Navigate</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-router-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> useLocalStorage <span class="keyword">from</span> <span class="string">&#x27;../hooks/useLocalStorage&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//一个简单的鉴权操作</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">AuthWrapComponent</span> = (<span class="params">&#123; children &#125;</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> [token, _] = <span class="title function_">useLocalStorage</span>(<span class="string">&#x27;token&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">Fragment</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            &#123;/* 注意一定要replace ,导航到404空白页 或者 401无权*/&#125;</span></span><br><span class="line"><span class="language-xml">            &#123;token ? children : <span class="tag">&lt;<span class="name">Navigate</span> <span class="attr">to</span>=<span class="string">&#x27;/a/about&#x27;</span> <span class="attr">replace</span> /&gt;</span>&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">Fragment</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="几个钩子的使用"><a href="#几个钩子的使用" class="headerlink" title="几个钩子的使用"></a>几个钩子的使用</h2><ol>
+<li><code>useLocation</code>： 获取当前路径，state传参时可以拿到 <strong>state</strong> 对象，还可以通过 <strong>patchname</strong> 拿到当前路由路径（不包含？）</li>
+<li><code>useSearchParams</code>：获取当前查询路径对象，需要使用get获取对应key的值</li>
+<li><code>useParams</code>：拿到 params传参的对象</li>
+</ol>
+<p>简单的一个示例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">Detail</span> = (<span class="params">props</span>) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 方式1：通过search传递参数，比较复杂，不推荐，</span></span><br><span class="line">    <span class="comment">//需要用解构赋值获得search对象，然后调用get函数获取对应的key的值</span></span><br><span class="line">    <span class="comment">// const [search] = useSearchParams()</span></span><br><span class="line">    <span class="comment">// const detail = &#123; id: search.get(&#x27;id&#x27;), title: search.get(&#x27;title&#x27;) &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 方式2：通过params参数传递，非常简单直接使用useParams()</span></span><br><span class="line">    <span class="comment">// const detail = useParams()</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 方式3：通过state传递参数</span></span><br><span class="line">    <span class="comment">// const &#123; state: detail &#125; = useLocation();</span></span><br><span class="line">    <span class="comment">// console.log(&quot;此处可以收到来自route的state参数：&quot;, detail);</span></span><br><span class="line">  </span><br><span class="line">  	<span class="comment">//方式1+plus：自定义的钩子根据传入的key数组拿到search中的数据并包装成对象</span></span><br><span class="line">  	<span class="keyword">const</span> detail = <span class="title function_">useUrlQueryParam</span>([<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;title&#x27;</span>])</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;获取到对象：&quot;</span>, detail);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>ID:&#123;detail.id&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>TITLE:&#123;detail.title&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>CONTENT:&#123;detail.title&#125;+&#123;detail.id&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Detail</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//js下极简的封装</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">useUrlQueryParam</span> = (<span class="params">keys</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> [search] = <span class="title function_">useSearchParams</span>()</span><br><span class="line">    <span class="comment">//遍历keys，从search中获取对应的值，返回一个新对象</span></span><br><span class="line">    <span class="keyword">const</span> query = keys.<span class="title function_">reduce</span>(<span class="function">(<span class="params">acc, key</span>) =&gt;</span> &#123;</span><br><span class="line">        acc[key] = search.<span class="title function_">get</span>(key)</span><br><span class="line">        <span class="keyword">return</span> acc</span><br><span class="line">    &#125;, &#123;&#125;)</span><br><span class="line">    <span class="keyword">return</span> query</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>例如这样一个URL ：<a target="_blank" rel="noopener" href="http://localhost:3000/projects/1/kanban?id=1">http://localhost:3000/projects/1/kanban?id=1</a></p>
+<p>在使用两个钩子的效果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; pathname &#125; = <span class="title function_">useLocation</span>()</span><br><span class="line"><span class="keyword">const</span> [urlparam] = <span class="title function_">useSearchParams</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(pathname, urlparam);</span><br><span class="line"><span class="comment">//### : /projects/1/kanban id=1</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看出他们是术业有专攻的</p>
+<h3 id="在-TypeScript-下封装-useSearchParams"><a href="#在-TypeScript-下封装-useSearchParams" class="headerlink" title="在 TypeScript 下封装 useSearchParams"></a>在 TypeScript 下封装 useSearchParams</h3><p>由于 useSearchParams 钩子的不易用，不能直接返回我们需要的对象，我们可以自行封装如下钩子，帮助我们获取对象：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useMemo, useState &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">URLSearchParamsInit</span>, useSearchParams &#125; <span class="keyword">from</span> <span class="string">&quot;react-router-dom&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">isVoid</span> = (<span class="params">value: <span class="built_in">unknown</span></span>) =&gt; value === <span class="literal">undefined</span> || value === <span class="literal">null</span> || value === <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">isNullOrUndefined</span> = (<span class="params">value: <span class="built_in">unknown</span></span>) =&gt; value === <span class="literal">undefined</span> || value === <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//在js中函数传入对象是一个不好的方式，因为函数可能会污染对象</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">cleanObject</span> = (<span class="params">obj?: &#123; [key: <span class="built_in">string</span>]: <span class="built_in">unknown</span> &#125;</span>) =&gt; &#123;</span><br><span class="line">  <span class="comment">//空对象直接返回</span></span><br><span class="line">  <span class="keyword">if</span> (!obj) <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">  <span class="comment">//浅拷贝</span></span><br><span class="line">  <span class="keyword">const</span> result = &#123; ...obj &#125;;</span><br><span class="line">  <span class="comment">//清除对象中的空值</span></span><br><span class="line">  <span class="title class_">Object</span>.<span class="title function_">keys</span>(result).<span class="title function_">forEach</span>(<span class="function">(<span class="params">key</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> value = result[key];</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">isVoid</span>(value)) &#123;</span><br><span class="line">      <span class="keyword">delete</span> result[key];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 传入一个对象，和键集合，返回对应的对象中的键值对</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">obj</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">keys</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> subset = &lt;O <span class="keyword">extends</span> &#123; [key <span class="keyword">in</span> <span class="built_in">string</span>]: <span class="built_in">unknown</span> &#125;, K <span class="keyword">extends</span> keyof O&gt;<span class="function">(<span class="params">obj: O, keys: K[]</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> filteredEntries = <span class="title class_">Object</span>.<span class="title function_">entries</span>(obj).<span class="title function_">filter</span>(<span class="function">(<span class="params">[key]</span>) =&gt;</span></span><br><span class="line">    keys.<span class="title function_">includes</span>(key <span class="keyword">as</span> K)</span><br><span class="line">  );</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Object</span>.<span class="title function_">fromEntries</span>(filteredEntries) <span class="keyword">as</span> <span class="title class_">Pick</span>&lt;O, K&gt;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取查询参数 =&gt; 转换成对象</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> useUrlQueryParam = &lt;K <span class="keyword">extends</span> <span class="built_in">string</span>&gt;<span class="function">(<span class="params">keys: K[]</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [searchParams] = <span class="title function_">useSearchParams</span>()</span><br><span class="line">    <span class="keyword">const</span> setSearchParams = <span class="title function_">useSetUrlSearchParam</span>()</span><br><span class="line">    <span class="keyword">const</span> [stateKeys] = <span class="title function_">useState</span>(keys)</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="title function_">useMemo</span>(</span><br><span class="line">            <span class="function">() =&gt;</span> <span class="title function_">subset</span>(<span class="title class_">Object</span>.<span class="title function_">fromEntries</span>(searchParams), stateKeys) <span class="keyword">as</span> &#123; [key <span class="keyword">in</span> K]: <span class="built_in">string</span> &#125;,</span><br><span class="line">            [searchParams, stateKeys]</span><br><span class="line">        ),</span><br><span class="line">        <span class="function">(<span class="params">params: Partial&lt;&#123; [key <span class="keyword">in</span> K]: <span class="built_in">unknown</span> &#125;&gt;</span>) =&gt;</span> <span class="title function_">setSearchParams</span>(params)</span><br><span class="line">    ] <span class="keyword">as</span> <span class="keyword">const</span></span><br><span class="line">&#125;;</span><br><span class="line">        </span><br><span class="line"><span class="comment">//专门用来修改url的查询参数的钩子</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">useSetUrlSearchParam</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> [searchParam, setSearchParam] = <span class="title function_">useSearchParams</span>()</span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">params: Partial&lt;&#123; [key <span class="keyword">in</span> <span class="built_in">string</span>]: <span class="built_in">unknown</span> &#125;&gt;</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> o = <span class="title function_">cleanObject</span>(&#123;</span><br><span class="line">            ...<span class="title class_">Object</span>.<span class="title function_">fromEntries</span>(searchParam),</span><br><span class="line">            ...params</span><br><span class="line">        &#125;) <span class="keyword">as</span> <span class="title class_">URLSearchParamsInit</span></span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">setSearchParam</span>(o)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">----------</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用：</span></span><br><span class="line"><span class="keyword">const</span> [param, setParam] = <span class="title function_">useUrlQueryParam</span>([<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;personId&#x27;</span>])</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/" rel="prev" title="React入门：在 React 中使用使用 Antd">
+                  <i class="fa fa-angle-left"></i> React入门：在 React 中使用使用 Antd
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/01/%E5%A6%82%E4%BD%95%E5%9C%A8-Android-%E4%B8%AD%E5%BD%95%E5%88%B6%E5%B1%8F%E5%B9%95%E5%86%85%E5%AE%B9%EF%BC%8C%E5%B9%B6%E4%BB%A5H-264%E6%95%B0%E6%8D%AE%E6%B5%81%E5%BD%A2%E5%BC%8F%E5%8F%91%E9%80%81%EF%BC%88%E5%B1%8F%E5%B9%95%E5%B9%BF%E6%92%AD%EF%BC%89/" rel="next" title="如何在 Android 中录制屏幕内容，并以H.264数据流形式发送（屏幕广播）">
+                  如何在 Android 中录制屏幕内容，并以H.264数据流形式发送（屏幕广播） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

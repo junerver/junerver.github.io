@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="18年谷歌推出了新的开发套件 JetPack （喷气背包），本文将浅显的讨论一下其中 LiveData 的一些使用方法与注意事项。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JetPack 初见 - 使用 LiveData 实现组件之间数据共享">
+<meta property="og:url" content="https://junerver.xyz/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="18年谷歌推出了新的开发套件 JetPack （喷气背包），本文将浅显的讨论一下其中 LiveData 的一些使用方法与注意事项。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://junerver.xyz/20190725092041356.png">
+<meta property="og:image" content="https://junerver.xyz/20190725104522891.gif">
+<meta property="article:published_time" content="2019-07-25T03:11:59.000Z">
+<meta property="article:modified_time" content="2025-06-19T08:38:38.448Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Jetpack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://junerver.xyz/20190725092041356.png">
+
+
+<link rel="canonical" href="https://junerver.xyz/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/","path":"2019/07/25/JetPack-初见-使用-LiveData-实现组件之间数据共享/","title":"JetPack 初见 - 使用 LiveData 实现组件之间数据共享"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>JetPack 初见 - 使用 LiveData 实现组件之间数据共享 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-LiveData-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">1. LiveData 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-LiveData"><span class="nav-number">2.</span> <span class="nav-text">2. 如何使用 LiveData</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E5%AE%9E%E6%93%8D-Activity-%E4%B8%8E-Fragment-%E4%B9%8B%E9%97%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB"><span class="nav-number">3.</span> <span class="nav-text">3. 实操 - Activity 与 Fragment 之间的数据共享</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%89%A9%E5%B1%95%E9%98%85%E8%AF%BB-ViewModel-%E7%9A%84%E4%BD%9C%E7%94%A8%E8%8C%83%E5%9B%B4"><span class="nav-number">4.</span> <span class="nav-text">4. 扩展阅读 ViewModel 的作用范围</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="JetPack 初见 - 使用 LiveData 实现组件之间数据共享 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JetPack 初见 - 使用 LiveData 实现组件之间数据共享
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-07-25 11:11:59" itemprop="dateCreated datePublished" datetime="2019-07-25T11:11:59+08:00">2019-07-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-19 16:38:38" itemprop="dateModified" datetime="2025-06-19T16:38:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>18年谷歌推出了新的开发套件 <a target="_blank" rel="noopener" href="https://developer.android.google.cn/jetpack">JetPack</a> （喷气背包），本文将浅显的讨论一下其中 LiveData 的一些使用方法与注意事项。<br><img src="/20190725092041356.png" alt="JetPack"></p>
+<span id="more"></span>
+
+<h2 id="1-LiveData-是什么？"><a href="#1-LiveData-是什么？" class="headerlink" title="1. LiveData 是什么？"></a>1. LiveData 是什么？</h2><p><strong>LiveData</strong> 是一个可观察的数据持有者类。与常规observable不同，LiveData是生命周期感知的，这意味着它关注其他应用程序组件的生命周期，例如 <strong>Activity</strong>，<strong>Fragment</strong> 或 <strong>Service</strong>。这确保了 <strong>LiveData</strong> 仅更新处于活动生命周期状态的应用程序组件观察者。</p>
+<p>这带来的优点是显而易见的</p>
+<ol>
+<li>确保UI匹配数据状态</li>
+<li>不存在内存泄漏</li>
+<li>不会因为 Activity 停止而崩溃</li>
+<li>不需要手动处理生命周期</li>
+<li>适配配置更改（如设备旋转）</li>
+<li>资源共享（如使用一个单例对象持有 LiveData 实现全局资源共享 ）</li>
+</ol>
+<h2 id="2-如何使用-LiveData"><a href="#2-如何使用-LiveData" class="headerlink" title="2. 如何使用 LiveData"></a>2. 如何使用 LiveData</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://developer.android.google.cn/jetpack/androidx/releases/lifecycle#declaring_dependencies">添加依赖</a> （根据实际需求添加）<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="keyword">def</span> lifecycle_version = <span class="string">&quot;2.0.0&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// ViewModel and LiveData</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-extensions:$lifecycle_version&quot;</span></span><br><span class="line">    <span class="comment">// alternatively - just ViewModel</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version&quot;</span> <span class="comment">// For Kotlin use lifecycle-viewmodel-ktx</span></span><br><span class="line">    <span class="comment">// alternatively - just LiveData</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-livedata:$lifecycle_version&quot;</span></span><br><span class="line">    <span class="comment">// alternatively - Lifecycles only (no ViewModel or LiveData). Some UI</span></span><br><span class="line">    <span class="comment">//     AndroidX libraries use this lightweight import for Lifecycle</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-runtime:$lifecycle_version&quot;</span></span><br><span class="line"></span><br><span class="line">    annotationProcessor <span class="string">&quot;androidx.lifecycle:lifecycle-compiler:$lifecycle_version&quot;</span> <span class="comment">// For Kotlin use kapt instead of annotationProcessor</span></span><br><span class="line">    <span class="comment">// alternately - if using Java8, use the following instead of lifecycle-compiler</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-common-java8:$lifecycle_version&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - ReactiveStreams support for LiveData</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.lifecycle:lifecycle-reactivestreams:$lifecycle_version&quot;</span> <span class="comment">// For Kotlin use lifecycle-reactivestreams-ktx</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// optional - Test helpers for LiveData</span></span><br><span class="line">    testImplementation <span class="string">&quot;androidx.arch.core:core-testing:$lifecycle_version&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>创建一个 <strong>LiveData</strong> 实例用于保存特定类型数据，这通常在自己定义的 <strong>ViewModel</strong> 内内完成 。</li>
+<li>创建一个 <strong>Observer</strong> 对象并重写 <code>onChanged()</code> 方法，当 LiveData 对象中的数据发生变化时，会调用该方法，并传递包装在LiveData中的数据。该方法在主线程调用，通常用于变更 UI 状态。</li>
+<li>将 LiveData 与 Observer 建立订阅关系。调用 LiveData 的 <code>observe(LifecycleOwner owner,  Observer observer)</code> 来建立订阅关系，该方法第一个参数为 <strong>LifecycleOwner</strong> ，第二个参数为上一步创建的 <strong>Observer</strong> 对象。</li>
+</ol>
+<p>文至此处，各位读者朋友们应该已经从中窥出 LiveData 之所以能拥有生命周期感知能力，就是因为在最后一步中，我们传入了一个 <strong>LifecycleOwner</strong> 。</p>
+<p>我们一层一层查看 <strong>AppCompatActivity</strong> 等组件都会发现，该类实现了 <strong>LifecycleOwner</strong>接口，所以我们的 LiveData 可以在每个组件中跟随生命周期变化而变化。便不会存在组件生命周期结束了，却错误的试图去更新UI，而导致崩溃这种情况（说的就是你 RxJava）。</p>
+<h2 id="3-实操-Activity-与-Fragment-之间的数据共享"><a href="#3-实操-Activity-与-Fragment-之间的数据共享" class="headerlink" title="3. 实操 - Activity 与 Fragment 之间的数据共享"></a>3. 实操 - Activity 与 Fragment 之间的数据共享</h2><ol>
+<li><p>创建一个持有LiveData的类，一般来说是 ViewModel，当然也可以是一个单例，本文使用单例模式。这将使得我们的 LiveData 的生命周期是整个 APP 的生命周期。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Person</span>(<span class="keyword">var</span> name: String,</span><br><span class="line">                  <span class="keyword">var</span> age: <span class="built_in">Int</span>,</span><br><span class="line">                  <span class="keyword">var</span> sex: <span class="built_in">Int</span>)</span><br><span class="line">                  </span><br><span class="line"><span class="keyword">object</span> SingletonLiveData &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> list = ArrayList&lt;Person&gt;()</span><br><span class="line">    <span class="keyword">val</span> personList: MutableLiveData&lt;ArrayList&lt;Person&gt;&gt; <span class="keyword">by</span> lazy &#123;</span><br><span class="line">        MutableLiveData&lt;ArrayList&lt;Person&gt;&gt;()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">addPerson</span><span class="params">(person: <span class="type">Person</span>)</span></span> &#123;</span><br><span class="line">        list.add(person)</span><br><span class="line">        personList.value = list</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">clear</span><span class="params">()</span></span> &#123;</span><br><span class="line">        list.clear()</span><br><span class="line">        personList.value = list</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意我们想要更新LiveData中的数据时有两种方式，一：在主线程中操作可以使用<code>setValue()</code> ；二：在子线程中操作，使用<code>postValue()</code>。</p>
+</li>
+<li><p>在组件中使用 LiveData 实现数据共享<br>在Activity中使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DemoActivity</span> : <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_demo)</span><br><span class="line">        <span class="keyword">val</span> observer =  Observer&lt;ArrayList&lt;Person&gt;&gt;&#123;</span><br><span class="line">            textView.text = it.last().toString()</span><br><span class="line">        &#125;</span><br><span class="line">        SingletonLiveData.personList.observe(<span class="keyword">this</span>,observer)</span><br><span class="line">        <span class="keyword">var</span> age = <span class="number">19</span></span><br><span class="line">        btnAdd.setOnClickListener &#123;</span><br><span class="line">            SingletonLiveData.addPerson(Person(<span class="string">&quot;张三&quot;</span>,++age,<span class="number">1</span>))</span><br><span class="line">        &#125;</span><br><span class="line">        supportFragmentManager.beginTransaction()</span><br><span class="line">                .add(R.id.fl_content,BlankFragment.newInstance())</span><br><span class="line">                .commit()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Fragment中使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BlankFragment</span> : <span class="type">Fragment</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> lastPersonTv:TextView</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newInstance</span><span class="params">()</span></span> = BlankFragment()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?,</span></span></span><br><span class="line"><span class="params"><span class="function">                              savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        <span class="keyword">return</span> inflater.inflate(R.layout.blank_fragment, container, <span class="literal">false</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewCreated</span><span class="params">(view: <span class="type">View</span>, savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState)</span><br><span class="line">        lastPersonTv = view.findViewById(R.id.lastPerson)</span><br><span class="line">        <span class="keyword">var</span> age = <span class="number">19</span></span><br><span class="line">        view.findViewById&lt;Button&gt;(R.id.btnAddF).setOnClickListener &#123;</span><br><span class="line">            SingletonLiveData.addPerson(Person(<span class="string">&quot;李四&quot;</span>,++age,<span class="number">1</span>))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        <span class="keyword">val</span> observer =  Observer&lt;ArrayList&lt;Person&gt;&gt;&#123;</span><br><span class="line">            lastPersonTv.text = it.size.toString()</span><br><span class="line">        &#125;</span><br><span class="line">       SingletonLiveData.personList.observe(<span class="keyword">this</span>,observer)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际效果预览：<br><img src="/20190725104522891.gif" alt="Activity 与 Fragment 之间数据共享"><br>图示中白色区域为Activity，浅黄色区域为一个 Fragment，我们在act 与 frag 互不持有的状况下实现了数据的共享，并且及时的将最新的数据状态反馈到 UI 上。</p>
+</li>
+</ol>
+<h2 id="4-扩展阅读-ViewModel-的作用范围"><a href="#4-扩展阅读-ViewModel-的作用范围" class="headerlink" title="4. 扩展阅读 ViewModel 的作用范围"></a>4. 扩展阅读 ViewModel 的作用范围</h2><p>上文中持有 LiveData 的是我们创建的一个单例对象，他的作用范围是整个APP，任何一个组件在订阅该 LiveData 的时候，都将获得相同的数据。但是如果我们配合ViewModel来使用呢？</p>
+<p>我们修改部分代码：<br>创建一个持有 LiveData 的 ViewModel</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PersonViewModel</span> : <span class="type">ViewModel</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> list = ArrayList&lt;Person&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> personList: MutableLiveData&lt;ArrayList&lt;Person&gt;&gt; <span class="keyword">by</span> lazy &#123;</span><br><span class="line">        MutableLiveData&lt;ArrayList&lt;Person&gt;&gt;()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">addPerson</span><span class="params">(person: <span class="type">Person</span>)</span></span> &#123;</span><br><span class="line">        list.add(person)</span><br><span class="line">        personList.value = list</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改 Activity：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DemoActivity</span> : <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> model:PersonViewModel</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_demo)</span><br><span class="line">        <span class="keyword">val</span> observer =  Observer&lt;ArrayList&lt;Person&gt;&gt;&#123;</span><br><span class="line">            textView.text = it.last().toString()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//        SingletonLiveData.personList.observe(this,observer)</span></span><br><span class="line">        model = ViewModelProviders.of(<span class="keyword">this</span>).<span class="keyword">get</span>(PersonViewModel::<span class="keyword">class</span>.java)</span><br><span class="line">        model.personList.observe(<span class="keyword">this</span>,observer)</span><br><span class="line">        <span class="keyword">var</span> age = <span class="number">19</span></span><br><span class="line">        btnAdd.setOnClickListener &#123;</span><br><span class="line"><span class="comment">//            SingletonLiveData.addPerson(Person(&quot;张三&quot;,++age,1))</span></span><br><span class="line">            model.addPerson(Person(<span class="string">&quot;张三&quot;</span>,++age,<span class="number">1</span>))</span><br><span class="line">        &#125;</span><br><span class="line">        supportFragmentManager.beginTransaction()</span><br><span class="line">                .add(R.id.fl_content,BlankFragment.newInstance())</span><br><span class="line">                .commit()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改 Fragment：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BlankFragment</span> : <span class="type">Fragment</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> lastPersonTv:TextView</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newInstance</span><span class="params">()</span></span> = BlankFragment()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> viewModel: PersonViewModel</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?,</span></span></span><br><span class="line"><span class="params"><span class="function">                              savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        <span class="keyword">return</span> inflater.inflate(R.layout.blank_fragment, container, <span class="literal">false</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewCreated</span><span class="params">(view: <span class="type">View</span>, savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState)</span><br><span class="line">        lastPersonTv = view.findViewById(R.id.lastPerson)</span><br><span class="line">        <span class="keyword">var</span> age = <span class="number">19</span></span><br><span class="line">        view.findViewById&lt;Button&gt;(R.id.btnAddF).setOnClickListener &#123;</span><br><span class="line"><span class="comment">//            SingletonLiveData.addPerson(Person(&quot;李四&quot;,++age,1))</span></span><br><span class="line">            viewModel.addPerson(Person(<span class="string">&quot;李四&quot;</span>,++age,<span class="number">1</span>))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        viewModel = ViewModelProviders.of(<span class="keyword">this</span>).<span class="keyword">get</span>(PersonViewModel::<span class="keyword">class</span>.java)</span><br><span class="line">        <span class="keyword">val</span> observer =  Observer&lt;ArrayList&lt;Person&gt;&gt;&#123;</span><br><span class="line">            Logger.d(<span class="string">&quot;数据变化了&quot;</span>)</span><br><span class="line">            lastPersonTv.text = it.size.toString()</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//       SingletonLiveData.personList.observe(this,observer)</span></span><br><span class="line">       viewModel.personList.observe(<span class="keyword">this</span>,observer)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们会发现数据不再共享了，这是为什么么？</p>
+<p>原因其实很简单，这涉及到 ViewModel 的作用范围， LiveData 的作用范围取决于持有他的对象。如果是一个单例模式对象持有，那么这个 LiveData 全局共有，数据变化时，所有订阅他的组件都将调用 <code>onChanged()</code> 方法。</p>
+<p>但是 ViewModel 不是单例模式，如果使用 ViewModel 持有 LiveData 是不是就不能在组件之间共享数据了呢？答案是可以！</p>
+<p>我们观察 ViewModel 创建的方法<code>ViewModelProviders.of(this).get(PersonViewModel::class.java)</code>会发现，<code>of</code> 方法共有四个重载，它可以接受 Fragment 也可以接受 FragmentActivity。</p>
+<p>其实我们只需要在 Fragment 中获取 ViewModel 时，传入 getActivity() 即可，这样Activity 与 其所属的 Fragment 就可以通过 ViewModel 持有的 LiveData 来实现数据共享。也就是说 ViewModel 通过 <code>of()</code> 方法的传入值，来决定了 ViewModel 的作用范围。</p>
+<p>在多个Fragment嵌套时，使用 LiveData 有如下优势：</p>
+<ol>
+<li>Activity 不需要做任何事，甚至不知道这次交互，完美解耦。</li>
+<li>Fragment 只需要 与ViewModel交互，不需要知道对方 Fragment 的状态甚至是否存在，更不需要持有其引用。所有当对方 Fragment 销毁时，不影响本身任何工作。</li>
+<li>Fragment 生命周期互不影响，甚至 fragment 替换成其他的 也不影响这个系统的运作。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Jetpack/" rel="tag"># Jetpack</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/07/15/Android-9-0%E9%80%82%E9%85%8D/" rel="prev" title="Android 9.0适配">
+                  <i class="fa fa-angle-left"></i> Android 9.0适配
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/08/07/Kotlin%E5%8D%8F%E7%A8%8B-%E2%80%94%E2%80%94%E4%BB%8E-runBlocking-%E4%B8%8E-coroutineScope-%E8%AF%B4%E8%B5%B7/" rel="next" title="Kotlin协程 ——从 runBlocking 与 coroutineScope 说起">
+                  Kotlin协程 ——从 runBlocking 与 coroutineScope 说起 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
