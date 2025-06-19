@@ -6,47 +6,47 @@
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/junerver.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/junerver.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/junerver.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/junerver.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/junerver.github.io/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/junerver.github.io/","images":"/junerver.github.io/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/junerver.github.io/js/config.js"></script>
 
     <meta name="description" content="Jenkins的安装步骤我就不赘述了，有很多文章可以供参考，本文只讲在安装使用过程中遇到的一些问题及解决的方法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jenkins 踩坑记录">
-<meta property="og:url" content="https://junerver.github.io/2018/12/29/Jenkins-%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:url" content="https://junerver.github.io/junerver.github.io/2018/12/29/Jenkins-%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="Jenkins的安装步骤我就不赘述了，有很多文章可以供参考，本文只讲在安装使用过程中遇到的一些问题及解决的方法。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.github.io/1">
-<meta property="og:image" content="https://junerver.github.io/2">
-<meta property="og:image" content="https://junerver.github.io/3">
-<meta property="og:image" content="https://junerver.github.io/4">
-<meta property="og:image" content="https://junerver.github.io/5">
-<meta property="og:image" content="https://junerver.github.io/6">
-<meta property="og:image" content="https://junerver.github.io/7">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/1">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/2">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/3">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/4">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/5">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/6">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/7">
 <meta property="article:published_time" content="2018-12-29T01:44:47.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.436Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Jenkins">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.github.io/1">
+<meta name="twitter:image" content="https://junerver.github.io/junerver.github.io/1">
 
 
-<link rel="canonical" href="https://junerver.github.io/2018/12/29/Jenkins-%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/">
+<link rel="canonical" href="https://junerver.github.io/junerver.github.io/2018/12/29/Jenkins-%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2018/12/29/Jenkins-%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/","path":"2018/12/29/Jenkins-踩坑记录/","title":"Jenkins 踩坑记录"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/junerver.github.io/2018/12/29/Jenkins-%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/","path":"2018/12/29/Jenkins-踩坑记录/","title":"Jenkins 踩坑记录"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Jenkins 踩坑记录 | Junerver</title>
@@ -60,7 +60,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
+    <link rel="stylesheet" href="/junerver.github.io/css/noscript.css">
   </noscript>
 </head>
 
@@ -77,7 +77,7 @@
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/junerver.github.io/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
@@ -121,25 +121,25 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Junerver"
-      src="/uploads/13448219.png">
+      src="/junerver.github.io/uploads/13448219.png">
   <p class="site-author-name" itemprop="name">Junerver</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/archives/">
+        <a href="/junerver.github.io/archives/">
           <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-          <a href="/categories/">
+          <a href="/junerver.github.io/categories/">
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/tags/">
+          <a href="/junerver.github.io/tags/">
         <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
@@ -167,10 +167,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2018/12/29/Jenkins-%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/junerver.github.io/2018/12/29/Jenkins-%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="image" content="/junerver.github.io/uploads/13448219.png">
       <meta itemprop="name" content="Junerver">
     </span>
 
@@ -211,7 +211,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
         </span>
     </span>
 
@@ -224,21 +224,21 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p><img src="/1" alt="Jenkins"><br>Jenkins的安装步骤我就不赘述了，有很多文章可以供参考，本文只讲在安装使用过程中遇到的一些问题及解决的方法。</p>
-<p><img src="/2" alt="任务面板"></p>
+    <div class="post-body" itemprop="articleBody"><p><img src="/junerver.github.io/1" alt="Jenkins"><br>Jenkins的安装步骤我就不赘述了，有很多文章可以供参考，本文只讲在安装使用过程中遇到的一些问题及解决的方法。</p>
+<p><img src="/junerver.github.io/2" alt="任务面板"></p>
 <span id="more"></span>
 
 <h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h2><p>博主用于部署 Jenkins 的设备是一台 Debian8 主机，使用 ssh 连接。一开始我按照<a target="_blank" rel="noopener" href="https://pkg.jenkins.io/debian-stable/"><strong>官方指南</strong></a>来进行安装，但是在执行 <code>sudo apt-get install jenkins</code> 提示找不到这个安装包，后来发现是软件源的问题，官方指南上使用的是 https ，改成 <code>deb http://pkg.jenkins.io/debian-stable binary/</code> 就可以了。<br>我曾尝试使用 deb 安装包进行安装，但是安装完毕之后无法启动服务，不知道什么原因，要是哪位大佬知道还请不吝指教。</p>
-<h2 id="2-使用QQ邮箱作为通知邮箱"><a href="#2-使用QQ邮箱作为通知邮箱" class="headerlink" title="2. 使用QQ邮箱作为通知邮箱"></a>2. 使用QQ邮箱作为通知邮箱</h2><p>如果你使用自己的QQ邮箱作为通知发件邮箱，首先你需要在你的 QQ 邮箱中，开启 SMTP 服务，如果你已经开启过，请点击下方的生成授权码。<br><img src="/3" alt="开启 QQ 邮箱 SMTP 服务"></p>
-<p>在 Jenkins 的邮箱通知中密码位置填写的是 QQ 邮箱的授权码！<br><img src="/4" alt="密码填写授权码"></p>
+<h2 id="2-使用QQ邮箱作为通知邮箱"><a href="#2-使用QQ邮箱作为通知邮箱" class="headerlink" title="2. 使用QQ邮箱作为通知邮箱"></a>2. 使用QQ邮箱作为通知邮箱</h2><p>如果你使用自己的QQ邮箱作为通知发件邮箱，首先你需要在你的 QQ 邮箱中，开启 SMTP 服务，如果你已经开启过，请点击下方的生成授权码。<br><img src="/junerver.github.io/3" alt="开启 QQ 邮箱 SMTP 服务"></p>
+<p>在 Jenkins 的邮箱通知中密码位置填写的是 QQ 邮箱的授权码！<br><img src="/junerver.github.io/4" alt="密码填写授权码"></p>
 <h2 id="3-Gradle-错误"><a href="#3-Gradle-错误" class="headerlink" title="3. Gradle 错误"></a>3. Gradle 错误</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Build step &#x27;Invoke Gradle script&#x27; changed build result to FAILURE</span><br><span class="line">Build step &#x27;Invoke Gradle script&#x27; marked build as failure</span><br><span class="line">Finished: FAILURE</span><br></pre></td></tr></table></figure>
 <p>控制台输出这样的错误信息，说明 Gradle 在编译打包的过程中出现错误，我们可以按照以下方法来进行排查：</p>
 <h3 id="3-1-Jenkins-配置错误"><a href="#3-1-Jenkins-配置错误" class="headerlink" title="3.1 Jenkins 配置错误"></a>3.1 Jenkins 配置错误</h3><p>首先我们需要检查 Gradle 配置是否存在问题，网上很多帖子上建议我们在任务配置中使用 <code>Invoke Gradle</code>，如果使用这个选项的话一定要正确的配置 Gradle ，确保两点：</p>
 <ol>
 <li>Gradle 路径正确</li>
-<li>Gradle 版本正确<br><img src="/5" alt="正确的Gradle路径"></li>
+<li>Gradle 版本正确<br><img src="/junerver.github.io/5" alt="正确的Gradle路径"></li>
 </ol>
-<p>项目的 Gradle 版本信息保存在 <code>./gradle/wrapper/gradle-wrapper.properties</code> 这个文件中<br><img src="/6" alt="项目的 Gradle 版本"></p>
+<p>项目的 Gradle 版本信息保存在 <code>./gradle/wrapper/gradle-wrapper.properties</code> 这个文件中<br><img src="/junerver.github.io/6" alt="项目的 Gradle 版本"></p>
 <p>如果你使用的是一台全新的机器部署的 Jenkins ，在确保网络连接 OK 的情况下完全可以在全局工具配置中使用 <code>自动安装</code> 或者在任务配置中使用 <code>Use Gradle Wrapper</code></p>
 <h3 id="3-2-项目配置出错"><a href="#3-2-项目配置出错" class="headerlink" title="3.2 项目配置出错"></a>3.2 项目配置出错</h3><p>在检查确认我们的 Gradle 配置没有问题后，我们继续查看控制台的输出，在浏览器中搜索 <code>[ERROR]</code> 、<code>Exception</code> 可以帮助我们快速定位问题。</p>
 <h4 id="问题一：无法下载指定版本的-kotlin"><a href="#问题一：无法下载指定版本的-kotlin" class="headerlink" title="问题一：无法下载指定版本的 kotlin"></a>问题一：无法下载指定版本的 kotlin</h4><hr>
@@ -252,7 +252,7 @@
 <p>但是在 Jenkins 服务器上并没有 SS 代理，所以会出现这个错误，只需要将代理注释即可。</p>
 <p>Tips：其实，如果你用于部署 Jenkins 的主机上安装了 AS，那么你只要能在AS里顺利打包，在 Jenkins 上也能顺利打包，而且 AS 也相对更容易定位错误发生的位置与原因。如果没有安装 AS，就要要善用 Ctrl + F 搜索，来快速定位问题。</p>
 <h2 id="4-fir-im-插件上传路径配置出错"><a href="#4-fir-im-插件上传路径配置出错" class="headerlink" title="4. fir.im 插件上传路径配置出错"></a>4. fir.im 插件上传路径配置出错</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ERROR: Could not find the file specified by the pattern **/*.apk,**/*.ipa</span><br><span class="line">Build step &#x27;Upload to fir.im&#x27; marked build as failure</span><br><span class="line">Sending e-mails to: xxxxxxx@qq.com</span><br><span class="line">Finished: FAILURE</span><br></pre></td></tr></table></figure>
-<p>如果你不知道你的项目在计算机中的绝对路径，那么请使用 <strong><code>$&#123;WORKSPACE&#125;</code></strong> 来指向你的工作区：<br><img src="/7" alt="工作区"></p>
+<p>如果你不知道你的项目在计算机中的绝对路径，那么请使用 <strong><code>$&#123;WORKSPACE&#125;</code></strong> 来指向你的工作区：<br><img src="/junerver.github.io/7" alt="工作区"></p>
 
     </div>
 
@@ -262,19 +262,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Jenkins/" rel="tag"># Jenkins</a>
+              <a href="/junerver.github.io/tags/Jenkins/" rel="tag"># Jenkins</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2018/12/25/AndroidThings%E2%80%94%E2%80%94%E8%BF%9E%E6%8E%A5-SHT20-%E4%BC%A0%E6%84%9F%E5%99%A8%E8%AF%BB%E5%8F%96%E6%B8%A9%E6%B9%BF%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/" rel="prev" title="AndroidThings——连接 SHT20 传感器读取温湿度【已失效】">
+                <a href="/junerver.github.io/2018/12/25/AndroidThings%E2%80%94%E2%80%94%E8%BF%9E%E6%8E%A5-SHT20-%E4%BC%A0%E6%84%9F%E5%99%A8%E8%AF%BB%E5%8F%96%E6%B8%A9%E6%B9%BF%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/" rel="prev" title="AndroidThings——连接 SHT20 传感器读取温湿度【已失效】">
                   <i class="fa fa-angle-left"></i> AndroidThings——连接 SHT20 传感器读取温湿度【已失效】
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2019/04/19/Android-Studio%E6%89%93%E5%BC%80%E9%A1%B9%E7%9B%AE%E5%90%8E%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6%E7%88%86%E7%BA%A2%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" rel="next" title="Android Studio打开项目后所有文件爆红的解决方法">
+                <a href="/junerver.github.io/2019/04/19/Android-Studio%E6%89%93%E5%BC%80%E9%A1%B9%E7%9B%AE%E5%90%8E%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6%E7%88%86%E7%BA%A2%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" rel="next" title="Android Studio打开项目后所有文件爆红的解决方法">
                   Android Studio打开项目后所有文件爆红的解决方法 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -327,7 +327,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+<script src="/junerver.github.io/js/comments.js"></script><script src="/junerver.github.io/js/utils.js"></script><script src="/junerver.github.io/js/motion.js"></script><script src="/junerver.github.io/js/schemes/muse.js"></script><script src="/junerver.github.io/js/sidebar.js"></script><script src="/junerver.github.io/js/next-boot.js"></script>
 
   
 

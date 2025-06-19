@@ -6,41 +6,41 @@
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/junerver.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/junerver.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/junerver.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/junerver.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/junerver.github.io/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/junerver.github.io/","images":"/junerver.github.io/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/junerver.github.io/js/config.js"></script>
 
     <meta name="description" content="新建一个 compose 项目开始前，请下载最新版本的 Android Studio Arctic Fox，然后使用 Empty Compose Activity 模板创建应用。 我们先看看在 app&#x2F;build.gradle 中是如何配置使用 compose 的。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Compose学习笔记1-compose、state、flow、remember">
-<meta property="og:url" content="https://junerver.github.io/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/index.html">
+<meta property="og:url" content="https://junerver.github.io/junerver.github.io/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="新建一个 compose 项目开始前，请下载最新版本的 Android Studio Arctic Fox，然后使用 Empty Compose Activity 模板创建应用。 我们先看看在 app&#x2F;build.gradle 中是如何配置使用 compose 的。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.github.io/db977de65f38407c9fa01a49572bccaa~tplv-k3u1fbpfcp-watermark.image">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/db977de65f38407c9fa01a49572bccaa~tplv-k3u1fbpfcp-watermark.image">
 <meta property="article:published_time" content="2022-02-12T00:35:41.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.429Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Compose">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.github.io/db977de65f38407c9fa01a49572bccaa~tplv-k3u1fbpfcp-watermark.image">
+<meta name="twitter:image" content="https://junerver.github.io/junerver.github.io/db977de65f38407c9fa01a49572bccaa~tplv-k3u1fbpfcp-watermark.image">
 
 
-<link rel="canonical" href="https://junerver.github.io/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/">
+<link rel="canonical" href="https://junerver.github.io/junerver.github.io/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/","path":"2022/02/12/Compose学习笔记1-compose、state、flow、remember/","title":"Compose学习笔记1-compose、state、flow、remember"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/junerver.github.io/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/","path":"2022/02/12/Compose学习笔记1-compose、state、flow、remember/","title":"Compose学习笔记1-compose、state、flow、remember"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Compose学习笔记1-compose、state、flow、remember | Junerver</title>
@@ -54,7 +54,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
+    <link rel="stylesheet" href="/junerver.github.io/css/noscript.css">
   </noscript>
 </head>
 
@@ -71,7 +71,7 @@
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/junerver.github.io/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
@@ -115,25 +115,25 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Junerver"
-      src="/uploads/13448219.png">
+      src="/junerver.github.io/uploads/13448219.png">
   <p class="site-author-name" itemprop="name">Junerver</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/archives/">
+        <a href="/junerver.github.io/archives/">
           <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-          <a href="/categories/">
+          <a href="/junerver.github.io/categories/">
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/tags/">
+          <a href="/junerver.github.io/tags/">
         <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
@@ -161,10 +161,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/junerver.github.io/2022/02/12/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B01-compose%E3%80%81state%E3%80%81flow%E3%80%81remember/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="image" content="/junerver.github.io/uploads/13448219.png">
       <meta itemprop="name" content="Junerver">
     </span>
 
@@ -205,11 +205,11 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
         </span>
           ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
+          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
         </span>
     </span>
 
@@ -229,7 +229,7 @@
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">android&#123;</span><br><span class="line">    buildFeatures &#123;</span><br><span class="line">        <span class="comment">// viewbinding 之类的功能也需要在此开启</span></span><br><span class="line">        compose <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    composeOptions &#123;</span><br><span class="line">        kotlinCompilerExtensionVersion compose_version</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation <span class="string">&#x27;androidx.core:core-ktx:1.7.0&#x27;</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.compose.ui:ui:$compose_version&quot;</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.compose.material:material:$compose_version&quot;</span></span><br><span class="line">    implementation <span class="string">&quot;androidx.compose.ui:ui-tooling-preview:$compose_version&quot;</span></span><br><span class="line">    implementation <span class="string">&#x27;androidx.lifecycle:lifecycle-runtime-ktx:2.3.1&#x27;</span></span><br><span class="line">    implementation <span class="string">&#x27;androidx.activity:activity-compose:1.3.1&#x27;</span></span><br><span class="line">    testImplementation <span class="string">&#x27;junit:junit:4.13.2&#x27;</span></span><br><span class="line">    androidTestImplementation <span class="string">&#x27;androidx.test.ext:junit:1.1.3&#x27;</span></span><br><span class="line">    androidTestImplementation <span class="string">&#x27;androidx.test.espresso:espresso-core:3.4.0&#x27;</span></span><br><span class="line">    androidTestImplementation <span class="string">&quot;androidx.compose.ui:ui-test-junit4:$compose_version&quot;</span></span><br><span class="line">    debugImplementation <span class="string">&quot;androidx.compose.ui:ui-tooling:$compose_version&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="观察第一个不同之处"><a href="#观察第一个不同之处" class="headerlink" title="观察第一个不同之处"></a>观察第一个不同之处</h2><p>默认项目创建的这个 Activity 继承自 <code>ComponentActivity</code> 这个类，而不是我们熟悉的 <code>AppcompatActivity</code> ，这两个类的层级关系如下：</p>
-<p><img src="/db977de65f38407c9fa01a49572bccaa~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p><img src="/junerver.github.io/db977de65f38407c9fa01a49572bccaa~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
 <p>普通的用法：</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_webview);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -312,19 +312,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Compose/" rel="tag"># Compose</a>
+              <a href="/junerver.github.io/tags/Compose/" rel="tag"># Compose</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2022/01/28/Android-Gradle-%E5%8D%87%E7%BA%A7-7-1-0-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%B8%8E%E5%A4%87%E5%BF%98/" rel="prev" title="Android Gradle 升级 7.1.0 的一些注意事项与备忘">
+                <a href="/junerver.github.io/2022/01/28/Android-Gradle-%E5%8D%87%E7%BA%A7-7-1-0-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%B8%8E%E5%A4%87%E5%BF%98/" rel="prev" title="Android Gradle 升级 7.1.0 的一些注意事项与备忘">
                   <i class="fa fa-angle-left"></i> Android Gradle 升级 7.1.0 的一些注意事项与备忘
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" rel="next" title="Compose学习笔记2 - LaunchedEffect、状态与 状态管理">
+                <a href="/junerver.github.io/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/" rel="next" title="Compose学习笔记2 - LaunchedEffect、状态与 状态管理">
                   Compose学习笔记2 - LaunchedEffect、状态与 状态管理 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -377,7 +377,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+<script src="/junerver.github.io/js/comments.js"></script><script src="/junerver.github.io/js/utils.js"></script><script src="/junerver.github.io/js/motion.js"></script><script src="/junerver.github.io/js/schemes/muse.js"></script><script src="/junerver.github.io/js/sidebar.js"></script><script src="/junerver.github.io/js/next-boot.js"></script>
 
   
 

@@ -6,54 +6,54 @@
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/junerver.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/junerver.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/junerver.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/junerver.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/junerver.github.io/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/junerver.github.io/","images":"/junerver.github.io/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/junerver.github.io/js/config.js"></script>
 
     <meta name="description" content="转载请标明原文地址：http:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;dc163215bc7e  本来打算继续写 MVP 模式的，但是看了网上的几篇 Dagger 介绍的文章后，还是决定先写写 Dagger，网上有些文章写的不是过于简单就是太过复杂，或是不够详实，让刚接触 Dagger 的人容易看的云里雾里。正好也是刚学习 Dagger 没多久，记录下来对自己也是一个查缺补漏。文中如有错误，请各位">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MVP 模式之 先说说 Dagger （2）">
-<meta property="og:url" content="https://junerver.github.io/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/index.html">
+<meta property="og:url" content="https://junerver.github.io/junerver.github.io/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="转载请标明原文地址：http:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;dc163215bc7e  本来打算继续写 MVP 模式的，但是看了网上的几篇 Dagger 介绍的文章后，还是决定先写写 Dagger，网上有些文章写的不是过于简单就是太过复杂，或是不够详实，让刚接触 Dagger 的人容易看的云里雾里。正好也是刚学习 Dagger 没多久，记录下来对自己也是一个查缺补漏。文中如有错误，请各位">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.github.io/1">
-<meta property="og:image" content="https://junerver.github.io/2">
-<meta property="og:image" content="https://junerver.github.io/3">
-<meta property="og:image" content="https://junerver.github.io/4">
-<meta property="og:image" content="https://junerver.github.io/5">
-<meta property="og:image" content="https://junerver.github.io/6">
-<meta property="og:image" content="https://junerver.github.io/7">
-<meta property="og:image" content="https://junerver.github.io/8">
-<meta property="og:image" content="https://junerver.github.io/9">
-<meta property="og:image" content="https://junerver.github.io/10">
-<meta property="og:image" content="https://junerver.github.io/11">
-<meta property="og:image" content="https://junerver.github.io/12">
-<meta property="og:image" content="https://junerver.github.io/13">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/1">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/2">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/3">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/4">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/5">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/6">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/7">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/8">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/9">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/10">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/11">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/12">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/13">
 <meta property="article:published_time" content="2016-12-23T05:44:00.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.466Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="DI">
 <meta property="article:tag" content="Dagger2">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.github.io/1">
+<meta name="twitter:image" content="https://junerver.github.io/junerver.github.io/1">
 
 
-<link rel="canonical" href="https://junerver.github.io/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/">
+<link rel="canonical" href="https://junerver.github.io/junerver.github.io/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/","path":"2016/12/23/MVP-模式之-先说说-Dagger-（2）/","title":"MVP 模式之 先说说 Dagger （2）"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/junerver.github.io/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/","path":"2016/12/23/MVP-模式之-先说说-Dagger-（2）/","title":"MVP 模式之 先说说 Dagger （2）"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>MVP 模式之 先说说 Dagger （2） | Junerver</title>
@@ -67,7 +67,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
+    <link rel="stylesheet" href="/junerver.github.io/css/noscript.css">
   </noscript>
 </head>
 
@@ -84,7 +84,7 @@
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/junerver.github.io/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
@@ -128,25 +128,25 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Junerver"
-      src="/uploads/13448219.png">
+      src="/junerver.github.io/uploads/13448219.png">
   <p class="site-author-name" itemprop="name">Junerver</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/archives/">
+        <a href="/junerver.github.io/archives/">
           <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-          <a href="/categories/">
+          <a href="/junerver.github.io/categories/">
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/tags/">
+          <a href="/junerver.github.io/tags/">
         <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
@@ -174,10 +174,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/junerver.github.io/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="image" content="/junerver.github.io/uploads/13448219.png">
       <meta itemprop="name" content="Junerver">
     </span>
 
@@ -218,7 +218,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
         </span>
     </span>
 
@@ -252,7 +252,7 @@
 
 <p>那么在每次我们视图实例化“白兰地”对象时，都需要首先将其他的四个对象先行实例化完毕，实例化一次还好，如果这个实例在上百个页面中都需要使用到呢？但如果我们要是使用了依赖注入框架，将会使这一步骤变得十分容易。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Inject</span></span><br><span class="line">Brandy mBrandy;</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    setContentView(R.layout.activity_main);</span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">    mInjection.inject(<span class="built_in">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>是的，我们只需要在申明对象时，加上一行注解即可。然后在需要使用的地方直接使用<code>mBrandy</code>，是不是方便了很多。<br><img src="/1"></p>
+<p>是的，我们只需要在申明对象时，加上一行注解即可。然后在需要使用的地方直接使用<code>mBrandy</code>，是不是方便了很多。<br><img src="/junerver.github.io/1"></p>
 <h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h3><p>看完上面的代码对比，相比你已经对 Dagger 产生了强烈的兴趣了吧。如此优雅、高效的方式怎么会不吸引人呢，下面我们来看看如何在项目中使用 Dagger 。</p>
 <blockquote>
 <p>注意：我使用的环境是 AS 2.0，使用的 Dagger 版本是 2.4。如果你是使用 AS 2.2，请参照<a target="_blank" rel="noopener" href="https://github.com/google/dagger">Dagger2</a>官方的说明。</p>
@@ -273,18 +273,18 @@
 </ul>
 <h3 id="看个小例子"><a href="#看个小例子" class="headerlink" title="看个小例子"></a>看个小例子</h3><p>如果你按照上面的步骤写下了代码，运行代码你会发现报了一个空指针错误，这是因为我们还没有为我们要注入的对象与被注入的类建立联系。我们需要在使用被注入实例之前调用如下方法**<code>DaggerBrandyComponent.create().inject(this);</code><strong>，注意这里的参数 this ，这个参数的值由我们刚刚定义的接口 BrandyComponent 中声明的方法的参数决定。为了方便测试，我新建了一个 TestDagger 类，并在接口中添加了一个方法</strong><code>void inject(TestDagger testDagger);</code>**</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestDagger</span> &#123;</span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    Distiller mDistiller;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TestDagger</span><span class="params">()</span> &#123;</span><br><span class="line">        DaggerBrandyComponent.create().inject(<span class="built_in">this</span>);    <span class="comment">//在代码中我们并没有对 Distiller 对象进行 new 操作来实例化</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> mDistiller.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样做是为了可以方便的在测试用例中进行测试，而不用将程序运行在手机或者模拟器上。<br><img src="/2" alt="使用测试用例来方便的测试"></p>
+<p>这样做是为了可以方便的在测试用例中进行测试，而不用将程序运行在手机或者模拟器上。<br><img src="/junerver.github.io/2" alt="使用测试用例来方便的测试"></p>
 <p>可以看到，下面输出了“蒸馏器”，这说明我们对这一实例的注入成功了。</p>
-<h3 id="不得不说的Module"><a href="#不得不说的Module" class="headerlink" title="不得不说的Module"></a>不得不说的Module</h3><p><img src="/3" alt="Interesting"><br>看了上面的例子，你是不是觉得有点意思了？但是要注意的是，上面的那种方法适用于无参的构造方法（当然也可以有参数，但是对应的参数的构造方法上也要有 @Inject 注解)。<strong>Talk is cheap，show me the code！</strong></p>
+<h3 id="不得不说的Module"><a href="#不得不说的Module" class="headerlink" title="不得不说的Module"></a>不得不说的Module</h3><p><img src="/junerver.github.io/3" alt="Interesting"><br>看了上面的例子，你是不是觉得有点意思了？但是要注意的是，上面的那种方法适用于无参的构造方法（当然也可以有参数，但是对应的参数的构造方法上也要有 @Inject 注解)。<strong>Talk is cheap，show me the code！</strong></p>
 <p>为了验证刚刚提到的那一点，我们来为蒸馏器的构造方法添加一个新的参数 Heater 加热器！</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Distiller</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Heater mHeater;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Distiller</span><span class="params">(Heater heater)</span> &#123;</span><br><span class="line">        mHeater = heater;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;蒸馏器&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Heater</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Heater</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;加热器&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>注意上面的代码，Heater 类的构造方法没有使用 @Inject 注解，我们运行一下看看效果。<br><img src="/4" alt="Heater类的实例无法提供"></p>
+<p>注意上面的代码，Heater 类的构造方法没有使用 @Inject 注解，我们运行一下看看效果。<br><img src="/junerver.github.io/4" alt="Heater类的实例无法提供"></p>
 <p>程序抛出错误，错误的内容是：在没有使用 @Inject 注解构造方法或者 @Provides 注解一个方法时无法提供 Heater 的实例。我们只需要在 Heater 类的构造方法上也加上 @Inject 注解就可以了。</p>
 <p>通过上面的例子，你应该了解了我们可以为构造方法参数的构造方法添加 @Inject 注解来实现注入。（绕口令：八百标兵奔北坡，北坡炮兵并排跑，炮兵怕把标兵碰，标兵怕碰炮兵炮）。</p>
 <p>但是如果我们的参数是第三方的类呢？比如参数是一个 String 呢？我们不可能去 String 类的构造方法中添加注解。这时候就需要用到 Moudle 类了。</p>
 <p>Module 的代码上面我们已经写过了，我们来看一下</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BrandyModule</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="keyword">public</span> Grape <span class="title function_">provideGrape</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Grape</span>(<span class="string">&quot;解百纳&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们的 Grape 葡萄类的构造方法有一个 String 参数，通过 @Provides 注解，我们可以告知 Dagger 当需要用到 Grape 类的实例的时候，来 Module 类中获取。再次运行代码查看结果：<br><img src="/5" alt="运行结果"></p>
+<p>我们的 Grape 葡萄类的构造方法有一个 String 参数，通过 @Provides 注解，我们可以告知 Dagger 当需要用到 Grape 类的实例的时候，来 Module 类中获取。再次运行代码查看结果：<br><img src="/junerver.github.io/5" alt="运行结果"></p>
 <p>可以看到我们输出了正确的结果：我们来梳理一下 Dagger 注入实例的过程：</p>
 <ul>
 <li>步骤1：查找Module中是否存在创建该类的方法。</li>
@@ -302,20 +302,20 @@
 <p><strong>注</strong>：同时存在 @Inject 与 Module 时，Module 的优先级高于 @Inject 注解。</p>
 <p>本文示例代码：<a target="_blank" rel="noopener" href="https://github.com/junerver/DaggerDemo">https://github.com/junerver/DaggerDemo</a></p>
 <h3 id="酒鬼总是希望可以多喝几种酒"><a href="#酒鬼总是希望可以多喝几种酒" class="headerlink" title="酒鬼总是希望可以多喝几种酒"></a>酒鬼总是希望可以多喝几种酒</h3><p>现在你应该理解了 Dagger 是怎么一个工作流程了吧！也许你会问了，纪然 Dagger 是通过被注解方法的返回值来将它添加到依赖列表的，那么我们如果有多个 Grape 实例可用，应该怎么办呢（1、如何为 Dagger 创建多个相同类的的实例；2、在需要注入时如何区分多个实例；）？</p>
-<p>首先我们再添加一个 @Provides 注解方法试试看：<br><img src="/6" alt="bound multiple times"></p>
+<p>首先我们再添加一个 @Provides 注解方法试试看：<br><img src="/junerver.github.io/6" alt="bound multiple times"></p>
 <p>可以看到，编译器报错，提示 <strong>bound multiple times</strong>（多次绑定），难道说 Dagger 只能注入一种实例么？？那他的局限性也太大了吧？这时候 <strong>@Named</strong> 注解就需要粉墨登场啦~</p>
 <p>@Named 注解用于给 @Provides 注解提供别名，在使用的时候也需要加上 @Named 注解，Dagger 就知道我们需要的是具体哪个实例了。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Provides</span></span><br><span class="line"><span class="meta">@Named(&quot;CabernetSauvignon&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Grape <span class="title function_">provideOtherGrape</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Grape</span>(<span class="string">&quot;赤霞珠&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/7" alt="默认的注入实例"></p>
-<p><img src="/8" alt="使用别名的注入实例"></p>
+<p><img src="/junerver.github.io/7" alt="默认的注入实例"></p>
+<p><img src="/junerver.github.io/8" alt="使用别名的注入实例"></p>
 <p> 可以看到我们现在可以通过 @Named 注解来活动不同的葡萄了，那需要使用 Wine 类如果希望使用赤霞珠作为参数应该怎么办呢，如下所示：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Provides</span></span><br><span class="line"><span class="meta">@Named(&quot;CabernetSauvignon&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Wine <span class="title function_">provideOtherWine</span><span class="params">(<span class="meta">@Named(&quot;CabernetSauvignon&quot;)</span> Grape grape, FermentBarrel fermentBarrel)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Wine</span>(grape, fermentBarrel);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们新增加一个提供赤霞珠原浆的方法，在其参数中使用了<code>@Named(&quot;CabernetSauvignon&quot;)</code>来指定，这个参数是赤霞珠。完整的代码如下所示：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Module</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BrandyModule</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="keyword">public</span> Grape <span class="title function_">provideGrape</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Grape</span>(<span class="string">&quot;解百纳&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@Named(&quot;CabernetSauvignon&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Grape <span class="title function_">provideOtherGrape</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Grape</span>(<span class="string">&quot;赤霞珠&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@Named(&quot;CabernetSauvignon&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Wine <span class="title function_">provideOtherWine</span><span class="params">(<span class="meta">@Named(&quot;CabernetSauvignon&quot;)</span> Grape grape, FermentBarrel fermentBarrel)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Wine</span>(grape, fermentBarrel);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Provides</span></span><br><span class="line">    <span class="meta">@Named(&quot;CabernetSauvignon&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Brandy <span class="title function_">provideOtherBrandy</span><span class="params">(<span class="meta">@Named(&quot;CabernetSauvignon&quot;)</span> Wine wine, Distiller distiller)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Brandy</span>(distiller, wine);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>现在我们就可以品尝到使用赤霞珠葡萄制作的白兰地啦~</p>
-<p><img src="/9" alt="品尝美酒吧！"></p>
+<p><img src="/junerver.github.io/9" alt="品尝美酒吧！"></p>
 <p>总结要点： </p>
 <ol>
 <li>@Inject 有两种用途；</li>
@@ -325,16 +325,16 @@
 </ol>
 <h2 id="我们不需要那么多的蒸馏器"><a href="#我们不需要那么多的蒸馏器" class="headerlink" title="我们不需要那么多的蒸馏器"></a>我们不需要那么多的蒸馏器</h2><p>我们将 Distiller 的 toString() 方法进行修改：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Distiller</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Heater mHeater;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Distiller</span><span class="params">(Heater heater)</span> &#123;</span><br><span class="line">        mHeater = heater;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;有&quot;</span>+mHeater.toString()+<span class="string">&quot;的蒸馏器&quot;</span>+<span class="built_in">super</span>.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再次运行程序：<br><img src="/10" alt="使用了不同的蒸馏器"><br>发现问题了吗？我们的白兰地居然使用了不同的蒸馏器，这很不合理，我们的酿酒作坊只需要一个蒸馏器就可以了，完全不需要对每瓶酒都使用一个新的蒸馏器。也就是说我们的 Distiller 类应该是一个单例！</p>
+<p>再次运行程序：<br><img src="/junerver.github.io/10" alt="使用了不同的蒸馏器"><br>发现问题了吗？我们的白兰地居然使用了不同的蒸馏器，这很不合理，我们的酿酒作坊只需要一个蒸馏器就可以了，完全不需要对每瓶酒都使用一个新的蒸馏器。也就是说我们的 Distiller 类应该是一个单例！</p>
 <p>如果你看过其他文章你应该会知道有一个注解 @Singleton，这个注解的字面就是单例，那么我们使用该注解来注释我们的 Distiller 类以及我们的 BrandyComponent 接口。再次运行程序，结果如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Distiller</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Heater mHeater;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Distiller</span><span class="params">(Heater heater)</span> &#123;</span><br><span class="line">        mHeater = heater;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;有&quot;</span>+mHeater.toString()+<span class="string">&quot;的蒸馏器&quot;</span>+<span class="built_in">super</span>.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component(modules = BrandyModule.class)</span></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">BrandyComponent</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">inject</span><span class="params">(MainActivity mainActivity)</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">inject</span><span class="params">(TestDagger testDagger)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
-<p><img src="/11" alt="现在使用的是相同的蒸馏器了"></p>
+<p><img src="/junerver.github.io/11" alt="现在使用的是相同的蒸馏器了"></p>
 <p>你可能会惊叹：我的天呐！真是魔法！！！我们居然通过一个注解就实现了单例模式！？还学什么<a target="_blank" rel="noopener" href="http://blog.csdn.net/happy_horse/article/details/51164262">7种单例模式的实现方式</a>啊，以后都用这个注解不就都搞定了嘛？</p>
 <p>我们再新建一个测试类，同时在 @Component 中添加新的方法<code>void inject(OtherTest otherTest);</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OtherTest</span> &#123;</span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    Brandy mBrandy;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    <span class="meta">@Named(&quot;CabernetSauvignon&quot;)</span></span><br><span class="line">    Brandy mCSBrandy;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">OtherTest</span><span class="params">()</span> &#123;</span><br><span class="line">        DaggerBrandyComponent.create().inject(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> mBrandy.toString()+<span class="string">&quot;\n&quot;</span>+mCSBrandy.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在我们的测试用例中输出<code>System.out.println(new OtherTest().toString());</code>，结果如下所示：<br><img src="/12" alt="Scope的障眼法"></p>
+<p>在我们的测试用例中输出<code>System.out.println(new OtherTest().toString());</code>，结果如下所示：<br><img src="/junerver.github.io/12" alt="Scope的障眼法"></p>
 <p>可以看到我们又生成了一个新的蒸馏器，也就是说我们的 Distiller 类并不是一个真正的单例，但是在一个用例（一个被注入类）的范围内，他确实是一个“单例”。这也就是我所说的，@Scope 注释的障眼法（@Singleton 的实质就是一个 @Scope）。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Scope</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Singleton &#123;&#125;</span><br></pre></td></tr></table></figure>
 <p>@Scope 字面意思是范围，实际使用的效果我们可以看出在相同范围内，只会存在一个该实例。那么这个范围到底是什么？我的理解是：调用注入者的生命周期，就是这个标注的范围。比如 TestDagger 类调用了 <code>DaggerBrandyComponent.create().inject(this);</code> 进行了注入，在这个类的生命周期里，会复用 Distiller 类的实例。</p>
@@ -354,7 +354,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> BaseComponent mBaseComponent;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;</span><br><span class="line">        mBaseComponent = DaggerBaseComponent.create();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">SingletonInstance</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Singleton</span> <span class="variable">INSTANCE</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonInstance.INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> BaseComponent <span class="title function_">getBaseComponent</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> mBaseComponent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>将原来的注入方法<code>DaggerBrandyComponent.create().inject(this);</code>修改为</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DaggerBrandyComponent</span><br><span class="line">        .builder()</span><br><span class="line">        .baseComponent(Singleton.getInstance().getBaseComponent())</span><br><span class="line">        .build()</span><br><span class="line">        .inject(<span class="built_in">this</span>);</span><br></pre></td></tr></table></figure>
-<p>再次运行代码：<br><img src="/13" alt="实现了真正的单例"><br>这次我们就真正实现了被注入对象单例了！</p>
+<p>再次运行代码：<br><img src="/junerver.github.io/13" alt="实现了真正的单例"><br>这次我们就真正实现了被注入对象单例了！</p>
 <p>在 Android 中我们有一个现成的单例模式可用，那就是我们的 Application 类，我们只要写下如下代码就可以实现上述效果：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyApp</span> <span class="keyword">extends</span> <span class="title class_">Application</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> BaseComponent mBaseComponent;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate();</span><br><span class="line">        mBaseComponent = DaggerBaseComponent.create();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> BaseComponent <span class="title function_">getBaseComponent</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> mBaseComponent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果 BaseComponent 需要使用 Module 的话，就将 BaseComponent 实例获取方式修改为： <code>mBaseComponent = DaggerBaseComponent.builder().baseModule(new BaseModule()).build();</code></p>
@@ -375,20 +375,20 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/DI/" rel="tag"># DI</a>
-              <a href="/tags/Dagger2/" rel="tag"># Dagger2</a>
+              <a href="/junerver.github.io/tags/DI/" rel="tag"># DI</a>
+              <a href="/junerver.github.io/tags/Dagger2/" rel="tag"># Dagger2</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2016/12/20/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%88%9D%E8%AF%86-MVP%EF%BC%881%EF%BC%89/" rel="prev" title="MVP 模式之初识 MVP（1）">
+                <a href="/junerver.github.io/2016/12/20/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%88%9D%E8%AF%86-MVP%EF%BC%881%EF%BC%89/" rel="prev" title="MVP 模式之初识 MVP（1）">
                   <i class="fa fa-angle-left"></i> MVP 模式之初识 MVP（1）
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/" rel="next" title="通过apktool解包替换资源重新打包实现app定制">
+                <a href="/junerver.github.io/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/" rel="next" title="通过apktool解包替换资源重新打包实现app定制">
                   通过apktool解包替换资源重新打包实现app定制 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -441,7 +441,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+<script src="/junerver.github.io/js/comments.js"></script><script src="/junerver.github.io/js/utils.js"></script><script src="/junerver.github.io/js/motion.js"></script><script src="/junerver.github.io/js/schemes/muse.js"></script><script src="/junerver.github.io/js/sidebar.js"></script><script src="/junerver.github.io/js/next-boot.js"></script>
 
   
 

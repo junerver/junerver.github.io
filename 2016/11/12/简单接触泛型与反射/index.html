@@ -6,41 +6,41 @@
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/junerver.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/junerver.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/junerver.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/junerver.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/junerver.github.io/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/junerver.github.io/","images":"/junerver.github.io/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/junerver.github.io/js/config.js"></script>
 
     <meta name="description" content="场景：存在着两个不同的实体类（ParentEntity、ChildEntity），这两个实体类中都有头像这一个属性，对应着服务器的图片保存位置。需要一个方法，可以获取这一属性，然后将图片下载保存到本地指定位置，同时将路径保存到该实体类，然后更新数据库。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="简单接触泛型与反射">
-<meta property="og:url" content="https://junerver.github.io/2016/11/12/%E7%AE%80%E5%8D%95%E6%8E%A5%E8%A7%A6%E6%B3%9B%E5%9E%8B%E4%B8%8E%E5%8F%8D%E5%B0%84/index.html">
+<meta property="og:url" content="https://junerver.github.io/junerver.github.io/2016/11/12/%E7%AE%80%E5%8D%95%E6%8E%A5%E8%A7%A6%E6%B3%9B%E5%9E%8B%E4%B8%8E%E5%8F%8D%E5%B0%84/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="场景：存在着两个不同的实体类（ParentEntity、ChildEntity），这两个实体类中都有头像这一个属性，对应着服务器的图片保存位置。需要一个方法，可以获取这一属性，然后将图片下载保存到本地指定位置，同时将路径保存到该实体类，然后更新数据库。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.github.io/1240">
+<meta property="og:image" content="https://junerver.github.io/junerver.github.io/1240">
 <meta property="article:published_time" content="2016-11-12T09:18:41.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.551Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.github.io/1240">
+<meta name="twitter:image" content="https://junerver.github.io/junerver.github.io/1240">
 
 
-<link rel="canonical" href="https://junerver.github.io/2016/11/12/%E7%AE%80%E5%8D%95%E6%8E%A5%E8%A7%A6%E6%B3%9B%E5%9E%8B%E4%B8%8E%E5%8F%8D%E5%B0%84/">
+<link rel="canonical" href="https://junerver.github.io/junerver.github.io/2016/11/12/%E7%AE%80%E5%8D%95%E6%8E%A5%E8%A7%A6%E6%B3%9B%E5%9E%8B%E4%B8%8E%E5%8F%8D%E5%B0%84/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2016/11/12/%E7%AE%80%E5%8D%95%E6%8E%A5%E8%A7%A6%E6%B3%9B%E5%9E%8B%E4%B8%8E%E5%8F%8D%E5%B0%84/","path":"2016/11/12/简单接触泛型与反射/","title":"简单接触泛型与反射"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/junerver.github.io/2016/11/12/%E7%AE%80%E5%8D%95%E6%8E%A5%E8%A7%A6%E6%B3%9B%E5%9E%8B%E4%B8%8E%E5%8F%8D%E5%B0%84/","path":"2016/11/12/简单接触泛型与反射/","title":"简单接触泛型与反射"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>简单接触泛型与反射 | Junerver</title>
@@ -54,7 +54,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
+    <link rel="stylesheet" href="/junerver.github.io/css/noscript.css">
   </noscript>
 </head>
 
@@ -71,7 +71,7 @@
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/junerver.github.io/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
@@ -114,25 +114,25 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Junerver"
-      src="/uploads/13448219.png">
+      src="/junerver.github.io/uploads/13448219.png">
   <p class="site-author-name" itemprop="name">Junerver</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/archives/">
+        <a href="/junerver.github.io/archives/">
           <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-          <a href="/categories/">
+          <a href="/junerver.github.io/categories/">
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/tags/">
+          <a href="/junerver.github.io/tags/">
         <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
@@ -160,10 +160,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2016/11/12/%E7%AE%80%E5%8D%95%E6%8E%A5%E8%A7%A6%E6%B3%9B%E5%9E%8B%E4%B8%8E%E5%8F%8D%E5%B0%84/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/junerver.github.io/2016/11/12/%E7%AE%80%E5%8D%95%E6%8E%A5%E8%A7%A6%E6%B3%9B%E5%9E%8B%E4%B8%8E%E5%8F%8D%E5%B0%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="image" content="/junerver.github.io/uploads/13448219.png">
       <meta itemprop="name" content="Junerver">
     </span>
 
@@ -204,7 +204,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
         </span>
     </span>
 
@@ -230,7 +230,7 @@
 <p><code>public &lt;T&gt; void func(T t)&#123;&#125;</code></p>
 <p>也就是需要在作用域关键字后边声明关键字 <code>&lt;T&gt;</code>，这样方法才能接受一个泛型作为参数。</p>
 <p>现在我们的方法可以接收任意类型的对象作为参数了，但是存在一个问题，那就是这个t对象是一个Object对象，如下图所示：</p>
-<p><img src="/1240" alt="传入的泛型对象是一个Object"></p>
+<p><img src="/junerver.github.io/1240" alt="传入的泛型对象是一个Object"></p>
 <p>对于方法而言，方法不管传入的对象是什么类型的实例，只对传入的对象做统一处理。那么首先我们应该先知道，传入的对象到底是ParentEntity、ChildEntity中的哪个？</p>
 <p>我们可以使用 <code>Class clazz = t.getClass();</code>来获取传入对象的“类”，使用 <code>String clazzName=clazz.getName();</code>可以得知传入的对象的类的名字，这样我们就可以判断传入的对象是不是我们需要的了。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (clazzName.equals(ParentEntity.class.getName())) &#123;   </span><br><span class="line"></span><br><span class="line"> &#125; <span class="keyword">else</span> <span class="keyword">if</span> (clazzName.equals(ChildEntity.class.getName())) &#123;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
@@ -252,7 +252,7 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/junerver.github.io/tags/Java/" rel="tag"># Java</a>
           </div>
 
         
@@ -261,7 +261,7 @@
             <div class="post-nav-item">
             </div>
             <div class="post-nav-item">
-                <a href="/2016/12/02/%E4%BD%BF%E7%94%A8gradle%E6%89%93%E5%8C%85%E5%A4%9A%E4%B8%AA%E5%8F%98%E4%BD%93%EF%BC%88variant%EF%BC%89/" rel="next" title="使用gradle打包多个变体（variant）">
+                <a href="/junerver.github.io/2016/12/02/%E4%BD%BF%E7%94%A8gradle%E6%89%93%E5%8C%85%E5%A4%9A%E4%B8%AA%E5%8F%98%E4%BD%93%EF%BC%88variant%EF%BC%89/" rel="next" title="使用gradle打包多个变体（variant）">
                   使用gradle打包多个变体（variant） <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -314,7 +314,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+<script src="/junerver.github.io/js/comments.js"></script><script src="/junerver.github.io/js/utils.js"></script><script src="/junerver.github.io/js/motion.js"></script><script src="/junerver.github.io/js/schemes/muse.js"></script><script src="/junerver.github.io/js/sidebar.js"></script><script src="/junerver.github.io/js/next-boot.js"></script>
 
   
 
