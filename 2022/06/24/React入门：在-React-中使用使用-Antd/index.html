@@ -18,29 +18,29 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="Antd 使用学习Antd 使用学习1. 配置antd 配合 craco2. 使用Antd1. Antd 使用第一课 Form 表单扩展知识：2. Table 表格的使用：3. Select 与 Input4. Dropdown 与 Menu5. Typegraphy.Text 用于显示一段文字6. Button7. Popover8. List，List.Item，List.Item.Meta9">
 <meta property="og:type" content="article">
 <meta property="og:title" content="React入门：在 React 中使用使用 Antd">
-<meta property="og:url" content="https://junerver.xyz/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/index.html">
+<meta property="og:url" content="https://junerver.github.io/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="Antd 使用学习Antd 使用学习1. 配置antd 配合 craco2. 使用Antd1. Antd 使用第一课 Form 表单扩展知识：2. Table 表格的使用：3. Select 与 Input4. Dropdown 与 Menu5. Typegraphy.Text 用于显示一段文字6. Button7. Popover8. List，List.Item，List.Item.Meta9">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.xyz/1">
+<meta property="og:image" content="https://junerver.github.io/1">
 <meta property="article:published_time" content="2022-06-24T03:58:33.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.482Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="React">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.xyz/1">
+<meta name="twitter:image" content="https://junerver.github.io/1">
 
 
-<link rel="canonical" href="https://junerver.xyz/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/">
+<link rel="canonical" href="https://junerver.github.io/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/","path":"2022/06/24/React入门：在-React-中使用使用-Antd/","title":"React入门：在 React 中使用使用 Antd"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/","path":"2022/06/24/React入门：在-React-中使用使用-Antd/","title":"React入门：在 React 中使用使用 Antd"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>React入门：在 React 中使用使用 Antd | Junerver</title>
@@ -161,7 +161,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2022/06/24/React%E5%85%A5%E9%97%A8%EF%BC%9A%E5%9C%A8-React-%E4%B8%AD%E4%BD%BF%E7%94%A8%E4%BD%BF%E7%94%A8-Antd/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/13448219.png">

@@ -18,30 +18,30 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="委托模式：委托模式是软件设计模式中的一项基本技巧。在委托模式中，有两个对象参与处理同一个请求，接受请求的对象将请求委托给另一个对象来处理。  举个例子，一个公司有普通员工、财务人员、管理者三个角色，管理者可以调用普通员工进行某项工作，可以派财务人员给某个员工开支。可以看出其中管理者并不会进行某项具体的工作，而是由各个人员来完成各自的工作。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kotlin 委托模式 - 一个管理人员的一天">
-<meta property="og:url" content="https://junerver.xyz/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/index.html">
+<meta property="og:url" content="https://junerver.github.io/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="委托模式：委托模式是软件设计模式中的一项基本技巧。在委托模式中，有两个对象参与处理同一个请求，接受请求的对象将请求委托给另一个对象来处理。  举个例子，一个公司有普通员工、财务人员、管理者三个角色，管理者可以调用普通员工进行某项工作，可以派财务人员给某个员工开支。可以看出其中管理者并不会进行某项具体的工作，而是由各个人员来完成各自的工作。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.xyz/1240">
-<meta property="og:image" content="https://junerver.xyz/2">
+<meta property="og:image" content="https://junerver.github.io/1240">
+<meta property="og:image" content="https://junerver.github.io/2">
 <meta property="article:published_time" content="2018-06-30T05:55:00.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.454Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Kotlin">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.xyz/1240">
+<meta name="twitter:image" content="https://junerver.github.io/1240">
 
 
-<link rel="canonical" href="https://junerver.xyz/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/">
+<link rel="canonical" href="https://junerver.github.io/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/","path":"2018/06/30/Kotlin-委托模式-一个管理人员的一天/","title":"Kotlin 委托模式 - 一个管理人员的一天"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/","path":"2018/06/30/Kotlin-委托模式-一个管理人员的一天/","title":"Kotlin 委托模式 - 一个管理人员的一天"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Kotlin 委托模式 - 一个管理人员的一天 | Junerver</title>
@@ -161,7 +161,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2018/06/30/Kotlin-%E5%A7%94%E6%89%98%E6%A8%A1%E5%BC%8F-%E4%B8%80%E4%B8%AA%E7%AE%A1%E7%90%86%E4%BA%BA%E5%91%98%E7%9A%84%E4%B8%80%E5%A4%A9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/13448219.png">

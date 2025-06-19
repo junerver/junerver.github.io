@@ -18,12 +18,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="还记得：   使用 ahooks 中的 useRequest 轻松管理React中的网络请求 这篇文章么？ 现在我将 ahooks 带到了 Compose 开发中！  在Compose项目中，你是如何进行网络请求，管理状态的？ViewModel？还是 LaunchedEffect 配合 State？ 他们看起来都不够优雅，我们真的需要在 Compose 中创建这么多VM么？ 还有更优雅的方式么">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在Compose中使用useRequest轻松管理网络请求">
-<meta property="og:url" content="https://junerver.xyz/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/index.html">
+<meta property="og:url" content="https://junerver.github.io/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="还记得：   使用 ahooks 中的 useRequest 轻松管理React中的网络请求 这篇文章么？ 现在我将 ahooks 带到了 Compose 开发中！  在Compose项目中，你是如何进行网络请求，管理状态的？ViewModel？还是 LaunchedEffect 配合 State？ 他们看起来都不够优雅，我们真的需要在 Compose 中创建这么多VM么？ 还有更优雅的方式么">
 <meta property="og:locale" content="zh_CN">
@@ -31,17 +31,17 @@
 <meta property="article:modified_time" content="2025-06-19T08:38:38.517Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Compose">
-<meta property="article:tag" content="Kotlin">
 <meta property="article:tag" content="React">
 <meta property="article:tag" content="ahooks">
+<meta property="article:tag" content="Kotlin">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://junerver.xyz/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
+<link rel="canonical" href="https://junerver.github.io/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/","path":"2024/03/06/在Compose中使用useRequest轻松管理网络请求/","title":"在Compose中使用useRequest轻松管理网络请求"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/","path":"2024/03/06/在Compose中使用useRequest轻松管理网络请求/","title":"在Compose中使用useRequest轻松管理网络请求"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>在Compose中使用useRequest轻松管理网络请求 | Junerver</title>
@@ -162,7 +162,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/13448219.png">
@@ -271,9 +271,9 @@
     <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Compose/" rel="tag"># Compose</a>
-              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
               <a href="/tags/React/" rel="tag"># React</a>
               <a href="/tags/ahooks/" rel="tag"># ahooks</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
           </div>
 
         

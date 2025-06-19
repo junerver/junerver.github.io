@@ -18,12 +18,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="匿名内部类在 Java 中是经常用到的一个特性，例如在 Android 开发中的各种 Listener，使用时也很简单，比如： 123456789101112&#x2F;&#x2F;lambdabutton.setOnClickListener(v -&gt; &#123;  &#x2F;&#x2F;do some thing&#125;);&#x2F;&#x2F;匿名内部类button.setOnClickListener(new View.OnClic">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数）">
-<meta property="og:url" content="https://junerver.xyz/2022/02/18/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/index.html">
+<meta property="og:url" content="https://junerver.github.io/2022/02/18/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="匿名内部类在 Java 中是经常用到的一个特性，例如在 Android 开发中的各种 Listener，使用时也很简单，比如： 123456789101112&#x2F;&#x2F;lambdabutton.setOnClickListener(v -&gt; &#123;  &#x2F;&#x2F;do some thing&#125;);&#x2F;&#x2F;匿名内部类button.setOnClickListener(new View.OnClic">
 <meta property="og:locale" content="zh_CN">
@@ -36,11 +36,11 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://junerver.xyz/2022/02/18/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/">
+<link rel="canonical" href="https://junerver.github.io/2022/02/18/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2022/02/18/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/","path":"2022/02/18/如何在-kotlin-优雅的封装匿名内部类（DSL、高阶函数）/","title":"如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数）"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2022/02/18/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/","path":"2022/02/18/如何在-kotlin-优雅的封装匿名内部类（DSL、高阶函数）/","title":"如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数）"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>如何在 kotlin 优雅的封装匿名内部类（DSL、高阶函数） | Junerver</title>
@@ -161,7 +161,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2022/02/18/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2022/02/18/%E5%A6%82%E4%BD%95%E5%9C%A8-kotlin-%E4%BC%98%E9%9B%85%E7%9A%84%E5%B0%81%E8%A3%85%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%EF%BC%88DSL%E3%80%81%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/13448219.png">

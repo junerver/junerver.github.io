@@ -18,12 +18,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="经过上文的介绍，想必你对 Kotlin 有了一定的兴趣了吧，Kotlin 简化了很多在 Java 里需要写大量代码的操作，稍安勿躁，我们来看看都有哪些 “常规操作”。 集合对于集合，想必你已经熟悉得不能再熟了，我就不废话了，我们来看看在 Kotlin 里怎么使用集合吧。 上文中我们曾经提到过，在 Kotlin 中 使用 var val 来声明 可变变量 只读变量。类似的，在集合中也存在这样的概念：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kotlin 集合类与扩展函数-都是常规操作">
-<meta property="og:url" content="https://junerver.xyz/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:url" content="https://junerver.github.io/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="经过上文的介绍，想必你对 Kotlin 有了一定的兴趣了吧，Kotlin 简化了很多在 Java 里需要写大量代码的操作，稍安勿躁，我们来看看都有哪些 “常规操作”。 集合对于集合，想必你已经熟悉得不能再熟了，我就不废话了，我们来看看在 Kotlin 里怎么使用集合吧。 上文中我们曾经提到过，在 Kotlin 中 使用 var val 来声明 可变变量 只读变量。类似的，在集合中也存在这样的概念：">
 <meta property="og:locale" content="zh_CN">
@@ -34,11 +34,11 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://junerver.xyz/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/">
+<link rel="canonical" href="https://junerver.github.io/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/","path":"2018/06/08/Kotlin-集合类与扩展函数-都是常规操作/","title":"Kotlin 集合类与扩展函数-都是常规操作"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/","path":"2018/06/08/Kotlin-集合类与扩展函数-都是常规操作/","title":"Kotlin 集合类与扩展函数-都是常规操作"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Kotlin 集合类与扩展函数-都是常规操作 | Junerver</title>
@@ -159,7 +159,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2018/06/08/Kotlin-%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%87%BD%E6%95%B0-%E9%83%BD%E6%98%AF%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/13448219.png">

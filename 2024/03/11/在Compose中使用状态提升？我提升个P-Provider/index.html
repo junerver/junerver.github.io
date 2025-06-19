@@ -18,12 +18,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="”总所周知“，在 Compose 中有个思想叫做状态提升，在之前的文章Compose学习笔记2 - LaunchedEffect、状态与 状态管理中我们曾提及过。 状态提升的目的是为了让我们的组件尽可能的”无状态“，无状态的优点：  可复用，组件只负责组件的职责，不持有或者少持有状态 可测试，组件不持有状态，更接近于纯函数，相同输入必然有相同输出  状态提升的想法很好，但是实践的时候可能并不美妙。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在Compose中使用状态提升？我提升个P...Provider">
-<meta property="og:url" content="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/index.html">
+<meta property="og:url" content="https://junerver.github.io/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="”总所周知“，在 Compose 中有个思想叫做状态提升，在之前的文章Compose学习笔记2 - LaunchedEffect、状态与 状态管理中我们曾提及过。 状态提升的目的是为了让我们的组件尽可能的”无状态“，无状态的优点：  可复用，组件只负责组件的职责，不持有或者少持有状态 可测试，组件不持有状态，更接近于纯函数，相同输入必然有相同输出  状态提升的想法很好，但是实践的时候可能并不美妙。">
 <meta property="og:locale" content="zh_CN">
@@ -31,17 +31,17 @@
 <meta property="article:modified_time" content="2025-06-19T08:38:38.517Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Compose">
-<meta property="article:tag" content="Kotlin">
 <meta property="article:tag" content="React">
 <meta property="article:tag" content="ahooks">
+<meta property="article:tag" content="Kotlin">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">
+<link rel="canonical" href="https://junerver.github.io/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/","path":"2024/03/11/在Compose中使用状态提升？我提升个P-Provider/","title":"在Compose中使用状态提升？我提升个P...Provider"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/","path":"2024/03/11/在Compose中使用状态提升？我提升个P-Provider/","title":"在Compose中使用状态提升？我提升个P...Provider"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>在Compose中使用状态提升？我提升个P...Provider | Junerver</title>
@@ -162,7 +162,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/13448219.png">
@@ -223,7 +223,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>”总所周知“，在 Compose 中有个思想叫做<strong>状态提升</strong>，在之前的文章<a href="https://junerver.xyz/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/#%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87">Compose学习笔记2 - LaunchedEffect、状态与 状态管理</a>中我们曾提及过。</p>
+    <div class="post-body" itemprop="articleBody"><p>”总所周知“，在 Compose 中有个思想叫做<strong>状态提升</strong>，在之前的文章<a target="_blank" rel="noopener" href="https://junerver.xyz/2022/02/15/Compose%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B02-LaunchedEffect%E3%80%81%E7%8A%B6%E6%80%81%E4%B8%8E-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/#%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87">Compose学习笔记2 - LaunchedEffect、状态与 状态管理</a>中我们曾提及过。</p>
 <p>状态提升的目的是为了让我们的组件尽可能的”无状态“，无状态的优点：</p>
 <ul>
 <li>可复用，组件只负责组件的职责，不持有或者少持有状态</li>
@@ -271,9 +271,9 @@
     <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Compose/" rel="tag"># Compose</a>
-              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
               <a href="/tags/React/" rel="tag"># React</a>
               <a href="/tags/ahooks/" rel="tag"># ahooks</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
           </div>
 
         

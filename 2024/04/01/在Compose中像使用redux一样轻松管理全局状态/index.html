@@ -18,12 +18,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专心于业务与UI组件。 这是系列文章的第五篇，前文：  在Compose中使用useRequest轻松管理网络请求 在Compose中使用状态提升？我提升个P…Provider 在Compose">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在Compose中像使用redux一样轻松管理全局状态">
-<meta property="og:url" content="https://junerver.xyz/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/index.html">
+<meta property="og:url" content="https://junerver.github.io/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专心于业务与UI组件。 这是系列文章的第五篇，前文：  在Compose中使用useRequest轻松管理网络请求 在Compose中使用状态提升？我提升个P…Provider 在Compose">
 <meta property="og:locale" content="zh_CN">
@@ -31,17 +31,17 @@
 <meta property="article:modified_time" content="2025-06-19T08:38:38.518Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Compose">
-<meta property="article:tag" content="Kotlin">
 <meta property="article:tag" content="React">
 <meta property="article:tag" content="ahooks">
+<meta property="article:tag" content="Kotlin">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://junerver.xyz/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/">
+<link rel="canonical" href="https://junerver.github.io/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/","path":"2024/04/01/在Compose中像使用redux一样轻松管理全局状态/","title":"在Compose中像使用redux一样轻松管理全局状态"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/","path":"2024/04/01/在Compose中像使用redux一样轻松管理全局状态/","title":"在Compose中像使用redux一样轻松管理全局状态"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>在Compose中像使用redux一样轻松管理全局状态 | Junerver</title>
@@ -162,7 +162,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/13448219.png">
@@ -226,17 +226,17 @@
     <div class="post-body" itemprop="articleBody"><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文中提及的 <code>use</code>开头的函数，都出自与我的 <a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a> 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专心于业务与UI组件。</p>
 <p>这是系列文章的第五篇，前文：</p>
 <ul>
-<li><a href="https://junerver.xyz/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">在Compose中使用useRequest轻松管理网络请求</a></li>
-<li><a href="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">在Compose中使用状态提升？我提升个P…Provider</a></li>
-<li><a href="https://junerver.xyz/2024/03/13/%E5%9C%A8Compose%E4%B8%AD%E7%88%B6%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E7%9A%84%E5%87%BD%E6%95%B0%EF%BC%9F/">在Compose中父组件如何调用子组件的函数？</a></li>
-<li><a href="https://junerver.xyz/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/">在Compose中方便的使用MVI思想？试试useReducer！</a></li>
+<li><a target="_blank" rel="noopener" href="https://junerver.xyz/2024/03/06/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8useRequest%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">在Compose中使用useRequest轻松管理网络请求</a></li>
+<li><a target="_blank" rel="noopener" href="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">在Compose中使用状态提升？我提升个P…Provider</a></li>
+<li><a target="_blank" rel="noopener" href="https://junerver.xyz/2024/03/13/%E5%9C%A8Compose%E4%B8%AD%E7%88%B6%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E7%9A%84%E5%87%BD%E6%95%B0%EF%BC%9F/">在Compose中父组件如何调用子组件的函数？</a></li>
+<li><a target="_blank" rel="noopener" href="https://junerver.xyz/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/">在Compose中方便的使用MVI思想？试试useReducer！</a></li>
 </ul>
 <span id="more"></span>
 
 <h2 id="也许只有-useContext-、useReducer-是不够的"><a href="#也许只有-useContext-、useReducer-是不够的" class="headerlink" title="也许只有 useContext 、useReducer 是不够的"></a>也许只有 <code>useContext</code> 、<code>useReducer</code> 是不够的</h2><p>书接上回，上次的文章发布后有小伙伴在评论区留言，谈到了关于在组件之间保存状态的问题，我也给予了回答，那就是使用 useContext 进行进一步的状态提升。</p>
 <p>但是在之前版本的<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a> 并没有很方便的方式让我们将 <code>useContext</code> 与 <code>useReducer</code> 配合起来，只使用这二者在暴露多个状态时非常麻烦。</p>
 <p>现在全新版本的 redux-react 风格的 hook来啦，它就是 <code>useSelector</code>、<code>useDispatch</code>，现在你可以轻松的构建全局状态，并通过这两个钩子轻松的跨组件获取状态与dispatch函数。它是基于 <code>useContext</code> 的进一步封装，现在你可以不需要再自己去配置 <code>useContext</code> 来管理状态暴露了！</p>
-<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><p>关于 reducer 的概念，请先查阅 <a href="https://junerver.xyz/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/">在Compose中方便的使用MVI思想？试试useReducer！</a>，一些概念我们就不再赘述了，这里依旧使用我最喜欢的 Todos 作为案例 （<a href="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">在Compose中使用状态提升？我提升个P…Provider</a>）。</p>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><p>关于 reducer 的概念，请先查阅 <a target="_blank" rel="noopener" href="https://junerver.xyz/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/">在Compose中方便的使用MVI思想？试试useReducer！</a>，一些概念我们就不再赘述了，这里依旧使用我最喜欢的 Todos 作为案例 （<a target="_blank" rel="noopener" href="https://junerver.xyz/2024/03/11/%E5%9C%A8Compose%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%8A%B6%E6%80%81%E6%8F%90%E5%8D%87%EF%BC%9F%E6%88%91%E6%8F%90%E5%8D%87%E4%B8%AAP-Provider/">在Compose中使用状态提升？我提升个P…Provider</a>）。</p>
 <h3 id="暴露全局状态"><a href="#暴露全局状态" class="headerlink" title="暴露全局状态"></a>暴露全局状态</h3><p>首先我们在根组件使用 <code>ReduxProvider</code> 组件暴露全局状态存储。</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Todo</span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> id: String)</span><br><span class="line"></span><br><span class="line"><span class="keyword">sealed</span> <span class="keyword">interface</span> <span class="title class_">TodoAction</span></span><br><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">AddTodo</span>(<span class="keyword">val</span> todo: Todo) : TodoAction</span><br><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">DelTodo</span>(<span class="keyword">val</span> id: String) : TodoAction</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> todoReducer: Reducer&lt;List&lt;Todo&gt;, TodoAction&gt; = &#123; prevState: List&lt;Todo&gt;, action: TodoAction -&gt;</span><br><span class="line">    <span class="keyword">when</span> (action) &#123;</span><br><span class="line">        <span class="keyword">is</span> AddTodo -&gt; buildList &#123;</span><br><span class="line">            addAll(prevState)</span><br><span class="line">            add(action.todo)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">is</span> DelTodo -&gt;  prevState.filter &#123; it.id != action.id &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> store = createStore &#123;</span><br><span class="line">    todoReducer with emptyList() <span class="comment">// 使用中缀函数 with 来连接reducer函数与初始状态</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">UseReduxExample</span><span class="params">()</span></span> &#123;</span><br><span class="line">    ReduxProvider(store = store) &#123;</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -269,9 +269,9 @@
     <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Compose/" rel="tag"># Compose</a>
-              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
               <a href="/tags/React/" rel="tag"># React</a>
               <a href="/tags/ahooks/" rel="tag"># ahooks</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
           </div>
 
         

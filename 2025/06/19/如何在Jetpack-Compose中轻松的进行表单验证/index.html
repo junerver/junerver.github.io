@@ -18,12 +18,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专注于业务与 UI 组件。 这是系列文章的第 9 篇，前文：  在 Compose 中使用 useRequest 轻松管理网络请求 在 Compose 中使用状态提升？我提升个 P…Provid">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何在Jetpack Compose中轻松的进行表单验证">
-<meta property="og:url" content="https://junerver.xyz/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/index.html">
+<meta property="og:url" content="https://junerver.github.io/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专注于业务与 UI 组件。 这是系列文章的第 9 篇，前文：  在 Compose 中使用 useRequest 轻松管理网络请求 在 Compose 中使用状态提升？我提升个 P…Provid">
 <meta property="og:locale" content="zh_CN">
@@ -31,17 +31,17 @@
 <meta property="article:modified_time" content="2025-06-19T10:07:17.352Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Compose">
-<meta property="article:tag" content="Kotlin">
 <meta property="article:tag" content="React">
 <meta property="article:tag" content="ahooks">
+<meta property="article:tag" content="Kotlin">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://junerver.xyz/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/">
+<link rel="canonical" href="https://junerver.github.io/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/","path":"2025/06/19/如何在Jetpack-Compose中轻松的进行表单验证/","title":"如何在Jetpack Compose中轻松的进行表单验证"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/","path":"2025/06/19/如何在Jetpack-Compose中轻松的进行表单验证/","title":"如何在Jetpack Compose中轻松的进行表单验证"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>如何在Jetpack Compose中轻松的进行表单验证 | Junerver</title>
@@ -162,7 +162,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/13448219.png">
@@ -314,9 +314,9 @@
     <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Compose/" rel="tag"># Compose</a>
-              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
               <a href="/tags/React/" rel="tag"># React</a>
               <a href="/tags/ahooks/" rel="tag"># ahooks</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
           </div>
 
         
