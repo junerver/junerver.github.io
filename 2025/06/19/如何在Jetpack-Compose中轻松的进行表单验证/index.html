@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="title: 如何在 Jetpack Compose 中轻松的进行表单验证categories:  技术博客 Composetags: Kotlin Composedate: 2024-04-15 10:30:00   写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在Jetpack Compose中轻松的进行表单验证">
+<meta property="og:url" content="https://junerver.xyz/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/index.html">
+<meta property="og:site_name" content="Junerver">
+<meta property="og:description" content="title: 如何在 Jetpack Compose 中轻松的进行表单验证categories:  技术博客 Composetags: Kotlin Composedate: 2024-04-15 10:30:00   写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-19T09:54:58.000Z">
+<meta property="article:modified_time" content="2025-06-19T09:55:31.233Z">
+<meta property="article:author" content="Junerver">
+<meta property="article:tag" content="Compose">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="ahooks">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://junerver.xyz/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.xyz/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/","path":"2025/06/19/如何在Jetpack-Compose中轻松的进行表单验证/","title":"如何在Jetpack Compose中轻松的进行表单验证"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>如何在Jetpack Compose中轻松的进行表单验证 | Junerver</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Junerver</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81%E7%9A%84%E7%97%9B%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">表单验证的痛点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-useForm-%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81"><span class="nav-number">3.</span> <span class="nav-text">使用 useForm 进行表单验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E9%AA%8C%E8%AF%81%E8%A7%84%E5%88%99"><span class="nav-number">3.2.</span> <span class="nav-text">添加验证规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E7%BD%AE%E9%AA%8C%E8%AF%81%E8%A7%84%E5%88%99"><span class="nav-number">3.3.</span> <span class="nav-text">内置验证规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%AA%8C%E8%AF%81%E8%A7%84%E5%88%99"><span class="nav-number">3.4.</span> <span class="nav-text">自定义验证规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E5%8D%95%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">表单状态管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E8%A1%A8%E5%8D%95%E5%80%BC"><span class="nav-number">4.1.</span> <span class="nav-text">设置表单值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E7%BD%AE%E8%A1%A8%E5%8D%95"><span class="nav-number">4.2.</span> <span class="nav-text">重置表单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E5%90%AC%E8%A1%A8%E5%8D%95%E9%A1%B9%E5%8F%98%E5%8C%96"><span class="nav-number">4.3.</span> <span class="nav-text">监听表单项变化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81%E7%8A%B6%E6%80%81"><span class="nav-number">4.4.</span> <span class="nav-text">获取表单验证状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E4%B8%AD%E8%8E%B7%E5%8F%96%E8%A1%A8%E5%8D%95%E5%AE%9E%E4%BE%8B"><span class="nav-number">4.5.</span> <span class="nav-text">在子组件中获取表单实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">完整示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">6.</span> <span class="nav-text">写在最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2%E6%9B%B4%E5%A4%9A"><span class="nav-number">7.</span> <span class="nav-text">探索更多</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junerver"
+      src="/uploads/13448219.png">
+  <p class="site-author-name" itemprop="name">Junerver</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://junerver.xyz/2025/06/19/%E5%A6%82%E4%BD%95%E5%9C%A8Jetpack-Compose%E4%B8%AD%E8%BD%BB%E6%9D%BE%E7%9A%84%E8%BF%9B%E8%A1%8C%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/13448219.png">
+      <meta itemprop="name" content="Junerver">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Junerver">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="如何在Jetpack Compose中轻松的进行表单验证 | Junerver">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何在Jetpack Compose中轻松的进行表单验证
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 17:54:58 / 修改时间：17:55:31" itemprop="dateCreated datePublished" datetime="2025-06-19T17:54:58+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>title: 如何在 Jetpack Compose 中轻松的进行表单验证<br>categories:</p>
+<ul>
+<li>技术博客</li>
+<li>Compose<br>tags:</li>
+<li>Kotlin</li>
+<li>Compose<br>date: 2024-04-15 10:30:00</li>
+</ul>
+<hr>
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文中提及的 <code>use</code>开头的函数，都出自与我的 <a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a> 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专注于业务与 UI 组件。</p>
+<p>这是系列文章的第 9 篇，前文：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7342793007938371594">在 Compose 中使用 useRequest 轻松管理网络请求</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7344927519923011594">在 Compose 中使用状态提升？我提升个 P…Provider</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7345396671423250441">在 Compose 中父组件如何调用子组件的函数？</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7347851786134978610">在 Compose 中方便的使用 MVI 思想？试试 useReducer！</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352527589247336458">在 Compose 中像使用 redux 一样轻松管理全局状态</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7352785768094433289">在 Compose 中轻松使用异步 dispatch 管理全局状态</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7353156196935434290">在 Jetpack Compose 中管理网络请求竟然如此简单！</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7354414289797079083">在 Jetpack Compose 中优雅的使用防抖、节流</a></li>
+</ul>
+<span id="more"></span>
+
+<h2 id="表单验证的痛点"><a href="#表单验证的痛点" class="headerlink" title="表单验证的痛点"></a>表单验证的痛点</h2><p>在开发中，表单验证是一个非常常见的需求，但在 Compose 中实现表单验证却不那么简单。传统的做法通常是：</p>
+<ol>
+<li>为每个表单项创建单独的状态</li>
+<li>为每个表单项编写验证逻辑</li>
+<li>手动跟踪整个表单的验证状态</li>
+<li>在提交时再次验证所有字段</li>
+</ol>
+<p>这种方式不仅代码冗长，而且容易出错，特别是在表单项较多的情况下。如果你曾经尝试过在 Compose 中实现一个复杂的表单，你一定深有体会。</p>
+<p>那么，有没有更简单、更优雅的方式来处理表单验证呢？答案是肯定的！今天我要介绍的是 ComposeHooks 中的<code>useForm</code>钩子，它可以帮助你轻松实现表单验证。</p>
+<h2 id="使用-useForm-进行表单验证"><a href="#使用-useForm-进行表单验证" class="headerlink" title="使用 useForm 进行表单验证"></a>使用 <code>useForm</code> 进行表单验证</h2><h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>首先，让我们看一个简单的例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">SimpleFormExample</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> form = Form.useForm()</span><br><span class="line"></span><br><span class="line">    Surface &#123;</span><br><span class="line">        Form(form) &#123;</span><br><span class="line">            FormItem&lt;String&gt;(name = <span class="string">&quot;name&quot;</span>) &#123; (state, validate, msgs) -&gt;</span><br><span class="line">                <span class="keyword">var</span> string <span class="keyword">by</span> state</span><br><span class="line">                Row &#123;</span><br><span class="line">                    Text(text = <span class="string">&quot;Name:&quot;</span>)</span><br><span class="line">                    OutlinedTextField(value = string ?: <span class="string">&quot;&quot;</span>, onValueChange = &#123; string = it &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 提交按钮</span></span><br><span class="line">            Row &#123;</span><br><span class="line">                Button(onClick = &#123;</span><br><span class="line">                    <span class="keyword">if</span> (form.isValidated()) &#123;</span><br><span class="line">                        <span class="keyword">val</span> values = form.getAllFields()</span><br><span class="line">                        <span class="comment">// 处理表单提交</span></span><br><span class="line">                        println(values)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;) &#123;</span><br><span class="line">                    Text(<span class="string">&quot;Submit&quot;</span>)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子展示了<code>useForm</code>的基本用法：</p>
+<ol>
+<li>使用<code>Form.useForm()</code>创建一个表单实例</li>
+<li>使用 Headless 组件 <code>Form</code> 包裹整个表单</li>
+<li>使用 Headless 组件 <code>FormItem</code>定义表单项，通过<code>name</code>属性指定表单项的名称</li>
+<li>在 <code>FormItem</code> 作用域中可以使用 <code>state</code> 状态、<code>validate</code> 校验结果、<code>msgs</code> 校验器提示信息列表</li>
+</ol>
+<h3 id="添加验证规则"><a href="#添加验证规则" class="headerlink" title="添加验证规则"></a>添加验证规则</h3><p><code>FormItem</code>组件支持添加多种验证规则，例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">FormItem&lt;String&gt;(</span><br><span class="line">    name = <span class="string">&quot;email&quot;</span>, <span class="comment">// 表单项名称</span></span><br><span class="line">    Email(),        <span class="comment">// 验证是否为有效的邮箱格式</span></span><br><span class="line">    Required()      <span class="comment">// 验证是否为必填项</span></span><br><span class="line">) &#123; (state, validate, msgs) -&gt;</span><br><span class="line">    <span class="keyword">var</span> string <span class="keyword">by</span> state</span><br><span class="line">    Row &#123;</span><br><span class="line">        Text(text = <span class="string">&quot;Email:&quot;</span>)</span><br><span class="line">        Column &#123;</span><br><span class="line">            OutlinedTextField(value = string ?: <span class="string">&quot;&quot;</span>, onValueChange = &#123; string = it &#125;)</span><br><span class="line">            <span class="comment">// 显示验证错误信息</span></span><br><span class="line">            Text(text = <span class="string">&quot;<span class="variable">$validate</span>  <span class="subst">$&#123;msgs.joinToString(<span class="string">&quot;、&quot;</span>)&#125;</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="内置验证规则"><a href="#内置验证规则" class="headerlink" title="内置验证规则"></a>内置验证规则</h3><p>ComposeHooks 提供了多种内置的验证规则：</p>
+<ul>
+<li><code>Required()</code> - 必填项验证</li>
+<li><code>Email()</code> - 邮箱格式验证</li>
+<li><code>Mobile()</code> - 手机号格式验证</li>
+<li><code>Phone()</code> - 电话号码格式验证</li>
+<li><code>Regex</code> - 正则表达式验证</li>
+</ul>
+<h3 id="自定义验证规则"><a href="#自定义验证规则" class="headerlink" title="自定义验证规则"></a>自定义验证规则</h3><p>如果内置的验证规则不满足你的需求，你还可以创建自定义的验证规则：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FormItem&lt;String&gt;(</span><br><span class="line">    name = <span class="string">&quot;id&quot;</span>,</span><br><span class="line">    <span class="keyword">object</span> : CustomValidator(<span class="string">&quot;身份证号码格式错误&quot;</span>, &#123;</span><br><span class="line">        !it.asBoolean() || (it <span class="keyword">is</span> String &amp;&amp; it.matches(Regex(CHINA_ID_REGEX)))</span><br><span class="line">    &#125;) &#123;&#125;</span><br><span class="line">) &#123; (state, validate, msgs) -&gt;</span><br><span class="line">    <span class="keyword">var</span> string <span class="keyword">by</span> state</span><br><span class="line">    <span class="comment">// UI代码...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="表单状态管理"><a href="#表单状态管理" class="headerlink" title="表单状态管理"></a>表单状态管理</h2><h3 id="设置表单值"><a href="#设置表单值" class="headerlink" title="设置表单值"></a>设置表单值</h3><p>你可以使用<code>setFieldsValue</code>方法一次性设置多个表单项的值：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useMount &#123;</span><br><span class="line">    form.setFieldsValue(</span><br><span class="line">        <span class="string">&quot;name&quot;</span> to <span class="string">&quot;default&quot;</span>,</span><br><span class="line">        <span class="string">&quot;mobile&quot;</span> to <span class="string">&quot;111&quot;</span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者使用<code>setFieldValue</code>设置单个表单项的值：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TButton(text = <span class="string">&quot;Set Age to 5&quot;</span>) &#123;</span><br><span class="line">    form.setFieldValue(<span class="string">&quot;age&quot;</span> to <span class="number">5</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="重置表单"><a href="#重置表单" class="headerlink" title="重置表单"></a>重置表单</h3><p>你可以使用<code>resetFields</code>方法重置表单：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TButton(text = <span class="string">&quot;reset&quot;</span>) &#123;</span><br><span class="line">    formInstance.resetFields()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也可以在重置的同时设置新的值：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TButton(text = <span class="string">&quot;reset with values&quot;</span>) &#123;</span><br><span class="line">    formInstance.resetFields(</span><br><span class="line">        <span class="string">&quot;name&quot;</span> to <span class="string">&quot;Junerver&quot;</span>,</span><br><span class="line">        <span class="string">&quot;age&quot;</span> to <span class="number">5</span>,</span><br><span class="line">        <span class="string">&quot;mobile&quot;</span> to <span class="string">&quot;13566667777&quot;</span>,</span><br><span class="line">        <span class="string">&quot;email&quot;</span> to <span class="string">&quot;composehook@gmail.com&quot;</span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="监听表单项变化"><a href="#监听表单项变化" class="headerlink" title="监听表单项变化"></a>监听表单项变化</h3><p>你可以使用<code>Form.useWatch</code>来监听表单项的变化，并将它的值作为一个 <code>State</code> 状态：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> form = Form.useForm()</span><br><span class="line"><span class="keyword">val</span> name <span class="keyword">by</span> Form.useWatch&lt;String&gt;(fieldName = <span class="string">&quot;name&quot;</span>, formInstance = form)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在UI中使用</span></span><br><span class="line">Text(text = <span class="string">&quot;Current name: <span class="variable">$name</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取表单验证状态"><a href="#获取表单验证状态" class="headerlink" title="获取表单验证状态"></a>获取表单验证状态</h3><p>你可以使用<code>_isValidated()</code>方法获取表单的验证状态：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> canSubmit <span class="keyword">by</span> form._isValidated()</span><br><span class="line">TButton(text = <span class="string">&quot;submit&quot;</span>, enabled = canSubmit) &#123;</span><br><span class="line">    <span class="comment">// 提交表单</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="在子组件中获取表单实例"><a href="#在子组件中获取表单实例" class="headerlink" title="在子组件中获取表单实例"></a>在子组件中获取表单实例</h3><p>当组件位于 <code>Form</code> 作用域下时，在子组件中可以通过 <code>Form.useFormInstance()</code> 获取表单实例</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> formInstance: FormInstance = Form.useFormInstance()</span><br></pre></td></tr></table></figure>
+
+<h2 id="完整示例"><a href="#完整示例" class="headerlink" title="完整示例"></a>完整示例</h2><p>下面是一个更完整的表单示例，包含多种类型的表单项和验证规则：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">UseFormExample</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> form = Form.useForm()</span><br><span class="line">    useMount &#123;</span><br><span class="line">        form.setFieldsValue(</span><br><span class="line">            <span class="string">&quot;name&quot;</span> to <span class="string">&quot;default&quot;</span>,</span><br><span class="line">            <span class="string">&quot;mobile&quot;</span> to <span class="string">&quot;111&quot;</span></span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 通过 Form.useWatch 可以监听表单项的内容到一个 State</span></span><br><span class="line">    <span class="keyword">val</span> name <span class="keyword">by</span> Form.useWatch&lt;String&gt;(fieldName = <span class="string">&quot;name&quot;</span>, formInstance = form)</span><br><span class="line"></span><br><span class="line">    Surface &#123;</span><br><span class="line">        ScrollColumn &#123;</span><br><span class="line">            Form(form) &#123;</span><br><span class="line">                FormItem&lt;String&gt;(name = <span class="string">&quot;name&quot;</span>) &#123; (state, validate, msgs) -&gt;</span><br><span class="line">                    <span class="keyword">var</span> string <span class="keyword">by</span> state</span><br><span class="line">                    ItemRow(title = <span class="string">&quot;name&quot;</span>) &#123;</span><br><span class="line">                        OutlinedTextField(value = string ?: <span class="string">&quot;&quot;</span>, onValueChange = &#123; string = it &#125;)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                Spacer(modifier = Modifier.height(<span class="number">18.</span>dp))</span><br><span class="line"></span><br><span class="line">                FormItem&lt;<span class="built_in">Int</span>&gt;(name = <span class="string">&quot;age&quot;</span>, Required()) &#123; (state, validate, msgs) -&gt;</span><br><span class="line">                    <span class="keyword">var</span> age <span class="keyword">by</span> state</span><br><span class="line">                    ItemRow(title = <span class="string">&quot;* age&quot;</span>) &#123;</span><br><span class="line">                        Row &#123;</span><br><span class="line">                            TButton(text = <span class="string">&quot;1&quot;</span>, enabled = age != <span class="number">1</span>) &#123;</span><br><span class="line">                                <span class="comment">// 通过 setFieldValue 可以为表单项设置值</span></span><br><span class="line">                                form.setFieldValue(<span class="string">&quot;age&quot;</span> to <span class="number">1</span>)</span><br><span class="line">                            &#125;</span><br><span class="line">                            TButton(text = <span class="string">&quot;3&quot;</span>, enabled = age != <span class="number">3</span>) &#123;</span><br><span class="line">                                form.setFieldValue(<span class="string">&quot;age&quot;</span> to <span class="number">3</span>)</span><br><span class="line">                            &#125;</span><br><span class="line">                            TButton(text = <span class="string">&quot;5&quot;</span>, enabled = age != <span class="number">5</span>) &#123;</span><br><span class="line">                                form.setFieldValue(<span class="string">&quot;age&quot;</span> to <span class="number">5</span>)</span><br><span class="line">                            &#125;</span><br><span class="line">                            TButton(text = <span class="string">&quot;null&quot;</span>, enabled = age != <span class="literal">null</span>) &#123;</span><br><span class="line">                                form.setFieldValue(<span class="string">&quot;age&quot;</span> to <span class="literal">null</span>)</span><br><span class="line">                            &#125;</span><br><span class="line">                            Text(text = <span class="string">&quot;<span class="variable">$validate</span>  <span class="subst">$&#123;msgs.joinToString(<span class="string">&quot;、&quot;</span>)&#125;</span>&quot;</span>)</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 更多表单项...</span></span><br><span class="line"></span><br><span class="line">                <span class="comment">// 提交按钮</span></span><br><span class="line">                Sub()</span><br><span class="line">            &#125;</span><br><span class="line">            Text(text = <span class="string">&quot;by use `Form.useWatch(fieldName,formInstance)`can watch a field\nname: <span class="variable">$name</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Composable</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> FormScope.<span class="title">Sub</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 你可以在子组件中使用 Form.useFormInstance() 获取父组件中的 FormInstance</span></span><br><span class="line">    <span class="keyword">val</span> formInstance: FormInstance = Form.useFormInstance()</span><br><span class="line">    <span class="comment">// 获得表单是否校验成功的 **状态**</span></span><br><span class="line">    <span class="keyword">val</span> canSubmit <span class="keyword">by</span> formInstance._isValidated()</span><br><span class="line">    Row &#123;</span><br><span class="line">        TButton(text = <span class="string">&quot;submit&quot;</span>, enabled = canSubmit) &#123;</span><br><span class="line">            println(</span><br><span class="line">                formInstance</span><br><span class="line">                    .getAllFields()</span><br><span class="line">                    .toString() + <span class="string">&quot;\nisValidated :&quot;</span> + formInstance.isValidated()</span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">        TButton(text = <span class="string">&quot;reset&quot;</span>) &#123;</span><br><span class="line">            formInstance.resetFields()</span><br><span class="line">        &#125;</span><br><span class="line">        TButton(text = <span class="string">&quot;reset with values&quot;</span>) &#123;</span><br><span class="line">            formInstance.resetFields(</span><br><span class="line">                <span class="string">&quot;name&quot;</span> to <span class="string">&quot;Junerver&quot;</span>,</span><br><span class="line">                <span class="string">&quot;age&quot;</span> to <span class="number">5</span>,</span><br><span class="line">                <span class="string">&quot;mobile&quot;</span> to <span class="string">&quot;13566667777&quot;</span>,</span><br><span class="line">                <span class="string">&quot;email&quot;</span> to <span class="string">&quot;composehook@gmail.com&quot;</span></span><br><span class="line">            )</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p><code>useForm</code>的工作原理是基于状态管理和验证规则的组合。每个<code>FormItem</code>都有自己的状态和验证规则，在 <code>FormItem</code> 作用域中使用其提供的状态，当修改状态时，会通过<code>useEffect</code> 触发验证，并更新验证结果。</p>
+<p>表单实例(<code>FormInstance</code>)会跟踪所有表单项的状态和验证结果，并提供方法来获取和操作这些状态。</p>
+<p>使用 <a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a> 中的<code>useForm</code>钩子，我们可以轻松地在 Jetpack Compose 中实现表单验证：</p>
+<ol>
+<li>无需手动管理每个表单项的状态</li>
+<li>内置多种常用的验证规则</li>
+<li>支持自定义验证规则</li>
+<li>提供丰富的 API 来操作表单状态</li>
+<li>自动跟踪整个表单的验证状态</li>
+</ol>
+<p>这种方式不仅减少了代码量，还提高了代码的可读性和可维护性。如果你正在使用 Jetpack Compose 开发表单，不妨试试<code>useForm</code>钩子，它会让你的表单验证变得更加简单和优雅。</p>
+<h2 id="探索更多"><a href="#探索更多" class="headerlink" title="探索更多"></a>探索更多</h2><p>项目开源地址：<a target="_blank" rel="noopener" href="https://github.com/junerver">junerver</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/junerver/ComposeHooks">ComposeHooks</a></p>
+<p>MavenCentral：<a target="_blank" rel="noopener" href="https://central.sonatype.com/artifact/xyz.junerver.compose/hooks">hooks</a></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation(<span class="string">&quot;xyz.junerver.compose:hooks2:2.1.0&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>欢迎使用、勘误、pr、star。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Compose/" rel="tag"># Compose</a>
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/ahooks/" rel="tag"># ahooks</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/18/Kotlin-2-1-0%E7%9A%84%E6%96%B0%E6%94%B9%E8%BF%9B%E5%B8%A6%E6%9D%A5%E5%93%AA%E4%BA%9B%E6%94%B9%E5%8F%98/" rel="prev" title="Kotlin 2.1.0的新改进带来哪些改变">
+                  <i class="fa fa-angle-left"></i> Kotlin 2.1.0的新改进带来哪些改变
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Junerver</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
