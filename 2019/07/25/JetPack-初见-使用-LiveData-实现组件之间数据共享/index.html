@@ -6,42 +6,42 @@
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/junerver.github.io/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/junerver.github.io/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/junerver.github.io/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/junerver.github.io/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/junerver.github.io/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/junerver.github.io/","images":"/junerver.github.io/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/junerver.github.io/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="18年谷歌推出了新的开发套件 JetPack （喷气背包），本文将浅显的讨论一下其中 LiveData 的一些使用方法与注意事项。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JetPack 初见 - 使用 LiveData 实现组件之间数据共享">
-<meta property="og:url" content="https://junerver.github.io/junerver.github.io/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/index.html">
+<meta property="og:url" content="https://junerver.github.io/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="18年谷歌推出了新的开发套件 JetPack （喷气背包），本文将浅显的讨论一下其中 LiveData 的一些使用方法与注意事项。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/20190725092041356.png">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/20190725104522891.gif">
+<meta property="og:image" content="https://junerver.github.io/20190725092041356.png">
+<meta property="og:image" content="https://junerver.github.io/20190725104522891.gif">
 <meta property="article:published_time" content="2019-07-25T03:11:59.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.448Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Jetpack">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.github.io/junerver.github.io/20190725092041356.png">
+<meta name="twitter:image" content="https://junerver.github.io/20190725092041356.png">
 
 
-<link rel="canonical" href="https://junerver.github.io/junerver.github.io/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
+<link rel="canonical" href="https://junerver.github.io/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/junerver.github.io/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/","path":"2019/07/25/JetPack-初见-使用-LiveData-实现组件之间数据共享/","title":"JetPack 初见 - 使用 LiveData 实现组件之间数据共享"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/","path":"2019/07/25/JetPack-初见-使用-LiveData-实现组件之间数据共享/","title":"JetPack 初见 - 使用 LiveData 实现组件之间数据共享"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>JetPack 初见 - 使用 LiveData 实现组件之间数据共享 | Junerver</title>
@@ -55,7 +55,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/junerver.github.io/css/noscript.css">
+    <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
 </head>
 
@@ -72,7 +72,7 @@
 
   <div class="site-meta">
 
-    <a href="/junerver.github.io/" class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
@@ -116,25 +116,25 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Junerver"
-      src="/junerver.github.io/uploads/13448219.png">
+      src="/uploads/13448219.png">
   <p class="site-author-name" itemprop="name">Junerver</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/junerver.github.io/archives/">
+        <a href="/archives/">
           <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-          <a href="/junerver.github.io/categories/">
+          <a href="/categories/">
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/junerver.github.io/tags/">
+          <a href="/tags/">
         <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
@@ -162,10 +162,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/junerver.github.io/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2019/07/25/JetPack-%E5%88%9D%E8%A7%81-%E4%BD%BF%E7%94%A8-LiveData-%E5%AE%9E%E7%8E%B0%E7%BB%84%E4%BB%B6%E4%B9%8B%E9%97%B4%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/junerver.github.io/uploads/13448219.png">
+      <meta itemprop="image" content="/uploads/13448219.png">
       <meta itemprop="name" content="Junerver">
     </span>
 
@@ -206,7 +206,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
         </span>
     </span>
 
@@ -219,7 +219,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>18年谷歌推出了新的开发套件 <a target="_blank" rel="noopener" href="https://developer.android.google.cn/jetpack">JetPack</a> （喷气背包），本文将浅显的讨论一下其中 LiveData 的一些使用方法与注意事项。<br><img src="/junerver.github.io/20190725092041356.png" alt="JetPack"></p>
+    <div class="post-body" itemprop="articleBody"><p>18年谷歌推出了新的开发套件 <a target="_blank" rel="noopener" href="https://developer.android.google.cn/jetpack">JetPack</a> （喷气背包），本文将浅显的讨论一下其中 LiveData 的一些使用方法与注意事项。<br><img src="/20190725092041356.png" alt="JetPack"></p>
 <span id="more"></span>
 
 <h2 id="1-LiveData-是什么？"><a href="#1-LiveData-是什么？" class="headerlink" title="1. LiveData 是什么？"></a>1. LiveData 是什么？</h2><p><strong>LiveData</strong> 是一个可观察的数据持有者类。与常规observable不同，LiveData是生命周期感知的，这意味着它关注其他应用程序组件的生命周期，例如 <strong>Activity</strong>，<strong>Fragment</strong> 或 <strong>Service</strong>。这确保了 <strong>LiveData</strong> 仅更新处于活动生命周期状态的应用程序组件观察者。</p>
@@ -249,7 +249,7 @@
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DemoActivity</span> : <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_demo)</span><br><span class="line">        <span class="keyword">val</span> observer =  Observer&lt;ArrayList&lt;Person&gt;&gt;&#123;</span><br><span class="line">            textView.text = it.last().toString()</span><br><span class="line">        &#125;</span><br><span class="line">        SingletonLiveData.personList.observe(<span class="keyword">this</span>,observer)</span><br><span class="line">        <span class="keyword">var</span> age = <span class="number">19</span></span><br><span class="line">        btnAdd.setOnClickListener &#123;</span><br><span class="line">            SingletonLiveData.addPerson(Person(<span class="string">&quot;张三&quot;</span>,++age,<span class="number">1</span>))</span><br><span class="line">        &#125;</span><br><span class="line">        supportFragmentManager.beginTransaction()</span><br><span class="line">                .add(R.id.fl_content,BlankFragment.newInstance())</span><br><span class="line">                .commit()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在Fragment中使用：</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BlankFragment</span> : <span class="type">Fragment</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> lastPersonTv:TextView</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newInstance</span><span class="params">()</span></span> = BlankFragment()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?,</span></span></span><br><span class="line"><span class="params"><span class="function">                              savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        <span class="keyword">return</span> inflater.inflate(R.layout.blank_fragment, container, <span class="literal">false</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewCreated</span><span class="params">(view: <span class="type">View</span>, savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState)</span><br><span class="line">        lastPersonTv = view.findViewById(R.id.lastPerson)</span><br><span class="line">        <span class="keyword">var</span> age = <span class="number">19</span></span><br><span class="line">        view.findViewById&lt;Button&gt;(R.id.btnAddF).setOnClickListener &#123;</span><br><span class="line">            SingletonLiveData.addPerson(Person(<span class="string">&quot;李四&quot;</span>,++age,<span class="number">1</span>))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        <span class="keyword">val</span> observer =  Observer&lt;ArrayList&lt;Person&gt;&gt;&#123;</span><br><span class="line">            lastPersonTv.text = it.size.toString()</span><br><span class="line">        &#125;</span><br><span class="line">       SingletonLiveData.personList.observe(<span class="keyword">this</span>,observer)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>实际效果预览：<br><img src="/junerver.github.io/20190725104522891.gif" alt="Activity 与 Fragment 之间数据共享"><br>图示中白色区域为Activity，浅黄色区域为一个 Fragment，我们在act 与 frag 互不持有的状况下实现了数据的共享，并且及时的将最新的数据状态反馈到 UI 上。</p>
+<p>实际效果预览：<br><img src="/20190725104522891.gif" alt="Activity 与 Fragment 之间数据共享"><br>图示中白色区域为Activity，浅黄色区域为一个 Fragment，我们在act 与 frag 互不持有的状况下实现了数据的共享，并且及时的将最新的数据状态反馈到 UI 上。</p>
 </li>
 </ol>
 <h2 id="4-扩展阅读-ViewModel-的作用范围"><a href="#4-扩展阅读-ViewModel-的作用范围" class="headerlink" title="4. 扩展阅读 ViewModel 的作用范围"></a>4. 扩展阅读 ViewModel 的作用范围</h2><p>上文中持有 LiveData 的是我们创建的一个单例对象，他的作用范围是整个APP，任何一个组件在订阅该 LiveData 的时候，都将获得相同的数据。但是如果我们配合ViewModel来使用呢？</p>
@@ -279,19 +279,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/junerver.github.io/tags/Jetpack/" rel="tag"># Jetpack</a>
+              <a href="/tags/Jetpack/" rel="tag"># Jetpack</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2019/07/15/Android-9-0%E9%80%82%E9%85%8D/" rel="prev" title="Android 9.0适配">
+                <a href="/2019/07/15/Android-9-0%E9%80%82%E9%85%8D/" rel="prev" title="Android 9.0适配">
                   <i class="fa fa-angle-left"></i> Android 9.0适配
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2019/08/07/Kotlin%E5%8D%8F%E7%A8%8B-%E2%80%94%E2%80%94%E4%BB%8E-runBlocking-%E4%B8%8E-coroutineScope-%E8%AF%B4%E8%B5%B7/" rel="next" title="Kotlin协程 ——从 runBlocking 与 coroutineScope 说起">
+                <a href="/2019/08/07/Kotlin%E5%8D%8F%E7%A8%8B-%E2%80%94%E2%80%94%E4%BB%8E-runBlocking-%E4%B8%8E-coroutineScope-%E8%AF%B4%E8%B5%B7/" rel="next" title="Kotlin协程 ——从 runBlocking 与 coroutineScope 说起">
                   Kotlin协程 ——从 runBlocking 与 coroutineScope 说起 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -344,7 +344,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/junerver.github.io/js/comments.js"></script><script src="/junerver.github.io/js/utils.js"></script><script src="/junerver.github.io/js/motion.js"></script><script src="/junerver.github.io/js/schemes/muse.js"></script><script src="/junerver.github.io/js/sidebar.js"></script><script src="/junerver.github.io/js/next-boot.js"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
 
   
 

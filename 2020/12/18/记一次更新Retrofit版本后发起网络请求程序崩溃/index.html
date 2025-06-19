@@ -6,41 +6,41 @@
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/junerver.github.io/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/junerver.github.io/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/junerver.github.io/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/junerver.github.io/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/junerver.github.io/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/junerver.github.io/","images":"/junerver.github.io/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/junerver.github.io/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="错误日志如下：  java.lang.NoSuchMethodError: No static method metafactory(Ljava&#x2F;lang&#x2F;invoke&#x2F;MethodHandles$Lookup;Ljava&#x2F;lang&#x2F;String;Ljava&#x2F;lang&#x2F;invoke&#x2F;MethodType;Ljava&amp;#">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次更新Retrofit版本后发起网络请求程序崩溃">
-<meta property="og:url" content="https://junerver.github.io/junerver.github.io/2020/12/18/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9B%B4%E6%96%B0Retrofit%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%91%E8%B5%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%A8%8B%E5%BA%8F%E5%B4%A9%E6%BA%83/index.html">
+<meta property="og:url" content="https://junerver.github.io/2020/12/18/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9B%B4%E6%96%B0Retrofit%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%91%E8%B5%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%A8%8B%E5%BA%8F%E5%B4%A9%E6%BA%83/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="错误日志如下：  java.lang.NoSuchMethodError: No static method metafactory(Ljava&#x2F;lang&#x2F;invoke&#x2F;MethodHandles$Lookup;Ljava&#x2F;lang&#x2F;String;Ljava&#x2F;lang&#x2F;invoke&#x2F;MethodType;Ljava&amp;#">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/1">
+<meta property="og:image" content="https://junerver.github.io/1">
 <meta property="article:published_time" content="2020-12-18T08:46:32.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.553Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Retrofit">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.github.io/junerver.github.io/1">
+<meta name="twitter:image" content="https://junerver.github.io/1">
 
 
-<link rel="canonical" href="https://junerver.github.io/junerver.github.io/2020/12/18/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9B%B4%E6%96%B0Retrofit%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%91%E8%B5%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%A8%8B%E5%BA%8F%E5%B4%A9%E6%BA%83/">
+<link rel="canonical" href="https://junerver.github.io/2020/12/18/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9B%B4%E6%96%B0Retrofit%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%91%E8%B5%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%A8%8B%E5%BA%8F%E5%B4%A9%E6%BA%83/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/junerver.github.io/2020/12/18/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9B%B4%E6%96%B0Retrofit%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%91%E8%B5%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%A8%8B%E5%BA%8F%E5%B4%A9%E6%BA%83/","path":"2020/12/18/记一次更新Retrofit版本后发起网络请求程序崩溃/","title":"记一次更新Retrofit版本后发起网络请求程序崩溃"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2020/12/18/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9B%B4%E6%96%B0Retrofit%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%91%E8%B5%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%A8%8B%E5%BA%8F%E5%B4%A9%E6%BA%83/","path":"2020/12/18/记一次更新Retrofit版本后发起网络请求程序崩溃/","title":"记一次更新Retrofit版本后发起网络请求程序崩溃"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>记一次更新Retrofit版本后发起网络请求程序崩溃 | Junerver</title>
@@ -54,7 +54,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/junerver.github.io/css/noscript.css">
+    <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
 </head>
 
@@ -71,7 +71,7 @@
 
   <div class="site-meta">
 
-    <a href="/junerver.github.io/" class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
@@ -114,25 +114,25 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Junerver"
-      src="/junerver.github.io/uploads/13448219.png">
+      src="/uploads/13448219.png">
   <p class="site-author-name" itemprop="name">Junerver</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/junerver.github.io/archives/">
+        <a href="/archives/">
           <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-          <a href="/junerver.github.io/categories/">
+          <a href="/categories/">
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/junerver.github.io/tags/">
+          <a href="/tags/">
         <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
@@ -160,10 +160,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/junerver.github.io/2020/12/18/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9B%B4%E6%96%B0Retrofit%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%91%E8%B5%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%A8%8B%E5%BA%8F%E5%B4%A9%E6%BA%83/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2020/12/18/%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9B%B4%E6%96%B0Retrofit%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%91%E8%B5%B7%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%A8%8B%E5%BA%8F%E5%B4%A9%E6%BA%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/junerver.github.io/uploads/13448219.png">
+      <meta itemprop="image" content="/uploads/13448219.png">
       <meta itemprop="name" content="Junerver">
     </span>
 
@@ -204,7 +204,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
         </span>
     </span>
 
@@ -222,7 +222,7 @@
 <p>java.lang.NoSuchMethodError: No static method metafactory(Ljava&#x2F;lang&#x2F;invoke&#x2F;MethodHandles$Lookup;Ljava&#x2F;lang&#x2F;String;Ljava&#x2F;lang&#x2F;invoke&#x2F;MethodType;Ljava&#x2F;lang&#x2F;invoke&#x2F;MethodType;Ljava&#x2F;lang&#x2F;invoke&#x2F;MethodHandle;Ljava&#x2F;lang&#x2F;invoke&#x2F;MethodType;)Ljava&#x2F;lang&#x2F;invoke&#x2F;CallSite; in class Ljava&#x2F;lang&#x2F;invoke&#x2F;LambdaMetafactory; or its super classes (declaration of ‘java.lang.invoke.LambdaMetafactory’ appears in &#x2F;apex&#x2F;com.android.runtime&#x2F;javalib&#x2F;core-oj.jar)</p>
 </blockquote>
 <p>原因：<br>新版本的 Retrofit 使用到了JAVA8 的Lambda表达式，项目中需要使用JAVA1.8，否则无法正常使用。</p>
-<p>点击File -&gt; Project Structure-&gt;Modules -&gt; Properties  设置Source Compatibility和 Target Compatibility两项为 JDK8就可以了<br><img src="/junerver.github.io/1"></p>
+<p>点击File -&gt; Project Structure-&gt;Modules -&gt; Properties  设置Source Compatibility和 Target Compatibility两项为 JDK8就可以了<br><img src="/1"></p>
 
     </div>
 
@@ -232,19 +232,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/junerver.github.io/tags/Retrofit/" rel="tag"># Retrofit</a>
+              <a href="/tags/Retrofit/" rel="tag"># Retrofit</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2020/10/30/%E3%80%8A%E5%86%9C%E7%A5%9E%E9%A3%9F%E5%85%B6%E5%AD%90%E3%80%8B%E4%B8%8E%E3%80%8C%E7%B2%BE%E7%A5%9E%E5%BC%91%E7%88%B6%E3%80%8D/" rel="prev" title="《农神食其子》与「精神弑父」">
+                <a href="/2020/10/30/%E3%80%8A%E5%86%9C%E7%A5%9E%E9%A3%9F%E5%85%B6%E5%AD%90%E3%80%8B%E4%B8%8E%E3%80%8C%E7%B2%BE%E7%A5%9E%E5%BC%91%E7%88%B6%E3%80%8D/" rel="prev" title="《农神食其子》与「精神弑父」">
                   <i class="fa fa-angle-left"></i> 《农神食其子》与「精神弑父」
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2021/01/06/%E6%9B%B4%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0-%E2%80%94%E2%80%94-Kotlin-%E5%8D%8F%E7%A8%8B/" rel="next" title="更优雅的使用回调函数 —— Kotlin 协程">
+                <a href="/2021/01/06/%E6%9B%B4%E4%BC%98%E9%9B%85%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0-%E2%80%94%E2%80%94-Kotlin-%E5%8D%8F%E7%A8%8B/" rel="next" title="更优雅的使用回调函数 —— Kotlin 协程">
                   更优雅的使用回调函数 —— Kotlin 协程 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -297,7 +297,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/junerver.github.io/js/comments.js"></script><script src="/junerver.github.io/js/utils.js"></script><script src="/junerver.github.io/js/motion.js"></script><script src="/junerver.github.io/js/schemes/muse.js"></script><script src="/junerver.github.io/js/sidebar.js"></script><script src="/junerver.github.io/js/next-boot.js"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
 
   
 

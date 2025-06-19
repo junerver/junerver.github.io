@@ -6,42 +6,42 @@
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/junerver.github.io/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/junerver.github.io/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/junerver.github.io/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/junerver.github.io/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/junerver.github.io/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/junerver.github.io/","images":"/junerver.github.io/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/junerver.github.io/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专心于业务与UI组件。 这是系列文章的第四篇，前文：  在Compose中使用useRequest轻松管理网络请求 在Compose中使用状态提升？我提升个P…Provider 在Compose">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在Compose中方便的使用MVI思想？试试useReducer！">
-<meta property="og:url" content="https://junerver.github.io/junerver.github.io/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/index.html">
+<meta property="og:url" content="https://junerver.github.io/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="写在前面本文中提及的 use开头的函数，都出自与我的 ComposeHooks 项目，它提供了一系列 React Hooks 风格的状态封装函数，可以帮你更好的使用 Compose，无需关心复杂的状态管理，专心于业务与UI组件。 这是系列文章的第四篇，前文：  在Compose中使用useRequest轻松管理网络请求 在Compose中使用状态提升？我提升个P…Provider 在Compose">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/1">
+<meta property="og:image" content="https://junerver.github.io/1">
 <meta property="article:published_time" content="2024-03-18T08:22:21.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.519Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="Compose">
 <meta property="article:tag" content="Kotlin">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.github.io/junerver.github.io/1">
+<meta name="twitter:image" content="https://junerver.github.io/1">
 
 
-<link rel="canonical" href="https://junerver.github.io/junerver.github.io/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/">
+<link rel="canonical" href="https://junerver.github.io/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/junerver.github.io/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/","path":"2024/03/18/在Compose中方便的使用MVI思想？试试useReducer！/","title":"在Compose中方便的使用MVI思想？试试useReducer！"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/","path":"2024/03/18/在Compose中方便的使用MVI思想？试试useReducer！/","title":"在Compose中方便的使用MVI思想？试试useReducer！"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>在Compose中方便的使用MVI思想？试试useReducer！ | Junerver</title>
@@ -55,7 +55,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/junerver.github.io/css/noscript.css">
+    <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
 </head>
 
@@ -72,7 +72,7 @@
 
   <div class="site-meta">
 
-    <a href="/junerver.github.io/" class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
@@ -116,25 +116,25 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Junerver"
-      src="/junerver.github.io/uploads/13448219.png">
+      src="/uploads/13448219.png">
   <p class="site-author-name" itemprop="name">Junerver</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/junerver.github.io/archives/">
+        <a href="/archives/">
           <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-          <a href="/junerver.github.io/categories/">
+          <a href="/categories/">
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/junerver.github.io/tags/">
+          <a href="/tags/">
         <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
@@ -162,10 +162,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/junerver.github.io/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2024/03/18/%E5%9C%A8Compose%E4%B8%AD%E6%96%B9%E4%BE%BF%E7%9A%84%E4%BD%BF%E7%94%A8MVI%E6%80%9D%E6%83%B3%EF%BC%9F%E8%AF%95%E8%AF%95useReducer%EF%BC%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/junerver.github.io/uploads/13448219.png">
+      <meta itemprop="image" content="/uploads/13448219.png">
       <meta itemprop="name" content="Junerver">
     </span>
 
@@ -206,11 +206,11 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
         </span>
           ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Compose/" itemprop="url" rel="index"><span itemprop="name">Compose</span></a>
         </span>
     </span>
 
@@ -236,7 +236,7 @@
 <p>它与 <code>MVVM</code> 其实区别不大，有别于 MVVM 的是，MVVM 将耦合代码按照职责区分，拆分文件。借助 <code>LiveData</code> 或者 <code>DataBinding</code> 将 VM 中数据更新直接驱动 V 层，实现了 V 层与 M 层之间的解耦。</p>
 <p>得力于 Compose 带来的<strong>状态</strong>驱动视图能力，我们可以理解 MVI 思想为：用户发出<strong>事件</strong>，事件驱动<strong>状态</strong>变化，状态驱动 <strong>UI</strong> 变化。这也就是所谓的事件向上，状态向下：事件从组件发出，单一可信来源的状态驱动组件更新。</p>
 <p>从这一思想出发，我们可以理解为：谁持有状态，谁就是 M 层。那么过去的 MVVM 的文件拆分将会变得相对松散，我们完全可以摒弃过去那种<em>全屏式</em>思想，不再根据屏幕创建一个 VM 大管家。而是拆分成职责、粒度更细小的<strong>组件</strong>思想。</p>
-<p><img src="/junerver.github.io/1" alt="事件向上状态向下"></p>
+<p><img src="/1" alt="事件向上状态向下"></p>
 <p>当然使用 <code>MVVM</code> 我们一样可以做到类似的效果，但是 MVI 将它流程化、标准化，所以可以理解为其实 MVI 就是一个有一定模板的更优秀的 <code>MVVM</code>。</p>
 <p>过去我们的 VM 层其实也很重，一个复杂的页面，数个网络接口，都被仍在一个 VM 中，鉴于不同开发者的水平的参差，我们项目中甚至有一个 VM 文件中持有了20多个 LiveData，可以说完全违背了 MVVM 的初衷。</p>
 <p>同样的，想必你已经看了很多在 Compose 中使用 <code>ViewModel</code> 来实现 <code>MVI</code> 的文章了吧（我甚至看过回字的四种写法），它真的有这么复杂么？在 Compose 中我们还需要这样的一位大管家么？虽然很多例子、甚至官方的 demo，都还在使用 <code>ViewModel</code>，但是这是一种无法回避的取舍？还是既往路线的惯性。</p>
@@ -275,20 +275,20 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/junerver.github.io/tags/Compose/" rel="tag"># Compose</a>
-              <a href="/junerver.github.io/tags/Kotlin/" rel="tag"># Kotlin</a>
+              <a href="/tags/Compose/" rel="tag"># Compose</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2024/03/13/%E5%9C%A8Compose%E4%B8%AD%E7%88%B6%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E7%9A%84%E5%87%BD%E6%95%B0%EF%BC%9F/" rel="prev" title="在Compose中父组件如何调用子组件的函数？">
+                <a href="/2024/03/13/%E5%9C%A8Compose%E4%B8%AD%E7%88%B6%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8%E5%AD%90%E7%BB%84%E4%BB%B6%E7%9A%84%E5%87%BD%E6%95%B0%EF%BC%9F/" rel="prev" title="在Compose中父组件如何调用子组件的函数？">
                   <i class="fa fa-angle-left"></i> 在Compose中父组件如何调用子组件的函数？
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/" rel="next" title="在Compose中像使用redux一样轻松管理全局状态">
+                <a href="/2024/04/01/%E5%9C%A8Compose%E4%B8%AD%E5%83%8F%E4%BD%BF%E7%94%A8redux%E4%B8%80%E6%A0%B7%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81/" rel="next" title="在Compose中像使用redux一样轻松管理全局状态">
                   在Compose中像使用redux一样轻松管理全局状态 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -341,7 +341,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/junerver.github.io/js/comments.js"></script><script src="/junerver.github.io/js/utils.js"></script><script src="/junerver.github.io/js/motion.js"></script><script src="/junerver.github.io/js/schemes/muse.js"></script><script src="/junerver.github.io/js/sidebar.js"></script><script src="/junerver.github.io/js/next-boot.js"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
 
   
 

@@ -6,47 +6,47 @@
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/junerver.github.io/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/junerver.github.io/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/junerver.github.io/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/junerver.github.io/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/junerver.github.io/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/junerver.github.io/","images":"/junerver.github.io/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/junerver.github.io/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="转载请标明原文地址：http:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;b547d889c6c8  一个奇葩的需求，用户希望可以由客户来自定义 app 的应用名、图标，由于这些资源是不确定的，所以没有办法事先通过打包多个 flavor 来满足需求。需要在用户需要的时候，动态的完成打包工作。   思考在接到这个需求的时候，我想到了两个可能实现的方案：  使用 gradle，将项目源文件放在服务器上，当">
 <meta property="og:type" content="article">
 <meta property="og:title" content="通过apktool解包替换资源重新打包实现app定制">
-<meta property="og:url" content="https://junerver.github.io/junerver.github.io/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/index.html">
+<meta property="og:url" content="https://junerver.github.io/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="转载请标明原文地址：http:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;b547d889c6c8  一个奇葩的需求，用户希望可以由客户来自定义 app 的应用名、图标，由于这些资源是不确定的，所以没有办法事先通过打包多个 flavor 来满足需求。需要在用户需要的时候，动态的完成打包工作。   思考在接到这个需求的时候，我想到了两个可能实现的方案：  使用 gradle，将项目源文件放在服务器上，当">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/1240">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/1">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/2">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/3">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/4">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/7">
-<meta property="og:image" content="https://junerver.github.io/junerver.github.io/6">
+<meta property="og:image" content="https://junerver.github.io/1240">
+<meta property="og:image" content="https://junerver.github.io/1">
+<meta property="og:image" content="https://junerver.github.io/2">
+<meta property="og:image" content="https://junerver.github.io/3">
+<meta property="og:image" content="https://junerver.github.io/4">
+<meta property="og:image" content="https://junerver.github.io/7">
+<meta property="og:image" content="https://junerver.github.io/6">
 <meta property="article:published_time" content="2017-03-12T12:59:00.000Z">
 <meta property="article:modified_time" content="2025-06-19T08:38:38.556Z">
 <meta property="article:author" content="Junerver">
 <meta property="article:tag" content="apktool">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://junerver.github.io/junerver.github.io/1240">
+<meta name="twitter:image" content="https://junerver.github.io/1240">
 
 
-<link rel="canonical" href="https://junerver.github.io/junerver.github.io/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/">
+<link rel="canonical" href="https://junerver.github.io/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/junerver.github.io/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/","path":"2017/03/12/通过apktool解包替换资源重新打包实现app定制/","title":"通过apktool解包替换资源重新打包实现app定制"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/","path":"2017/03/12/通过apktool解包替换资源重新打包实现app定制/","title":"通过apktool解包替换资源重新打包实现app定制"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>通过apktool解包替换资源重新打包实现app定制 | Junerver</title>
@@ -60,7 +60,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/junerver.github.io/css/noscript.css">
+    <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
 </head>
 
@@ -77,7 +77,7 @@
 
   <div class="site-meta">
 
-    <a href="/junerver.github.io/" class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
@@ -121,25 +121,25 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Junerver"
-      src="/junerver.github.io/uploads/13448219.png">
+      src="/uploads/13448219.png">
   <p class="site-author-name" itemprop="name">Junerver</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/junerver.github.io/archives/">
+        <a href="/archives/">
           <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-          <a href="/junerver.github.io/categories/">
+          <a href="/categories/">
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/junerver.github.io/tags/">
+          <a href="/tags/">
         <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
@@ -167,10 +167,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/junerver.github.io/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2017/03/12/%E9%80%9A%E8%BF%87apktool%E8%A7%A3%E5%8C%85%E6%9B%BF%E6%8D%A2%E8%B5%84%E6%BA%90%E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%E5%AE%9E%E7%8E%B0app%E5%AE%9A%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/junerver.github.io/uploads/13448219.png">
+      <meta itemprop="image" content="/uploads/13448219.png">
       <meta itemprop="name" content="Junerver">
     </span>
 
@@ -211,11 +211,11 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
         </span>
           ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
         </span>
     </span>
 
@@ -232,7 +232,7 @@
 <blockquote>
 <p>一个奇葩的需求，用户希望可以由客户来自定义 app 的应用名、图标，由于这些资源是不确定的，所以没有办法事先通过打包多个 flavor 来满足需求。需要在用户需要的时候，动态的完成打包工作。</p>
 </blockquote>
-<p><img src="/junerver.github.io/1240" alt="apktool"></p>
+<p><img src="/1240" alt="apktool"></p>
 <h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p>在接到这个需求的时候，我想到了两个可能实现的方案：</p>
 <ol>
 <li><p>使用 gradle，将项目源文件放在服务器上，当需要打包时，替换对应的资源文件，然后调用 gradle 指令，完成打包任务（思路来自 Jenkins，其实质好像就是通过调用gradle来进行打包）。</p>
@@ -247,17 +247,17 @@
 <h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
 <li><p>下载 apktool.bat 与 apktool.jar 文件，放在同一目录下，并将该目录添加到环境变量（Windows系统）</p>
 </li>
-<li><p>通过 AS 打包生成 apk 文件，并放置到上述目录中<br><img src="/junerver.github.io/1" alt="放置在同一目录"></p>
+<li><p>通过 AS 打包生成 apk 文件，并放置到上述目录中<br><img src="/1" alt="放置在同一目录"></p>
 </li>
-<li><p>cmd 运行指令 <code>apktool d app.apk</code>，将 apk 文件解包（默认解包到当前目录下的同名文件夹下）<br><img src="/junerver.github.io/2" alt="Paste_Image.png"></p>
+<li><p>cmd 运行指令 <code>apktool d app.apk</code>，将 apk 文件解包（默认解包到当前目录下的同名文件夹下）<br><img src="/2" alt="Paste_Image.png"></p>
 </li>
-<li><p>修改资源文件<br><img src="/junerver.github.io/3" alt="修改图标文件"><br><img src="/junerver.github.io/4" alt="修改应用名"></p>
+<li><p>修改资源文件<br><img src="/3" alt="修改图标文件"><br><img src="/4" alt="修改应用名"></p>
 </li>
-<li><p>cmd 运行指令<code>apktool b app -o other.apk</code>（app 指需要打包的文件夹，-o other.apk 表示生产新文件），重新打包 apk<br><img src="/junerver.github.io/7" alt="重新打包 apk"></p>
+<li><p>cmd 运行指令<code>apktool b app -o other.apk</code>（app 指需要打包的文件夹，-o other.apk 表示生产新文件），重新打包 apk<br><img src="/7" alt="重新打包 apk"></p>
 </li>
 <li><p>将 keystore 文件放到该目录，签名 apk 文件</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore key.keystore -storepass yourpass other.apk alias</span><br><span class="line">//注意这里是一行指令</span><br></pre></td></tr></table></figure>
-<p><img src="/junerver.github.io/6" alt="签名apk"></p>
+<p><img src="/6" alt="签名apk"></p>
 </li>
 </ol>
 <p><code>-keystore key.keystore</code> ：用于指定 keystore 的位置<br><code>-storepass yourpass </code>：用于指定 keystore 的密码<br><code>other.apk</code>：表示要签名的文件<br><code>alias</code>：表示 keystore 文件的别名</p>
@@ -273,19 +273,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/junerver.github.io/tags/apktool/" rel="tag"># apktool</a>
+              <a href="/tags/apktool/" rel="tag"># apktool</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/" rel="prev" title="MVP 模式之 先说说 Dagger （2）">
+                <a href="/2016/12/23/MVP-%E6%A8%A1%E5%BC%8F%E4%B9%8B-%E5%85%88%E8%AF%B4%E8%AF%B4-Dagger-%EF%BC%882%EF%BC%89/" rel="prev" title="MVP 模式之 先说说 Dagger （2）">
                   <i class="fa fa-angle-left"></i> MVP 模式之 先说说 Dagger （2）
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/" rel="next" title="在项目中集成Freeline来提升编译速度【已失效】">
+                <a href="/2017/03/20/%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9B%86%E6%88%90Freeline%E6%9D%A5%E6%8F%90%E5%8D%87%E7%BC%96%E8%AF%91%E9%80%9F%E5%BA%A6%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91/" rel="next" title="在项目中集成Freeline来提升编译速度【已失效】">
                   在项目中集成Freeline来提升编译速度【已失效】 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -338,7 +338,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/junerver.github.io/js/comments.js"></script><script src="/junerver.github.io/js/utils.js"></script><script src="/junerver.github.io/js/motion.js"></script><script src="/junerver.github.io/js/schemes/muse.js"></script><script src="/junerver.github.io/js/sidebar.js"></script><script src="/junerver.github.io/js/next-boot.js"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
 
   
 

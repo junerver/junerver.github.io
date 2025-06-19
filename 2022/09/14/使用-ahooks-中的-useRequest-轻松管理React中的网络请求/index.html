@@ -6,24 +6,24 @@
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/junerver.github.io/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/junerver.github.io/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/junerver.github.io/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/junerver.github.io/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/junerver.github.io/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/junerver.github.io/","images":"/junerver.github.io/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/junerver.github.io/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"junerver.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="携手创作，共同成长！这是我参与「掘金日新计划 · 8 月更文挑战」的第1天，点击查看活动详情 关于 ahooks2022年的今天，在 React 中使用 Hook 已经是常规的不能再常规的操作了，我们会大量的通过组合 React 提供的 Hook，创建属于自己业务的专属自定义 Hook，亦或是各种工具 Hook。 阿里前端团队出品的 ahooks 正是这样一套 Hook 工具集，里面提供数十个常用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 ahooks 中的 useRequest 轻松管理React中的网络请求">
-<meta property="og:url" content="https://junerver.github.io/junerver.github.io/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/index.html">
+<meta property="og:url" content="https://junerver.github.io/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/index.html">
 <meta property="og:site_name" content="Junerver">
 <meta property="og:description" content="携手创作，共同成长！这是我参与「掘金日新计划 · 8 月更文挑战」的第1天，点击查看活动详情 关于 ahooks2022年的今天，在 React 中使用 Hook 已经是常规的不能再常规的操作了，我们会大量的通过组合 React 提供的 Hook，创建属于自己业务的专属自定义 Hook，亦或是各种工具 Hook。 阿里前端团队出品的 ahooks 正是这样一套 Hook 工具集，里面提供数十个常用">
 <meta property="og:locale" content="zh_CN">
@@ -35,11 +35,11 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://junerver.github.io/junerver.github.io/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
+<link rel="canonical" href="https://junerver.github.io/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/junerver.github.io/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/","path":"2022/09/14/使用-ahooks-中的-useRequest-轻松管理React中的网络请求/","title":"使用 ahooks 中的 useRequest 轻松管理React中的网络请求"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://junerver.github.io/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/","path":"2022/09/14/使用-ahooks-中的-useRequest-轻松管理React中的网络请求/","title":"使用 ahooks 中的 useRequest 轻松管理React中的网络请求"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>使用 ahooks 中的 useRequest 轻松管理React中的网络请求 | Junerver</title>
@@ -53,7 +53,7 @@
 
 
   <noscript>
-    <link rel="stylesheet" href="/junerver.github.io/css/noscript.css">
+    <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
 </head>
 
@@ -70,7 +70,7 @@
 
   <div class="site-meta">
 
-    <a href="/junerver.github.io/" class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
       <p class="site-title">Junerver</p>
       <i class="logo-line"></i>
@@ -114,25 +114,25 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Junerver"
-      src="/junerver.github.io/uploads/13448219.png">
+      src="/uploads/13448219.png">
   <p class="site-author-name" itemprop="name">Junerver</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-        <a href="/junerver.github.io/archives/">
+        <a href="/archives/">
           <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-          <a href="/junerver.github.io/categories/">
+          <a href="/categories/">
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-          <a href="/junerver.github.io/tags/">
+          <a href="/tags/">
         <span class="site-state-item-count">37</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
@@ -160,10 +160,10 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/junerver.github.io/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
+    <link itemprop="mainEntityOfPage" href="https://junerver.github.io/2022/09/14/%E4%BD%BF%E7%94%A8-ahooks-%E4%B8%AD%E7%9A%84-useRequest-%E8%BD%BB%E6%9D%BE%E7%AE%A1%E7%90%86React%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/junerver.github.io/uploads/13448219.png">
+      <meta itemprop="image" content="/uploads/13448219.png">
       <meta itemprop="name" content="Junerver">
     </span>
 
@@ -204,11 +204,11 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">技术博客</span></a>
         </span>
           ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/junerver.github.io/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">Web前端</span></a>
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2/Web%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">Web前端</span></a>
         </span>
     </span>
 
@@ -296,20 +296,20 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/junerver.github.io/tags/React/" rel="tag"># React</a>
-              <a href="/junerver.github.io/tags/ahooks/" rel="tag"># ahooks</a>
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/ahooks/" rel="tag"># ahooks</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2022/08/05/React-%E4%BC%98%E5%8C%96%EF%BC%9A%E5%9C%A8-ahooks-useRequest-%E4%B8%AD%E5%88%A9%E7%94%A8-swr-%E4%BC%98%E5%8C%96%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/" rel="prev" title="React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求">
+                <a href="/2022/08/05/React-%E4%BC%98%E5%8C%96%EF%BC%9A%E5%9C%A8-ahooks-useRequest-%E4%B8%AD%E5%88%A9%E7%94%A8-swr-%E4%BC%98%E5%8C%96%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82/" rel="prev" title="React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求">
                   <i class="fa fa-angle-left"></i> React 优化：在 ahooks - useRequest 中利用 swr 优化网络请求
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/junerver.github.io/2023/06/08/%E4%BD%A0%E5%8F%AF%E8%83%BD%E4%B8%80%E7%9B%B4%E5%9C%A8kt%E6%96%87%E4%BB%B6%E4%B8%AD%E5%86%99Java%E4%BB%A3%E7%A0%81/" rel="next" title="你可能一直在kt文件中写Java代码">
+                <a href="/2023/06/08/%E4%BD%A0%E5%8F%AF%E8%83%BD%E4%B8%80%E7%9B%B4%E5%9C%A8kt%E6%96%87%E4%BB%B6%E4%B8%AD%E5%86%99Java%E4%BB%A3%E7%A0%81/" rel="next" title="你可能一直在kt文件中写Java代码">
                   你可能一直在kt文件中写Java代码 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -362,7 +362,7 @@
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
-<script src="/junerver.github.io/js/comments.js"></script><script src="/junerver.github.io/js/utils.js"></script><script src="/junerver.github.io/js/motion.js"></script><script src="/junerver.github.io/js/schemes/muse.js"></script><script src="/junerver.github.io/js/sidebar.js"></script><script src="/junerver.github.io/js/next-boot.js"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
 
   
 
